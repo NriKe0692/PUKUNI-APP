@@ -5,5 +5,11 @@
 
     <style name="Theme.PukuniApp.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuIcon</item>
+    </style>
+
+    <style name="OverflowMenuIcon" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@android:color/white</item>
     </style>
 </resources>

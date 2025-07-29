@@ -1,6 +1,7 @@
 package com.example.pukuniapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
@@ -10,9 +11,16 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.pukuniapp.retrofit.ApiClient;
+import com.example.pukuniapp.retrofit.ApiService;
+import com.example.pukuniapp.retrofit.LoginRequest;
+import com.example.pukuniapp.retrofit.LoginResponse;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,16 +50,58 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            if (!password.equals("123456")) {
-                Toast.makeText(this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+            if (password.isEmpty()) {
+                Toast.makeText(this, "Ingrese su contraseña", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Login correcto (puedes redirigir a MainActivity u otra)
-            Toast.makeText(this, "Login exitoso", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+            ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+            LoginRequest request = new LoginRequest(email, password);
+
+            api.login(request).enqueue(new retrofit2.Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        LoginResponse loginResponse = response.body();
+                        Toast.makeText(LoginActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
+
+                        Gson gson = new Gson();
+                        String json = gson.toJson(response.body().user);
+                        System.out.println("response JSON: " + json);
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("PukuniPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("auth_token", response.body().token);
+                        editor.putString("user_name", response.body().user.name);
+                        editor.putString("user_last_name", response.body().user.lastname);
+                        editor.apply();
+
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        try {
+                            String errorJson = response.errorBody().string();
+                            System.out.println("response ERROR JSON: " + errorJson);
+
+                            // Puedes parsearlo si quieres algo más detallado
+                            JSONObject jsonObject = new JSONObject(errorJson);
+                            String errorMsg = jsonObject.optString("error", "Error desconocido");
+                            Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(LoginActivity.this, "Error desconocido", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Toast.makeText(LoginActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             });
+        });
+
 
         // Ir a forgot password
         forgotPassword.setOnClickListener(v -> {
