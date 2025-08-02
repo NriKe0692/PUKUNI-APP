@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FloraFormFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha"/>
+
+            <EditText
+                android:id="@+id/et_fecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="dd/mm/yyyy"
+                android:inputType="text"
+                android:maxLength="10" />
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unidad de Muestreo"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_unidad_muestreo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Código de Parcela"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_parcela"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forofito"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_forofito"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sub Parcela"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_sub_parcela"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tamaño Unidad"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_tamanio_unidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unidad de Vegetación"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_unidad_vegetacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Código Placa"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_codigo_placa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Localidad"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_localidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <android.widget.Button
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:padding="12dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enviar Formulario"
+                android:background="@drawable/rounded_background">
+            </android.widget.Button>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

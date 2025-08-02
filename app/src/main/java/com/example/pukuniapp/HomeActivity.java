@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -52,6 +53,13 @@ public class HomeActivity extends AppCompatActivity {
 
         TextView tvUserName = findViewById(R.id.toolbar_name);
         tvUserName.setText(userName + " " + lastName);
+
+        LinearLayout formBtn = findViewById(R.id.form_click);
+
+        formBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, FormActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

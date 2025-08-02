@@ -1,10 +1,26 @@
 package com.example.pukuniapp.retrofit;
 
+import com.example.pukuniapp.classes.Departamento;
+import com.example.pukuniapp.classes.Distrito;
+import com.example.pukuniapp.classes.Forofito;
+import com.example.pukuniapp.classes.Franja;
+import com.example.pukuniapp.classes.Location;
+import com.example.pukuniapp.classes.Pais;
+import com.example.pukuniapp.classes.Parcela;
+import com.example.pukuniapp.classes.Provincia;
+import com.example.pukuniapp.classes.SubParcela;
+import com.example.pukuniapp.classes.UnidadMuestreo;
+import com.example.pukuniapp.classes.UnidadVegetacion;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
+
 public interface ApiService {
     @POST("login")
     Call<LoginResponse> login(@Body LoginRequest request);
@@ -14,4 +30,37 @@ public interface ApiService {
 
     @GET("/verify")
     Call<Void> verifyToken(@Header("Authorization") String token);
+
+    @GET("/locations")
+    Call<List<Location>> getLocations(@Header("Authorization") String token);
+
+    @GET("/unidades_muestreo")
+    Call<List<UnidadMuestreo>> getUnidadMuestreoList(@Header("Authorization") String token);
+
+    @GET("/franjas")
+    Call<List<Franja>> getFranjas(@Header("Authorization") String token);
+
+    @GET("/parcelas")
+    Call<List<Parcela>> getParcelas(@Header("Authorization") String token, @Query("franja_id") int franjaId);
+
+    @GET("/forofitos")
+    Call<List<Forofito>> getForofitos(@Header("Authorization") String token, @Query("parcela_id") int parcelaId);
+
+    @GET("/subparcelas")
+    Call<List<SubParcela>> getSubparcelas(@Header("Authorization") String token, @Query("parcela_id") int parcelaId);
+
+    @GET("/unidad_vegetacion")
+    Call<List<UnidadVegetacion>> getUnidadVegetacion(@Header("Authorization") String token);
+
+    @GET("/paises")
+    Call<List<Pais>> getPaises(@Header("Authorization") String token);
+
+    @GET("/departamentos")
+    Call<List<Departamento>> getDepartamentos(@Header("Authorization") String token);
+
+    @GET("/provincias")
+    Call<List<Provincia>> getProvincias(@Header("Authorization") String token, @Query("departamento_id") int departamento_id);
+
+    @GET("/distritos")
+    Call<List<Distrito>> getDistritos(@Header("Authorization") String token, @Query("provincia_id") int provincia_id);
 }
