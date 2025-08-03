@@ -1,12 +1,16 @@
 package com.example.pukuniapp.retrofit;
 
+import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Departamento;
 import com.example.pukuniapp.classes.Distrito;
 import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.EstacionMuestreo;
+import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
+import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.Location;
+import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.Provincia;
@@ -41,6 +45,18 @@ public interface ApiService {
 
     @GET("/estaciones_muestreo")
     Call<List<EstacionMuestreo>> getEstacionMuestreoList(@Header("Authorization") String token);
+
+    @GET("/clases")
+    Call<List<Clase>> getClases(@Header("Authorization") String token);
+
+    @GET("/ordenes")
+    Call<List<Orden>> getOrdenes(@Header("Authorization") String token);
+
+    @GET("/familias")
+    Call<List<Familia>> getFamilias(@Header("Authorization") String token);
+
+    @GET("/generos")
+    Call<List<Genero>> getGeneros(@Header("Authorization") String token);
 
     @GET("/especies")
     Call<List<Especie>> getEspecies(@Header("Authorization") String token);

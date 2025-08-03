@@ -24,9 +24,13 @@ import android.widget.Toast;
 
 import com.example.pukuniapp.LoginActivity;
 import com.example.pukuniapp.R;
+import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Especie;
+import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
+import com.example.pukuniapp.classes.Genero;
+import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.SubParcela;
@@ -57,6 +61,10 @@ public class FloraFormFragment extends Fragment {
     TextView textViewEste;
     TextView textViewNorte;
     TextView textViewAltitud;
+    AutoCompleteTextView et_clase;
+    AutoCompleteTextView et_orden;
+    AutoCompleteTextView et_familia;
+    AutoCompleteTextView et_genero;
     AutoCompleteTextView et_especie;
 
     public FloraFormFragment() {
@@ -96,6 +104,10 @@ public class FloraFormFragment extends Fragment {
         textViewEste = view.findViewById(R.id.tv_este);
         textViewNorte = view.findViewById(R.id.tv_norte);
         textViewAltitud = view.findViewById(R.id.tv_altitud);
+        et_clase= view.findViewById(R.id.et_clase);
+        et_orden = view.findViewById(R.id.et_orden);
+        et_familia = view.findViewById(R.id.et_familia);
+        et_genero = view.findViewById(R.id.et_genero);
         et_especie = view.findViewById(R.id.et_especie);
 
         if (token == null) {
@@ -114,6 +126,134 @@ public class FloraFormFragment extends Fragment {
     }
 
     private void setupAutocompleteTv(ApiService api, String token){
+        api.getClases("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Clase>> call, Response<List<Clase>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Clase> clasesList = response.body();
+
+                    List<String> clasesNames = new ArrayList<>();
+
+                    for (Clase clase : clasesList) {
+                        clasesNames.add(clase.getClase_name());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            clasesNames
+                    );
+
+                    et_clase.setAdapter(adapter);
+                    et_clase.setThreshold(1);
+
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Clase>> call, Throwable t) {
+                irALogin();
+            }
+        });
+
+        api.getOrdenes("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Orden>> call, Response<List<Orden>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Orden> ordenesList = response.body();
+
+                    List<String> ordenesNames = new ArrayList<>();
+
+                    for (Orden orden : ordenesList) {
+                        ordenesNames.add(orden.getOrden_name());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            ordenesNames
+                    );
+
+                    et_orden.setAdapter(adapter);
+                    et_orden.setThreshold(1);
+
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Orden>> call, Throwable t) {
+                irALogin();
+            }
+        });
+
+        api.getFamilias("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Familia>> call, Response<List<Familia>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Familia> familiasList = response.body();
+
+                    List<String> familiasNames = new ArrayList<>();
+
+                    for (Familia familia : familiasList) {
+                        familiasNames.add(familia.getFamilia_name());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            familiasNames
+                    );
+
+                    et_familia.setAdapter(adapter);
+                    et_familia.setThreshold(1);
+
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Familia>> call, Throwable t) {
+                irALogin();
+            }
+        });
+
+        api.getGeneros("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Genero>> call, Response<List<Genero>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Genero> generosList = response.body();
+
+                    List<String> generosNames = new ArrayList<>();
+
+                    for (Genero genero : generosList) {
+                        generosNames.add(genero.getGenero_name());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            generosNames
+                    );
+
+                    et_genero.setAdapter(adapter);
+                    et_genero.setThreshold(1);
+
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Genero>> call, Throwable t) {
+                irALogin();
+            }
+        });
+
         api.getEspecies("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Especie>> call, Response<List<Especie>> response) {

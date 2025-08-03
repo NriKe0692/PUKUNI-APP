@@ -194,12 +194,14 @@
                 android:layout_height="wrap_content"
                 android:text="Clase"/>
 
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_clase"
-                android:background="@drawable/spinner_background"
+            <AutoCompleteTextView
+                android:id="@+id/et_clase"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:layout_height="48dp"
+                android:background="@drawable/spinner_background"
+                android:layout_marginBottom="12dp"
+                android:inputType="text"
+                android:padding="12dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
@@ -208,12 +210,14 @@
                 android:layout_height="wrap_content"
                 android:text="Orden"/>
 
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_orden"
-                android:background="@drawable/spinner_background"
+            <AutoCompleteTextView
+                android:id="@+id/et_orden"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:layout_height="48dp"
+                android:background="@drawable/spinner_background"
+                android:layout_marginBottom="12dp"
+                android:inputType="text"
+                android:padding="12dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
@@ -222,12 +226,14 @@
                 android:layout_height="wrap_content"
                 android:text="Familia"/>
 
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_familia"
-                android:background="@drawable/spinner_background"
+            <AutoCompleteTextView
+                android:id="@+id/et_familia"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:layout_height="48dp"
+                android:background="@drawable/spinner_background"
+                android:layout_marginBottom="12dp"
+                android:inputType="text"
+                android:padding="12dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
@@ -236,12 +242,14 @@
                 android:layout_height="wrap_content"
                 android:text="Género"/>
 
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_genero"
-                android:background="@drawable/spinner_background"
+            <AutoCompleteTextView
+                android:id="@+id/et_genero"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:layout_height="48dp"
+                android:background="@drawable/spinner_background"
+                android:layout_marginBottom="12dp"
+                android:inputType="text"
+                android:padding="12dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
