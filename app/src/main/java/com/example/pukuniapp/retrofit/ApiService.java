@@ -2,6 +2,8 @@ package com.example.pukuniapp.retrofit;
 
 import com.example.pukuniapp.classes.Departamento;
 import com.example.pukuniapp.classes.Distrito;
+import com.example.pukuniapp.classes.Especie;
+import com.example.pukuniapp.classes.EstacionMuestreo;
 import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Location;
@@ -37,8 +39,14 @@ public interface ApiService {
     @GET("/unidades_muestreo")
     Call<List<UnidadMuestreo>> getUnidadMuestreoList(@Header("Authorization") String token);
 
+    @GET("/estaciones_muestreo")
+    Call<List<EstacionMuestreo>> getEstacionMuestreoList(@Header("Authorization") String token);
+
+    @GET("/especies")
+    Call<List<Especie>> getEspecies(@Header("Authorization") String token);
+
     @GET("/franjas")
-    Call<List<Franja>> getFranjas(@Header("Authorization") String token);
+    Call<List<Franja>> getFranjas(@Header("Authorization") String token, @Query("estacion_id") int estacionMuestroId);
 
     @GET("/parcelas")
     Call<List<Parcela>> getParcelas(@Header("Authorization") String token, @Query("franja_id") int franjaId);
@@ -63,4 +71,6 @@ public interface ApiService {
 
     @GET("/distritos")
     Call<List<Distrito>> getDistritos(@Header("Authorization") String token, @Query("provincia_id") int provincia_id);
+
+
 }

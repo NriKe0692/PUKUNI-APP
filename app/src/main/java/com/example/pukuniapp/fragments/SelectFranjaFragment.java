@@ -1,4 +1,4 @@
-package com.example.pukuniapp;
+package com.example.pukuniapp.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,16 +9,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.pukuniapp.LoginActivity;
+import com.example.pukuniapp.R;
 import com.example.pukuniapp.classes.Franja;
-import com.example.pukuniapp.classes.Location;
-import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.retrofit.ApiClient;
 import com.example.pukuniapp.retrofit.ApiService;
 
@@ -34,15 +31,6 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class SelectFranjaFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public SelectFranjaFragment() {
         // Required empty public constructor
@@ -66,16 +54,11 @@ public class SelectFranjaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_franja, container, false);
 
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
@@ -92,7 +75,7 @@ public class SelectFranjaFragment extends Fragment {
         } else {
             ApiService api = ApiClient.getRetrofit().create(ApiService.class);
 
-            api.getFranjas("Bearer " + token).enqueue(new Callback<>() {
+            api.getFranjas("Bearer " + token, 1).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<List<Franja>> call, Response<List<Franja>> response) {
                     if (response.isSuccessful() && response.body() != null) {

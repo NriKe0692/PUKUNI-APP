@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.PukuniApp.NoActionBar"
-    tools:context=".fragments.SelectFranjaFragment">
+    tools:context=".fragments.SelectEstacionMuestreoFragment">
 
     <LinearLayout
         android:id="@+id/grid_layout"

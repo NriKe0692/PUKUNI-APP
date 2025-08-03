@@ -1,44 +1,43 @@
-package com.example.pukuniapp;
+package com.example.pukuniapp.fragments;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pukuniapp.classes.Departamento;
-import com.example.pukuniapp.classes.Distrito;
+import com.example.pukuniapp.LoginActivity;
+import com.example.pukuniapp.R;
+import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.Forofito;
-import com.example.pukuniapp.classes.Location;
+import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
-import com.example.pukuniapp.classes.Provincia;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.retrofit.ApiClient;
 import com.example.pukuniapp.retrofit.ApiService;
-import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import kotlin.reflect.KFunction;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,22 +48,25 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class FloraFormFragment extends Fragment {
+    Spinner spinnerSubEstacionMuestreo;
+    Spinner spinnerUnidadMuestreo;
+    Spinner spinnerParcela;
+    Spinner spinnerForofito;
+    Spinner spinnerSubParcela;
+    Spinner spinnerUnidadVegetacion;
+    TextView textViewEste;
+    TextView textViewNorte;
+    TextView textViewAltitud;
+    AutoCompleteTextView et_especie;
+
     public FloraFormFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment FloraFormFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FloraFormFragment newInstance(String nombreFranja, int franjaId) {
+    public static FloraFormFragment newInstance(String estacionName, int estacionId) {
         FloraFormFragment fragment = new FloraFormFragment();
         Bundle args = new Bundle();
-        args.putInt("franja_id", franjaId);
-        args.putString("franja_name", nombreFranja);
+        args.putInt("estacion_id", estacionId);
+        args.putString("estacion_name", estacionName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,232 +87,135 @@ public class FloraFormFragment extends Fragment {
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
         label.setText("Formulario Flora");
 
-        EditText etFecha = view.findViewById(R.id.et_fecha);
-        etFecha.addTextChangedListener(new TextWatcher() {
-            private boolean isFormatting;
-            private int previousLength;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                previousLength = s.length();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // No hacemos nada aquí
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isFormatting) return;
-
-                isFormatting = true;
-
-                String input = s.toString().replaceAll("[^\\d]", ""); // solo números
-                StringBuilder formatted = new StringBuilder();
-
-                for (int i = 0; i < input.length() && i < 8; i++) {
-                    formatted.append(input.charAt(i));
-                    if ((i == 1 || i == 3) && i != input.length() - 1) {
-                        formatted.append('/');
-                    }
-                }
-
-                etFecha.removeTextChangedListener(this);
-                etFecha.setText(formatted.toString());
-                etFecha.setSelection(formatted.length()); // mover cursor al final
-                etFecha.addTextChangedListener(this);
-
-                isFormatting = false;
-
-                // ✅ Validar si ya hay 10 caracteres (dd/MM/yyyy)
-                if (formatted.length() == 10) {
-                    String fecha = formatted.toString();
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    sdf.setLenient(false);
-
-                    try {
-                        sdf.parse(fecha); // lanza excepción si la fecha no es válida
-                        etFecha.setError(null); // fecha válida, quitar error si existía
-                    } catch (ParseException e) {
-                        etFecha.setError("Fecha inválida");
-                        Toast.makeText(getContext(), "La fecha ingresada no es válida", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        Spinner spinnerLocation = view.findViewById(R.id.spinner_lugar);
-        Spinner spinnerUnidadMuestreo = view.findViewById(R.id.spinner_unidad_muestreo);
-        Spinner spinnerParcela = view.findViewById(R.id.spinner_parcela);
-        Spinner spinnerForofito = view.findViewById(R.id.spinner_forofito);
-        Spinner spinnerSubParcela = view.findViewById(R.id.spinner_sub_parcela);
-        Spinner spinnerUnidadVegetacion = view.findViewById(R.id.spinner_unidad_vegetacion);
-        Spinner spinnerPais = view.findViewById(R.id.spinner_pais);
-        Spinner spinnerDepartamento = view.findViewById(R.id.spinner_departamento);
-        Spinner spinnerProvincia = view.findViewById(R.id.spinner_provincia);
-        Spinner spinnerDistrito = view.findViewById(R.id.spinner_distrito);
+        spinnerSubEstacionMuestreo = view.findViewById(R.id.spinner_sub_estacion_muestreo);
+        spinnerUnidadMuestreo = view.findViewById(R.id.spinner_unidad_muestreo);
+        spinnerParcela = view.findViewById(R.id.spinner_parcela);
+        spinnerForofito = view.findViewById(R.id.spinner_forofito);
+        spinnerSubParcela = view.findViewById(R.id.spinner_sub_parcela);
+        spinnerUnidadVegetacion = view.findViewById(R.id.spinner_unidad_vegetacion);
+        textViewEste = view.findViewById(R.id.tv_este);
+        textViewNorte = view.findViewById(R.id.tv_norte);
+        textViewAltitud = view.findViewById(R.id.tv_altitud);
+        et_especie = view.findViewById(R.id.et_especie);
 
         if (token == null) {
             irALogin();
         } else {
             ApiService api = ApiClient.getRetrofit().create(ApiService.class);
 
-            setLocationValues(api, token, spinnerLocation);
-            setUnidadeDeMuestreoValues(api, token, spinnerUnidadMuestreo, spinnerParcela, spinnerForofito);
-            setParcelaValues(api, token, spinnerParcela, spinnerUnidadMuestreo, spinnerForofito, spinnerSubParcela);
-            setUnidadDeVegetacionValues(api, token, spinnerUnidadVegetacion);
-            setPaisValues(api, token, spinnerPais);
-            setDepartamentosValues(api, token, spinnerDepartamento, spinnerProvincia, spinnerDistrito);
+            setSubEstacionesValues(api, token);
+            setUnidadeDeMuestreoValues(api, token);
+            setUnidadDeVegetacionValues(api, token);
+            getCoordinates();
+            setupAutocompleteTv(api, token);
         }
 
         return view;
     }
 
-    private void setDepartamentosValues(ApiService api, String token, Spinner spinnerDepartamento, Spinner spinnerProvincia, Spinner spinnerDistrito){
-        api.getDepartamentos("Bearer " + token).enqueue(new Callback<>() {
+    private void setupAutocompleteTv(ApiService api, String token){
+        api.getEspecies("Bearer " + token).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<Departamento>> call, Response<List<Departamento>> response) {
+            public void onResponse(Call<List<Especie>> call, Response<List<Especie>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Departamento> departamentoList = response.body();
+                    List<Especie> especiesList = response.body();
 
-                    ArrayAdapter<Departamento> adapter = new ArrayAdapter<>(
+                    List<String> especieNames = new ArrayList<>();
+                    for (Especie especie : especiesList) {
+                        especieNames.add(especie.getEspecie_name());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
                             requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            departamentoList
+                            android.R.layout.simple_dropdown_item_1line,
+                            especieNames
                     );
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerDepartamento.setAdapter(adapter);
 
-                    spinnerDepartamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                            Departamento departamentoSeleccionado = (Departamento) spinnerDepartamento.getSelectedItem();
+                    et_especie.setAdapter(adapter);
+                    et_especie.setThreshold(1);
 
-                            if (departamentoSeleccionado != null) {
-                                int departamentoId = departamentoSeleccionado.getDepartamento_id();
-
-                                setProvinciasValues(api, token, departamentoId, spinnerProvincia, spinnerDistrito);
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
                 } else {
                     irALogin();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Departamento>> call, Throwable t) {
+            public void onFailure(Call<List<Especie>> call, Throwable t) {
                 irALogin();
             }
         });
     }
 
-    private void setProvinciasValues(ApiService api, String token, int departamentoId, Spinner spinnerProvincia, Spinner spinnerDistrito){
-        api.getProvincias("Bearer " + token, departamentoId).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<Provincia>> call, Response<List<Provincia>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Provincia> provinciaList = response.body();
+    private void getCoordinates(){
+        LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
 
-                    Log.d("API_RESPONSE", "Provincias recibidas: " + new Gson().toJson(provinciaList));
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Solicita permisos
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }
 
-                    ArrayAdapter<Provincia> adapter = new ArrayAdapter<>(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            provinciaList
-                    );
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerProvincia.setAdapter(adapter);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                    spinnerProvincia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                            Provincia provinciaSeleccionada = (Provincia) spinnerProvincia.getSelectedItem();
+        if (location != null) {
+            double lat = location.getLatitude();
+            double lon = location.getLongitude();
+            double alt = location.getAltitude();
 
-                            if (provinciaSeleccionada != null) {
-                                int provinciaId = provinciaSeleccionada.getPronvicia_id();
-                                Toast.makeText(getContext(), "Provincia seleccionada: " + provinciaId, Toast.LENGTH_SHORT).show();
+            UTMConverter(lat, lon, alt);
+        }
+    }
 
-                                setDistritosValues(api, token, provinciaId, spinnerDistrito);
-                            }
+    private void setSubEstacionesValues(ApiService api, String token){
+        if (this.getArguments() != null) {
+            int estacionMuestreoId = getArguments().getInt("estacion_id", -1);
+
+            if(estacionMuestreoId != -1){
+                api.getFranjas("Bearer " + token, estacionMuestreoId).enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(Call<List<Franja>> call, Response<List<Franja>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<Franja> subEstacionesList = response.body();
+
+                            ArrayAdapter<Franja> adapter = new ArrayAdapter<>(
+                                    requireContext(),
+                                    android.R.layout.simple_spinner_item,
+                                    subEstacionesList
+                            );
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                            spinnerSubEstacionMuestreo.setAdapter(adapter);
+
+                            spinnerSubEstacionMuestreo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                    Franja franja = (Franja) spinnerSubEstacionMuestreo.getSelectedItem();
+
+                                    if (franja != null) {
+                                        setParcelaValues(api, token);
+                                    }
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                }
+                            });
+                        } else {
+                            irALogin();
                         }
+                    }
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
-                } else {
-                    irALogin();
-                }
+                    @Override
+                    public void onFailure(Call<List<Franja>> call, Throwable t) {
+                        irALogin();
+                    }
+                });
             }
+        }
 
-            @Override
-            public void onFailure(Call<List<Provincia>> call, Throwable t) {
-                irALogin();
-            }
-        });
     }
-
-    private void setDistritosValues(ApiService api, String token, int provinciaId, Spinner spinnerDistrito){
-        api.getDistritos("Bearer " + token, provinciaId).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<Distrito>> call, Response<List<Distrito>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Distrito> distritoList = response.body();
-
-                    ArrayAdapter<Distrito> adapter = new ArrayAdapter<>(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            distritoList
-                    );
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerDistrito.setAdapter(adapter);
-                } else {
-                    irALogin();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Distrito>> call, Throwable t) {
-                irALogin();
-            }
-        });
-    }
-
-    private void setLocationValues(ApiService api, String token, Spinner spinnerLocation) {
-        api.getLocations("Bearer " + token).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Location> locationList = response.body();
-
-                    ArrayAdapter<Location> adapter = new ArrayAdapter<>(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            locationList
-                    );
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerLocation.setAdapter(adapter);
-                } else {
-                    irALogin();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Location>> call, Throwable t) {
-                irALogin();
-            }
-        });
-    }
-
-    private void setUnidadeDeMuestreoValues(ApiService api, String token, Spinner spinnerUnidadMuestreo, Spinner spinnerParcela, Spinner spinnerForofito){
+    private void setUnidadeDeMuestreoValues(ApiService api, String token){
         api.getUnidadMuestreoList("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<UnidadMuestreo>> call, Response<List<UnidadMuestreo>> response) {
@@ -339,10 +244,10 @@ public class FloraFormFragment extends Fragment {
                                         int parcelaId = parcelaSeleccionada.getParcela_id();
                                         String parcelaName = parcelaSeleccionada.getParcela_name();
 
-                                        setForofitosValues(api, token, spinnerForofito, parcelaId, parcelaName);
+                                        setForofitosValues(api, token, parcelaId, parcelaName);
                                     }
                                 }else{
-                                    removeForofitosValues(spinnerForofito);
+                                    removeForofitosValues();
                                 }
 
                             }
@@ -365,10 +270,12 @@ public class FloraFormFragment extends Fragment {
         });
     }
 
-    private void setParcelaValues(ApiService api, String token, Spinner spinnerParcela, Spinner spinnerUnidadMuestreo, Spinner spinnerForofito, Spinner spinnerSubParcela){
-        if (this.getArguments() != null) {
-            int franjaId = getArguments().getInt("franja_id", -1);
-            String franjaName = getArguments().getString("franja_name", "");
+    private void setParcelaValues(ApiService api, String token){
+        Franja franjaSeleccionada = (Franja) spinnerSubEstacionMuestreo.getSelectedItem();
+
+        if(franjaSeleccionada != null){
+            int franjaId = franjaSeleccionada.getFranja_id();
+            String franjaName = franjaSeleccionada.getFranja_name();
 
             if(franjaId != -1){
                 api.getParcelas("Bearer " + token, franjaId).enqueue(new Callback<>() {
@@ -410,14 +317,14 @@ public class FloraFormFragment extends Fragment {
                                             int parcelaId = parcelaSeleccionada.getParcela_id();
                                             String parcelaName = parcelaSeleccionada.getParcela_name();
 
-                                            setForofitosValues(api, token, spinnerForofito, parcelaId, parcelaName);
+                                            setForofitosValues(api, token, parcelaId, parcelaName);
                                         }
                                     }
 
                                     if(parcelaSeleccionada != null){
                                         int parcelaId = parcelaSeleccionada.getParcela_id();
 
-                                        setSubparcelasValues(api, token, spinnerSubParcela, parcelaId);
+                                        setSubparcelasValues(api, token, parcelaId);
                                     }
                                 }
 
@@ -440,10 +347,12 @@ public class FloraFormFragment extends Fragment {
         }
     }
 
-    private void setForofitosValues(ApiService api, String token, Spinner spinnerForofito, int parcelaId, String parcelaName){
-        if (this.getArguments() != null) {
-            int franjaId = getArguments().getInt("franja_id", -1);
-            String franjaName = getArguments().getString("franja_name", "");
+    private void setForofitosValues(ApiService api, String token, int parcelaId, String parcelaName){
+        Franja franjaSeleccionada = (Franja) spinnerSubEstacionMuestreo.getSelectedItem();
+
+        if(franjaSeleccionada != null){
+            int franjaId = franjaSeleccionada.getFranja_id();
+            String franjaName = franjaSeleccionada.getFranja_name();
 
             if(franjaId != -1){
                 api.getForofitos("Bearer " + token, parcelaId).enqueue(new Callback<>() {
@@ -487,7 +396,7 @@ public class FloraFormFragment extends Fragment {
         }
     }
 
-    private void setSubparcelasValues(ApiService api, String token, Spinner spinnerSubParcela, int parcelaId){
+    private void setSubparcelasValues(ApiService api, String token, int parcelaId){
         api.getSubparcelas("Bearer " + token, parcelaId).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<SubParcela>> call, Response<List<SubParcela>> response) {
@@ -514,7 +423,7 @@ public class FloraFormFragment extends Fragment {
         });
     }
 
-    private void removeForofitosValues(Spinner spinnerForofito){
+    private void removeForofitosValues(){
         ArrayAdapter<String> emptyAdapter = new ArrayAdapter<>(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
@@ -524,7 +433,7 @@ public class FloraFormFragment extends Fragment {
         spinnerForofito.setAdapter(emptyAdapter);
     }
 
-    private void setUnidadDeVegetacionValues(ApiService api, String token, Spinner spinnerUnidadVegetacion){
+    private void setUnidadDeVegetacionValues(ApiService api, String token){
         api.getUnidadVegetacion("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<UnidadVegetacion>> call, Response<List<UnidadVegetacion>> response) {
@@ -578,7 +487,47 @@ public class FloraFormFragment extends Fragment {
         });
     }
 
+    private void UTMConverter(double latitude, double longitude, double altitude) {
+        int zone = (int) Math.floor(longitude / 6 + 31);
+        char hemisphere = (latitude < 0) ? 'S' : 'N';
 
+        double a = 6378137; // WGS84 major axis
+        double e = 0.081819191; // WGS84 eccentricity
+
+        double latRad = Math.toRadians(latitude);
+        double lonRad = Math.toRadians(longitude);
+        double lonOrigin = (zone - 1) * 6 - 180 + 3;  // +3 puts origin in middle of zone
+        double lonOriginRad = Math.toRadians(lonOrigin);
+
+        double N = a / Math.sqrt(1 - Math.pow(e * Math.sin(latRad), 2));
+        double T = Math.pow(Math.tan(latRad), 2);
+        double C = Math.pow(e, 2) / (1 - Math.pow(e, 2)) * Math.pow(Math.cos(latRad), 2);
+        double A = Math.cos(latRad) * (lonRad - lonOriginRad);
+
+        double M = a * ((1 - Math.pow(e, 2) / 4 - 3 * Math.pow(e, 4) / 64 - 5 * Math.pow(e, 6) / 256) * latRad
+                - (3 * Math.pow(e, 2) / 8 + 3 * Math.pow(e, 4) / 32 + 45 * Math.pow(e, 6) / 1024) * Math.sin(2 * latRad)
+                + (15 * Math.pow(e, 4) / 256 + 45 * Math.pow(e, 6) / 1024) * Math.sin(4 * latRad)
+                - (35 * Math.pow(e, 6) / 3072) * Math.sin(6 * latRad));
+
+        double easting = (0.9996 * N * (A + (1 - T + C) * Math.pow(A, 3) / 6
+                + (5 - 18 * T + T * T + 72 * C - 58 * Math.pow(e, 2) / (1 - Math.pow(e, 2)))
+                * Math.pow(A, 5) / 120) + 500000);
+
+        double northing = (0.9996 * (M + N * Math.tan(latRad) * (Math.pow(A, 2) / 2
+                + (5 - T + 9 * C + 4 * C * C) * Math.pow(A, 4) / 24
+                + (61 - 58 * T + T * T + 600 * C - 330 * Math.pow(e, 2) / (1 - Math.pow(e, 2)))
+                * Math.pow(A, 6) / 720)));
+
+        if (latitude < 0) {
+            northing += 10000000; // Offset for southern hemisphere
+        }
+
+        Toast.makeText(getContext(), "Este: " + easting, Toast.LENGTH_SHORT).show();
+
+        textViewEste.setText("Este (" + easting + ")");
+        textViewNorte.setText("Norte (" + northing + ")");
+        textViewAltitud.setText("Altitud (" + altitude + ")");
+    }
     private void irALogin() {
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
