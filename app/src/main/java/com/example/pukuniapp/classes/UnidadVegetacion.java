@@ -12,6 +12,14 @@ public class UnidadVegetacion {
         return unidad_vegetacion_name;
     }
 
+    public void setUnidad_vegetacion_id(int unidad_vegetacion_id) {
+        this.unidad_vegetacion_id = unidad_vegetacion_id;
+    }
+
+    public void setUnidad_vegetacion_name(String unidad_vegetacion_name) {
+        this.unidad_vegetacion_name = unidad_vegetacion_name;
+    }
+
     @Override
     public String toString() {
         return unidad_vegetacion_name;

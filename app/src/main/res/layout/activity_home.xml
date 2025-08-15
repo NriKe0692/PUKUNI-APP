@@ -100,6 +100,39 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/view_forms_click"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background"
+            android:orientation="horizontal"
+            android:elevation="4dp"
+            android:padding="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_form"
+                android:layout_marginEnd="16dp"
+                app:tint="#35553f" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver formularios"
+                android:textSize="16sp"
+                android:textColor="#35553f"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/register_new_specie_click"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

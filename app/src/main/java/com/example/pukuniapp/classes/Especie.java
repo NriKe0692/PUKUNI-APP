@@ -16,4 +16,16 @@ public class Especie {
     public int getGenero_id() {
         return genero_id;
     }
+
+    public void setEspecie_id(int especie_id) {
+        this.especie_id = especie_id;
+    }
+
+    public void setEspecie_name(String especie_name) {
+        this.especie_name = especie_name;
+    }
+
+    public void setGenero_id(int genero_id) {
+        this.genero_id = genero_id;
+    }
 }

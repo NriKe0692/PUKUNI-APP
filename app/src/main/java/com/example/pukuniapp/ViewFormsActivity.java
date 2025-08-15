@@ -1,7 +1,11 @@
 package com.example.pukuniapp;
 
+import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FORMULARIO_FLORA;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -15,29 +19,41 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pukuniapp.fragments.FormListFragment;
+import com.example.pukuniapp.adapters.FormFloraAdapter;
+import com.example.pukuniapp.classes.FormFlora;
+import com.example.pukuniapp.sqlite.DBHelper;
 
-public class FormActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ViewFormsActivity extends AppCompatActivity {
+    RecyclerView recyclerView;
+    FormFloraAdapter floraAdapter;
+    List<FormFlora> formFloraList;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_form);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, new FormListFragment())
-                    .commit();
-        }
-
+        setContentView(R.layout.activity_view_forms);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        recyclerView = findViewById(R.id.recyclerFlora);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        dbHelper = new DBHelper(this);
+        formFloraList = getFloraListFromDB();
+
+        floraAdapter = new FormFloraAdapter(formFloraList);
+        recyclerView.setAdapter(floraAdapter);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,14 +82,40 @@ public class FormActivity extends AppCompatActivity {
         }
     }
 
+    private List<FormFlora> getFloraListFromDB() {
+        List<FormFlora> list = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FORMULARIO_FLORA, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String localidad = cursor.getString(cursor.getColumnIndexOrThrow("localidad"));
+                int especie = cursor.getInt(cursor.getColumnIndexOrThrow("especie_id"));
+                double altura = cursor.getDouble(cursor.getColumnIndexOrThrow("altura"));
+                String usos = cursor.getString(cursor.getColumnIndexOrThrow("usos"));
+
+                FormFlora formFloraTemp = new FormFlora();
+                formFloraTemp.setLocalidad(localidad);
+                formFloraTemp.setEspecie_id(especie);
+                formFloraTemp.setAltura(altura);
+                formFloraTemp.setUsos(usos);
+
+                list.add(formFloraTemp);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return list;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStack();
-            } else {
-                finish();
-            }
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

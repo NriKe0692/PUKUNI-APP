@@ -17,6 +17,10 @@
         android:theme="@style/Theme.PukuniApp"
         tools:targetApi="31">
         <activity
+            android:name=".ViewFormsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PukuniApp.NoActionBar" />
+        <activity
             android:name=".FormActivity"
             android:exported="false"
             android:theme="@style/Theme.PukuniApp.NoActionBar" />

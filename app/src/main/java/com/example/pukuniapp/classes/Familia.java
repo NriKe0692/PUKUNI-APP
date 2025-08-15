@@ -16,4 +16,16 @@ public class Familia {
     public int getOrden_id() {
         return orden_id;
     }
+
+    public void setFamilia_id(int familia_id) {
+        this.familia_id = familia_id;
+    }
+
+    public void setFamilia_name(String familia_name) {
+        this.familia_name = familia_name;
+    }
+
+    public void setOrden_id(int orden_id) {
+        this.orden_id = orden_id;
+    }
 }

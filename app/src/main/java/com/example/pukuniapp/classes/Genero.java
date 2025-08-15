@@ -16,4 +16,16 @@ public class Genero {
     public int getFamilia_id() {
         return familia_id;
     }
+
+    public void setGenero_id(int genero_id) {
+        this.genero_id = genero_id;
+    }
+
+    public void setGenero_name(String genero_name) {
+        this.genero_name = genero_name;
+    }
+
+    public void setFamilia_id(int familia_id) {
+        this.familia_id = familia_id;
+    }
 }

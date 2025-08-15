@@ -75,7 +75,7 @@ public class SelectFranjaFragment extends Fragment {
         } else {
             ApiService api = ApiClient.getRetrofit().create(ApiService.class);
 
-            api.getFranjas("Bearer " + token, 1).enqueue(new Callback<>() {
+            api.getFranjas("Bearer " + token).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<List<Franja>> call, Response<List<Franja>> response) {
                     if (response.isSuccessful() && response.body() != null) {

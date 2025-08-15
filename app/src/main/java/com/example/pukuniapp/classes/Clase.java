@@ -8,6 +8,14 @@ public class Clase {
         return clase_id;
     }
 
+    public void setClase_id(int clase_id) {
+        this.clase_id = clase_id;
+    }
+
+    public void setClase_name(String clase_name) {
+        this.clase_name = clase_name;
+    }
+
     public String getClase_name() {
         return clase_name;
     }

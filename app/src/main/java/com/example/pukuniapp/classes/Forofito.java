@@ -25,6 +25,18 @@ public class Forofito {
         return parcela_name;
     }
 
+    public void setForofito_id(int forofito_id) {
+        this.forofito_id = forofito_id;
+    }
+
+    public void setForofito_name(String forofito_name) {
+        this.forofito_name = forofito_name;
+    }
+
+    public void setParcela_id(int parcela_id) {
+        this.parcela_id = parcela_id;
+    }
+
     @Override
     public String toString() {
         return parcela_name;
