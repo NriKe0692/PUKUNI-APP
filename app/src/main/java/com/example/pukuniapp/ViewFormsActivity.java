@@ -1,6 +1,6 @@
 package com.example.pukuniapp;
 
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FORMULARIO_FLORA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_FLORA;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pukuniapp.adapters.FormFloraAdapter;
 import com.example.pukuniapp.classes.FormFlora;
-import com.example.pukuniapp.sqlite.DBHelper;
+import com.example.pukuniapp.helpers.DBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,12 +94,14 @@ public class ViewFormsActivity extends AppCompatActivity {
                 int especie = cursor.getInt(cursor.getColumnIndexOrThrow("especie_id"));
                 double altura = cursor.getDouble(cursor.getColumnIndexOrThrow("altura"));
                 String usos = cursor.getString(cursor.getColumnIndexOrThrow("usos"));
+                String imageURI = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
 
                 FormFlora formFloraTemp = new FormFlora();
                 formFloraTemp.setLocalidad(localidad);
                 formFloraTemp.setEspecie_id(especie);
                 formFloraTemp.setAltura(altura);
                 formFloraTemp.setUsos(usos);
+                formFloraTemp.setImageUri(imageURI);
 
                 list.add(formFloraTemp);
             } while (cursor.moveToNext());

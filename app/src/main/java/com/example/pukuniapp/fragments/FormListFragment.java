@@ -47,13 +47,12 @@ public class FormListFragment extends Fragment {
 
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
 
-        label.setText("Seleccione un Formulario");
+        label.setText("Seleccione un Tipo de Formulario");
 
-        View.OnClickListener myClickListener = v -> {
-            TextView formText = v.findViewById(R.id.form_flora_text);
-            String formName = formText.getText().toString();
+        View.OnClickListener floraClickListener = v -> {
+            TextView floraFormText = v.findViewById(R.id.form_flora_text);
+            String formName = floraFormText.getText().toString();
 
-//            SelectFranjaFragment newFragment = SelectFranjaFragment.newInstance(formName);
             SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
 
             requireActivity().getSupportFragmentManager()
@@ -63,7 +62,22 @@ public class FormListFragment extends Fragment {
                     .commit();
         };
 
-        view.findViewById(R.id.form_flora_click).setOnClickListener(myClickListener);
+        view.findViewById(R.id.form_flora_click).setOnClickListener(floraClickListener);
+
+        View.OnClickListener faunaClickListener = v -> {
+            TextView faunaFormText = v.findViewById(R.id.form_fauna_text);
+            String formName = faunaFormText.getText().toString();
+
+            FaunaListFragment newFragment = FaunaListFragment.newInstance(formName);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, newFragment)
+                    .addToBackStack(null)
+                    .commit();
+        };
+
+        view.findViewById(R.id.form_fauna_click).setOnClickListener(faunaClickListener);
 
         return view;
     }

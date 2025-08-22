@@ -11,45 +11,61 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:background="#C8E6C9"
         android:padding="8dp">
 
-        <TextView
-            android:id="@+id/tv_form_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tipo de Formulario:"
-            android:textColor="#35553f"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/img_preview"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+            android:layout_marginEnd="8dp" />
 
-        <TextView
-            android:id="@+id/tv_localidad"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#35553f"
-            android:text="Localidad:" />
+            android:orientation="vertical"
+            android:background="#C8E6C9"
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/tv_especie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#35553f"
-            android:text="Especie:" />
+            <TextView
+                android:id="@+id/tv_form_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo de Formulario:"
+                android:textColor="#35553f"
+                android:textStyle="bold"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_altura"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#35553f"
-            android:text="Altura:" />
+            <TextView
+                android:id="@+id/tv_localidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#35553f"
+                android:text="Localidad:" />
 
-        <TextView
-            android:id="@+id/tv_usos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#35553f"
-            android:text="Usos:" />
+            <TextView
+                android:id="@+id/tv_especie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#35553f"
+                android:text="Especie:" />
+
+            <TextView
+                android:id="@+id/tv_altura"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#35553f"
+                android:text="Altura:" />
+
+            <TextView
+                android:id="@+id/tv_usos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#35553f"
+                android:text="Usos:" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

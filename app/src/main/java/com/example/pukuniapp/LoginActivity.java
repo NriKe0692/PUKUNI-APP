@@ -1,22 +1,24 @@
 package com.example.pukuniapp;
 
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_AUTOR;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_CLASE;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_ESPECIE;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_ESTACION_MUESTREO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_ESTADIO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FAMILIA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FENOLOGIA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FOROFITO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FRANJA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_GENERO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_HABITO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_ORDEN;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_PAIS;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_PARCELA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_SUB_PARCELA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_UNIDAD_MUESTREO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_UNIDAD_VEGETACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_AUTOR;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLASE;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTACION_MUESTREO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADIO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FAMILIA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FENOLOGIA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FOROFITO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ORDEN;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_PAIS;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_PARCELA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUB_PARCELA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_TEMPORADA_EVALUACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_VEGETACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ZONA;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -48,13 +50,15 @@ import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.SubParcela;
+import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
+import com.example.pukuniapp.classes.Zona;
 import com.example.pukuniapp.retrofit.ApiClient;
 import com.example.pukuniapp.retrofit.ApiService;
 import com.example.pukuniapp.retrofit.LoginRequest;
 import com.example.pukuniapp.retrofit.LoginResponse;
-import com.example.pukuniapp.sqlite.DBHelper;
+import com.example.pukuniapp.helpers.DBHelper;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -191,7 +195,65 @@ public class LoginActivity extends AppCompatActivity {
             loadSubParcela(db, api, token, TABLE_SUB_PARCELA);
             loadUnidadMuestreo(db, api, token, TABLE_UNIDAD_MUESTREO);
             loadUnidadVegetacion(db, api, token, TABLE_UNIDAD_VEGETACION);
+            loadTemporadasEvaluacion(db, api, token, TABLE_TEMPORADA_EVALUACION);
+            loadZonas(db, api, token, TABLE_ZONA);
         }
+    }
+
+    public void loadTemporadasEvaluacion(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME){
+        api.getTemporadasEvaluacion("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<TemporadaEvaluacion>> call, Response<List<TemporadaEvaluacion>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<TemporadaEvaluacion> temporadaEvaluacionList = response.body();
+
+                    db.delete(TABLE_NAME, null, null);
+                    db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                    for(TemporadaEvaluacion temporadaEvaluacion : temporadaEvaluacionList){
+                        ContentValues values = new ContentValues();
+                        values.put("temporada_evaluacion_id", temporadaEvaluacion.getTemporada_evaluacion_id());
+                        values.put("temporada_evaluacion_name", temporadaEvaluacion.getTemporada_evaluacion_name());
+                        db.insert(TABLE_NAME, null, values);
+                    }
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TemporadaEvaluacion>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    public void loadZonas(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME){
+        api.getZonas("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Zona>> call, Response<List<Zona>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Zona> zonasList = response.body();
+
+                    db.delete(TABLE_NAME, null, null);
+                    db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                    for(Zona zona : zonasList){
+                        ContentValues values = new ContentValues();
+                        values.put("zona_id", zona.getZona_id());
+                        values.put("zona_name", zona.getZona_name());
+                        db.insert(TABLE_NAME, null, values);
+                    }
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Zona>> call, Throwable t) {
+                irALogin();
+            }
+        });
     }
 
     public void loadAutores(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME) {
@@ -293,6 +355,14 @@ public class LoginActivity extends AppCompatActivity {
                         ContentValues values = new ContentValues();
                         values.put("estacion_muestreo_id", estacionMuestreo.getEstacion_muestreo_id());
                         values.put("estacion_muestreo_name", estacionMuestreo.getEstacion_muestreo_name());
+                        values.put("pais_id", estacionMuestreo.getPais_id());
+                        values.put("pais_name", estacionMuestreo.getPais_name());
+                        values.put("departamento_id", estacionMuestreo.getDepartamento_id());
+                        values.put("departamento_name", estacionMuestreo.getDepartamento_name());
+                        values.put("provincia_id", estacionMuestreo.getProvincia_id());
+                        values.put("provincia_name", estacionMuestreo.getProvincia_name());
+                        values.put("distrito_id", estacionMuestreo.getDistrito_id());
+                        values.put("distrito_name", estacionMuestreo.getDistrito_name());
                         db.insert(TABLE_NAME, null, values);
                     }
                 } else {
@@ -613,13 +683,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<List<SubParcela>> call, Response<List<SubParcela>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<SubParcela> subParcelaListList = response.body();
-
-                    for(SubParcela subParcela : subParcelaListList){
-                        Log.d("SUBPARCELA ID", "" + subParcela.getSubparcela_id());
-                        Log.d("SUBPARCELA NAME", subParcela.getSubparcela_name());
-                        Log.d("PARCELA ID", "" + subParcela.getParcela_id());
-                        Log.d("======================", "======================");
-                    }
 
                     db.delete(TABLE_NAME, null, null);
                     db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");

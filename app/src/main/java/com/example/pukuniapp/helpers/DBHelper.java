@@ -1,15 +1,8 @@
-package com.example.pukuniapp.sqlite;
+package com.example.pukuniapp.helpers;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.pukuniapp.classes.FormFlora;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "pukuni_db.db";
@@ -39,7 +32,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_UNIDAD_MUESTREO = "unidad_muestreo";
     public static final String TABLE_UNIDAD_VEGETACION = "unidad_vegetacion";
     public static final String TABLE_USERS = "users";
-
+    public static final String TABLE_TEMPORADA_EVALUACION = "temporada_evaluacion";
+    public static final String TABLE_ZONA = "zona";
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -70,6 +64,8 @@ public class DBHelper extends SQLiteOpenHelper {
         createUnidadMuestreoTable(db);
         createUnidadVegetacionTable(db);
         createUserTable(db);
+        createTemporadaEvaluacionTable(db);
+        createZonaTable(db);
     }
 
     private void createAutorTable(SQLiteDatabase db){
@@ -119,11 +115,15 @@ public class DBHelper extends SQLiteOpenHelper {
         String sqlQuery = "CREATE TABLE " + TABLE_ESTACION_MUESTREO + " (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "estacion_muestreo_id INTEGER, " +
+            "estacion_muestreo_name TEXT, " +
             "pais_id INTEGER, " +
+            "pais_name TEXT, " +
             "departamento_id INTEGER, " +
             "provincia_id INTEGER, " +
             "distrito_id INTEGER, " +
-            "estacion_muestreo_name TEXT)";
+            "departamento_name TEXT, " +
+            "provincia_name TEXT, " +
+            "distrito_name TEXT) ";
         db.execSQL(sqlQuery);
     }
 
@@ -278,6 +278,22 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(sqlQuery);
     }
 
+    private void createTemporadaEvaluacionTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_TEMPORADA_EVALUACION + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "temporada_evaluacion_id INTEGER, " +
+            "temporada_evaluacion_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createZonaTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_ZONA + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "zona_id INTEGER, " +
+            "zona_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
     private void createFormFloraTable(SQLiteDatabase db){
         String createTableFloraForm = "CREATE TABLE " + TABLE_FORMULARIO_FLORA + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -313,6 +329,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "estadio_id INTEGER," +
                 "fenologia_id INTEGER," +
                 "usos TEXT," +
+                "image_uri TEXT," +
                 "observaciones TEXT," +
                 "datos_planta TEXT)";
         db.execSQL(createTableFloraForm);
@@ -322,65 +339,5 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_FLORA);
         onCreate(db);
-    }
-
-    // Guardar una persona
-    public long insertarFormularioFlora(FormFlora formularioFlora) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("lugar_id", formularioFlora.getLugar_id());
-        values.put("fecha", formularioFlora.getFecha());
-        values.put("franja_id", formularioFlora.getFranja_id());
-        values.put("unidad_muestreo_id", formularioFlora.getUnidad_muestreo_id());
-        values.put("parcela_id", formularioFlora.getParcela_id());
-        values.put("forofito_id", formularioFlora.getForofito_id());
-        values.put("sub_parcela_id", formularioFlora.getSub_parcela_id());
-        values.put("tamanio", formularioFlora.getTamanio());
-        values.put("unidad_vegetacion_id", formularioFlora.getUnidad_vegetacion_id());
-        values.put("pais_id", formularioFlora.getPais_id());
-        values.put("departamento_id", formularioFlora.getDepartamento_id());
-        values.put("provincia_id", formularioFlora.getProvincia_id());
-        values.put("distrito_id", formularioFlora.getDistrito_id());
-        values.put("localidad", formularioFlora.getLocalidad());
-        values.put("este", formularioFlora.getEste());
-        values.put("norte", formularioFlora.getNorte());
-        values.put("altitud", formularioFlora.getAltitud());
-        values.put("clase_id", formularioFlora.getClase_id());
-        values.put("orden_id", formularioFlora.getOrden_id());
-        values.put("familia_id", formularioFlora.getFamilia_id());
-        values.put("genero_id", formularioFlora.getGenero_id());
-        values.put("especie_id", formularioFlora.getEspecie_id());
-        values.put("nombre_comun", formularioFlora.getNombre_comun());
-        values.put("autor_id", formularioFlora.getAutor_id());
-        values.put("individuos", formularioFlora.getIndividuos());
-        values.put("dap", formularioFlora.getDap());
-        values.put("altura", formularioFlora.getAltura());
-        values.put("valor_cobertura", formularioFlora.getValor_cobertura());
-        values.put("habito_id", formularioFlora.getHabito_id());
-        values.put("estadio_id", formularioFlora.getEstadio_id());
-        values.put("fenologia_id", formularioFlora.getFenologia_id());
-        values.put("usos", formularioFlora.getUsos());
-        values.put("observaciones", formularioFlora.getObservaciones());
-        values.put("datos_planta", formularioFlora.getDatosPlanta());
-        values.put("formulario_enviado", false);
-        return db.insert(TABLE_FORMULARIO_FLORA, null, values);
-    }
-
-    // Leer todas las personas
-    public List<FormFlora> obtenerFormularios() {
-        List<FormFlora> lista = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FORMULARIO_FLORA, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                int edad = cursor.getInt(cursor.getColumnIndexOrThrow("edad"));
-                lista.add(new FormFlora());
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return lista;
     }
 }

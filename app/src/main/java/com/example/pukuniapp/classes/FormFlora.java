@@ -39,6 +39,16 @@ public class FormFlora {
     private String datosPlanta;
     private boolean formularioEnviado;
 
+    private String imageUri;
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
     public int getLugar_id() {
         return lugar_id;
     }

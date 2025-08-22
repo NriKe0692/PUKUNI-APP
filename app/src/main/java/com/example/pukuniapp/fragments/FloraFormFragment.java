@@ -1,36 +1,43 @@
 package com.example.pukuniapp.fragments;
 
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_AUTOR;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_CLASE;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_ESPECIE;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_ESTADIO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FAMILIA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FENOLOGIA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FOROFITO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_FRANJA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_GENERO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_HABITO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_ORDEN;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_PARCELA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_SUB_PARCELA;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_UNIDAD_MUESTREO;
-import static com.example.pukuniapp.sqlite.DBHelper.TABLE_UNIDAD_VEGETACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_AUTOR;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLASE;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADIO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FAMILIA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FENOLOGIA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FOROFITO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ORDEN;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_PARCELA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUB_PARCELA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_VEGETACION;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +46,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,20 +65,15 @@ import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Orden;
-import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
-import com.example.pukuniapp.retrofit.ApiService;
-import com.example.pukuniapp.sqlite.DBHelper;
+import com.example.pukuniapp.helpers.DBHelper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,6 +114,13 @@ public class FloraFormFragment extends Fragment {
     List<Genero> generosList;
     List<Especie> especiesList;
 
+    private ImageView imgPreview;
+    private Uri photoUri;
+    private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<Uri> cameraLauncher;
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private static final int REQUEST_GALLERY_PERMISSION = 101;
+
     public FloraFormFragment() {
         // Required empty public constructor
     }
@@ -126,6 +136,28 @@ public class FloraFormFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
+                result -> {
+                    if (result) {
+                        imgPreview.setImageURI(photoUri);
+                    }
+                }
+        );
+
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            photoUri = data.getData();
+                            imgPreview.setImageURI(photoUri);
+                        }
+                    }
+                }
+        );
     }
 
     @Override
@@ -164,6 +196,31 @@ public class FloraFormFragment extends Fragment {
         et_valor_observaciones = view.findViewById(R.id.et_valor_observaciones);
         et_valor_datos_planta = view.findViewById(R.id.et_valor_datos_planta);
 
+        imgPreview = view.findViewById(R.id.img_preview);
+        Button btnCamera = view.findViewById(R.id.btnCamera);
+        Button btnGallery = view.findViewById(R.id.btnGallery);
+
+        btnCamera.setOnClickListener(v -> {
+            if (hasPermission(Manifest.permission.CAMERA)) {
+                File file = new File(requireContext().getFilesDir(), "flora_" + System.currentTimeMillis() + ".jpg");
+                photoUri = FileProvider.getUriForFile(requireContext(),
+                        requireContext().getPackageName() + ".fileprovider", file);
+                cameraLauncher.launch(photoUri);
+            } else {
+                requestPermission(Manifest.permission.CAMERA, REQUEST_CAMERA_PERMISSION);
+            }
+        });
+
+        btnGallery.setOnClickListener(v -> {
+            if (hasGalleryPermission()) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                galleryLauncher.launch(intent);
+            } else {
+                requestGalleryPermission();
+            }
+        });
+
+
         DBHelper dbHelper = new DBHelper(requireContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -178,83 +235,119 @@ public class FloraFormFragment extends Fragment {
         setFenologiasValues(db);
 
         saveForm.setOnClickListener(v -> {
-            // Recoger valores de los spinners
-            Franja subEstacion = (Franja) spinnerSubEstacionMuestreo.getSelectedItem();
-            UnidadMuestreo unidadMuestreo = (UnidadMuestreo) spinnerUnidadMuestreo.getSelectedItem();
-            Parcela parcela = (Parcela) spinnerParcela.getSelectedItem();
-            Forofito forofito = (Forofito) spinnerForofito.getSelectedItem();
-            SubParcela subParcela = (SubParcela) spinnerSubParcela.getSelectedItem();
-            UnidadVegetacion unidadVegetacion = (UnidadVegetacion) spinnerUnidadVegetacion.getSelectedItem();
-            Autor autor = (Autor) spinnerAutores.getSelectedItem();
-            Habito habito = (Habito) spinnerHabito.getSelectedItem();
-            Estadio estadio = (Estadio) spinnerEstadio.getSelectedItem();
-            Fenologia fenologia = (Fenologia) spinnerFenologia.getSelectedItem();
-
-            // Recoger valores de los campos de texto
-            String clase = et_clase.getText().toString();
-            String orden = et_orden.getText().toString();
-            String familia = et_familia.getText().toString();
-            String genero = et_genero.getText().toString();
-            String especie = et_especie.getText().toString();
-            String este = textViewEste.getText().toString();
-            String norte = textViewNorte.getText().toString();
-            String altitud = textViewAltitud.getText().toString();
-
-            // Ejemplo de campos adicionales (los tendrías que tener en tu layout)
-            String nombreComun = et_nombre_comun.getText().toString();
-            String numIndividuos = et_individuos.getText().toString();
-            String dap = et_dap.getText().toString();
-            String altura = et_altura.getText().toString();
-            String valorCobertura = et_valor_cobertura.getText().toString();
-            String usos = et_usos.getText().toString();
-            String observaciones = et_valor_observaciones.getText().toString();
-            String datosPlanta = et_valor_datos_planta.getText().toString();
-
-            ContentValues values = new ContentValues();
-            values.put("franja_id", subEstacion != null ? subEstacion.getFranja_id() : null);
-            values.put("unidad_muestreo_id", unidadMuestreo != null ? unidadMuestreo.getUnidad_muestreo_id() : null);
-            values.put("parcela_id", parcela != null ? parcela.getParcela_id() : null);
-            values.put("forofito_id", forofito != null ? forofito.getForofito_id() : null);
-            values.put("sub_parcela_id", subParcela != null ? subParcela.getSubparcela_id() : null);
-            values.put("unidad_vegetacion_id", unidadVegetacion != null ? unidadVegetacion.getUnidad_vegetacion_id() : null);
-            values.put("autor_id", autor != null ? autor.getAutor_id() : null);
-            values.put("habito_id", habito != null ? habito.getHabito_id() : null);
-            values.put("estadio_id", estadio != null ? estadio.getEstadio_id() : null);
-            values.put("fenologia_id", fenologia != null ? fenologia.getFenologia_id() : null);
-
-            values.put("clase_id", clase);
-            values.put("orden_id", orden);
-            values.put("familia_id", familia);
-            values.put("genero_id", genero);
-            values.put("especie_id", especie);
-            values.put("nombre_comun", nombreComun);
-            values.put("este", este);
-            values.put("norte", norte);
-            values.put("altitud", altitud);
-            values.put("individuos", numIndividuos);
-            values.put("dap", dap);
-            values.put("altura", altura);
-            values.put("valor_cobertura", valorCobertura);
-            values.put("usos", usos);
-            values.put("observaciones", observaciones);
-            values.put("datos_planta", datosPlanta);
-
-            long newRowId = db.insert("flora", null, values);
-
-            if (newRowId != -1) {
-                Toast.makeText(requireContext(), "Registro guardado correctamente", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(), "Error al guardar el registro", Toast.LENGTH_SHORT).show();
-            }
-
-            db.close();
-
-            Intent intent = new Intent(getActivity(), HomeActivity.class);
-            startActivity(intent);
-            getActivity().finish();
+            saveForm(db);
         });
 
         return view;
+    }
+
+    private void saveForm(SQLiteDatabase db){
+        // Recoger valores de los spinners
+        Franja subEstacion = (Franja) spinnerSubEstacionMuestreo.getSelectedItem();
+        UnidadMuestreo unidadMuestreo = (UnidadMuestreo) spinnerUnidadMuestreo.getSelectedItem();
+        Parcela parcela = (Parcela) spinnerParcela.getSelectedItem();
+        Forofito forofito = (Forofito) spinnerForofito.getSelectedItem();
+        SubParcela subParcela = (SubParcela) spinnerSubParcela.getSelectedItem();
+        UnidadVegetacion unidadVegetacion = (UnidadVegetacion) spinnerUnidadVegetacion.getSelectedItem();
+        Autor autor = (Autor) spinnerAutores.getSelectedItem();
+        Habito habito = (Habito) spinnerHabito.getSelectedItem();
+        Estadio estadio = (Estadio) spinnerEstadio.getSelectedItem();
+        Fenologia fenologia = (Fenologia) spinnerFenologia.getSelectedItem();
+
+        // Recoger valores de los campos de texto
+        String clase = et_clase.getText().toString();
+        String orden = et_orden.getText().toString();
+        String familia = et_familia.getText().toString();
+        String genero = et_genero.getText().toString();
+        String especie = et_especie.getText().toString();
+        String este = textViewEste.getText().toString();
+        String norte = textViewNorte.getText().toString();
+        String altitud = textViewAltitud.getText().toString();
+
+        // Ejemplo de campos adicionales (los tendrías que tener en tu layout)
+        String nombreComun = et_nombre_comun.getText().toString();
+        String numIndividuos = et_individuos.getText().toString();
+        String dap = et_dap.getText().toString();
+        String altura = et_altura.getText().toString();
+        String valorCobertura = et_valor_cobertura.getText().toString();
+        String usos = et_usos.getText().toString();
+        String observaciones = et_valor_observaciones.getText().toString();
+        String datosPlanta = et_valor_datos_planta.getText().toString();
+        String uriString = (photoUri != null) ? photoUri.toString() : "";
+
+        ContentValues values = new ContentValues();
+        values.put("franja_id", subEstacion != null ? subEstacion.getFranja_id() : null);
+        values.put("unidad_muestreo_id", unidadMuestreo != null ? unidadMuestreo.getUnidad_muestreo_id() : null);
+        values.put("parcela_id", parcela != null ? parcela.getParcela_id() : null);
+        values.put("forofito_id", forofito != null ? forofito.getForofito_id() : null);
+        values.put("sub_parcela_id", subParcela != null ? subParcela.getSubparcela_id() : null);
+        values.put("unidad_vegetacion_id", unidadVegetacion != null ? unidadVegetacion.getUnidad_vegetacion_id() : null);
+        values.put("autor_id", autor != null ? autor.getAutor_id() : null);
+        values.put("habito_id", habito != null ? habito.getHabito_id() : null);
+        values.put("estadio_id", estadio != null ? estadio.getEstadio_id() : null);
+        values.put("fenologia_id", fenologia != null ? fenologia.getFenologia_id() : null);
+
+        values.put("clase_id", clase);
+        values.put("orden_id", orden);
+        values.put("familia_id", familia);
+        values.put("genero_id", genero);
+        values.put("especie_id", especie);
+        values.put("nombre_comun", nombreComun);
+        values.put("este", este);
+        values.put("norte", norte);
+        values.put("altitud", altitud);
+        values.put("individuos", numIndividuos);
+        values.put("dap", dap);
+        values.put("altura", altura);
+        values.put("valor_cobertura", valorCobertura);
+        values.put("usos", usos);
+        values.put("observaciones", observaciones);
+        values.put("datos_planta", datosPlanta);
+        values.put("image_uri", uriString);
+
+        long newRowId = db.insert("flora", null, values);
+
+        if (newRowId != -1) {
+            Toast.makeText(requireContext(), "Registro guardado correctamente", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "Error al guardar el registro", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    private boolean hasPermission(String permission) {
+        return ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission(String permission, int requestCode) {
+        ActivityCompat.requestPermissions(requireActivity(), new String[]{permission}, requestCode);
+    }
+
+    private boolean hasGalleryPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return ContextCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED;
+        } else {
+            return ContextCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+
+    private void requestGalleryPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                    REQUEST_GALLERY_PERMISSION);
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_GALLERY_PERMISSION);
+        }
     }
 
     private void setupAutocompleteTv(SQLiteDatabase db){
@@ -810,7 +903,6 @@ public class FloraFormFragment extends Fragment {
                 }
 
                 cursor.close();
-//                db.close();
 
                 ArrayAdapter<Franja> adapter = new ArrayAdapter<>(
                         requireContext(),
@@ -1104,33 +1196,6 @@ public class FloraFormFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerUnidadVegetacion.setAdapter(adapter);
-    }
-
-    private void setPaisValues(ApiService api, String token, Spinner spinnerPais){
-        api.getPaises("Bearer " + token).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<Pais>> call, Response<List<Pais>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Pais> paisList = response.body();
-
-                    ArrayAdapter<Pais> adapter = new ArrayAdapter<>(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            paisList
-                    );
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    spinnerPais.setAdapter(adapter);
-                } else {
-                    irALogin();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Pais>> call, Throwable t) {
-                irALogin();
-            }
-        });
     }
 
     private void UTMConverter(double latitude, double longitude, double altitude) {

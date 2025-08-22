@@ -1,8 +1,10 @@
 package com.example.pukuniapp.adapters;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +38,7 @@ public class FormFloraAdapter extends RecyclerView.Adapter<FormFloraAdapter.Form
         holder.tv_especie.setText("Especie: " + flora.getEspecie_id());
         holder.tv_altura.setText("Altura: " + flora.getAltura() + " cm");
         holder.tv_usos.setText("Usos: " + flora.getUsos());
+        holder.img_preview.setImageURI(Uri.parse(flora.getImageUri()));
     }
 
     @Override
@@ -45,6 +48,7 @@ public class FormFloraAdapter extends RecyclerView.Adapter<FormFloraAdapter.Form
 
     public static class FormFloraViewHolder extends RecyclerView.ViewHolder {
         TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
+        ImageView img_preview;
 
         public FormFloraViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,6 +57,7 @@ public class FormFloraAdapter extends RecyclerView.Adapter<FormFloraAdapter.Form
             tv_especie = itemView.findViewById(R.id.tv_especie);
             tv_altura = itemView.findViewById(R.id.tv_altura);
             tv_usos = itemView.findViewById(R.id.tv_usos);
+            img_preview = itemView.findViewById(R.id.img_preview);
         }
     }
 }

@@ -1,26 +1,40 @@
 package com.example.pukuniapp.fragments;
 
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_DEPARTAMENTO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_DISTRITO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTACION_MUESTREO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_PROVINCIA;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pukuniapp.LoginActivity;
 import com.example.pukuniapp.R;
 import com.example.pukuniapp.classes.EstacionMuestreo;
 import com.example.pukuniapp.classes.Franja;
+import com.example.pukuniapp.helpers.DBHelper;
 import com.example.pukuniapp.retrofit.ApiClient;
 import com.example.pukuniapp.retrofit.ApiService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -56,9 +70,6 @@ public class SelectEstacionMuestreoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
@@ -66,75 +77,119 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_select_estacion_muestreo, container, false);
 
+        String formName = null;
+
+        if (getArguments() != null) {
+            formName = getArguments().getString("form_name");
+        }
+
+        String finalFormName = formName;
+
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
         label.setText("Seleccione una Estación de Muestreo");
 
         LinearLayout btnContainer = view.findViewById(R.id.btn_container);
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences("PukuniPrefs", android.content.Context.MODE_PRIVATE);
-        String token = prefs.getString("auth_token", null);
+        DBHelper dbHelper = new DBHelper(requireContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        if (token == null) {
-            irALogin();
-        } else {
-            ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+        Cursor cursor = db.rawQuery(
+            "SELECT * FROM " + TABLE_ESTACION_MUESTREO,
+            null
+        );
 
-            api.getEstacionMuestreoList("Bearer " + token).enqueue(new Callback<>() {
-                @Override
-                public void onResponse(Call<List<EstacionMuestreo>> call, Response<List<EstacionMuestreo>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        LinearLayout currentRow = null;
-                        int count = 0;
+        LinearLayout currentRow = null;
+        int count = 0;
 
-                        for (EstacionMuestreo estacion : response.body()) {
-                            if (count % 2 == 0) {
-                                currentRow = new LinearLayout(requireContext());
-                                currentRow.setOrientation(LinearLayout.HORIZONTAL);
-                                currentRow.setLayoutParams(new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                ));
-                                currentRow.setGravity(Gravity.CENTER_HORIZONTAL);
-                                btnContainer.addView(currentRow);
-                            }
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("estacion_muestreo_id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("estacion_muestreo_name"));
+                String departamento = cursor.getString(cursor.getColumnIndexOrThrow("departamento_name"));
+                String provincia = cursor.getString(cursor.getColumnIndexOrThrow("provincia_name"));
+                String distrito = cursor.getString(cursor.getColumnIndexOrThrow("distrito_name"));
 
-                            Button btn = new Button(requireContext());
-                            btn.setText(estacion.getEstacion_muestreo_name() + "\n\n(" +
-                                    estacion.getDepartamento_name() + ", " +
-                                    estacion.getProvincia_name() + ", " +
-                                    estacion.getDistrito_name() + ")");
-                            btn.setLayoutParams(new LinearLayout.LayoutParams(400, 400));
-                            btn.setBackgroundResource(R.drawable.rounded_background);
-                            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) btn.getLayoutParams();
-                            params.setMargins(50, 50, 50, 50);
-                            btn.setLayoutParams(params);
+                EstacionMuestreo estacion = new EstacionMuestreo();
+                estacion.setEstacion_muestreo_id(id);
+                estacion.setEstacion_muestreo_name(name);
+                estacion.setDepartamento_name(departamento);
+                estacion.setProvincia_name(provincia);
+                estacion.setDistrito_name(distrito);
 
-                            btn.setOnClickListener(v -> {
-                                FloraFormFragment newFragment = FloraFormFragment.newInstance(estacion.getEstacion_muestreo_name(), estacion.getEstacion_muestreo_id());
-                                requireActivity().getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .replace(R.id.fragment_container, newFragment)
-                                        .addToBackStack(null)
-                                        .commit();
-                            });
+                if (count % 2 == 0) {
+                    currentRow = new LinearLayout(requireContext());
+                    currentRow.setOrientation(LinearLayout.HORIZONTAL);
+                    currentRow.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    ));
+                    currentRow.setGravity(Gravity.CENTER_HORIZONTAL);
+                    btnContainer.addView(currentRow);
+                }
 
-                            if (currentRow != null) {
-                                currentRow.addView(btn);
-                            }
+                Button btn = new Button(requireContext());
+                btn.setText(estacion.getEstacion_muestreo_name() + "\n\n(" +
+                        estacion.getDepartamento_name() + ", " +
+                        estacion.getProvincia_name() + ", " +
+                        estacion.getDistrito_name() + ")");
+                btn.setLayoutParams(new LinearLayout.LayoutParams(400, 400));
+                btn.setBackgroundResource(R.drawable.rounded_background);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) btn.getLayoutParams();
+                params.setMargins(50, 50, 50, 50);
+                btn.setLayoutParams(params);
 
-                            count++;
+                btn.setOnClickListener(v -> {
+                    switch (finalFormName){
+                        case "Flora": {
+                            FloraFormFragment newFragment = FloraFormFragment.newInstance(estacion.getEstacion_muestreo_name(), estacion.getEstacion_muestreo_id());
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                            break;
                         }
-                    } else {
-                        irALogin();
+                        case "Ornitofauna": {
+                            OrnitoFaunaFragment newFragment = OrnitoFaunaFragment.newInstance(estacion.getEstacion_muestreo_name(), estacion.getEstacion_muestreo_id());
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                            break;
+                        }
+                        case "Herpetología": {
+                            Toast.makeText(getContext(), "Herpetología", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case "Masto": {
+                            Toast.makeText(getContext(), "Masto", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case "Quiropteros": {
+                            Toast.makeText(getContext(), "Quiropteros", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case "Roedores": {
+                            Toast.makeText(getContext(), "Roedores", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case "Hidrobiología": {
+                            Toast.makeText(getContext(), "Hidrobiología", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                     }
+                });
+
+                if (currentRow != null) {
+                    currentRow.addView(btn);
                 }
 
-                @Override
-                public void onFailure(Call<List<EstacionMuestreo>> call, Throwable t) {
-                    irALogin();
-                }
-            });
+                count++;
+            } while (cursor.moveToNext());
         }
+
+        cursor.close();
 
         return view;
     }

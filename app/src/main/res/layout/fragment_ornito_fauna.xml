@@ -35,70 +35,14 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Unidad de Muestreo"/>
+                android:text="Temporada de Evaluación"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_unidad_muestreo"
+                android:id="@+id/spinner_temporada_evaluacion"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Código de Parcela"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_parcela"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Forofito"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_forofito"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sub Parcela"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_sub_parcela"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tamaño Unidad"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_tamanio_unidad"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_marginTop="12dp"
@@ -119,28 +63,42 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Código Placa"/>
+                android:text="Zona"/>
 
-            <EditText
+            <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_codigo_placa"
+                android:id="@+id/spinner_zona"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="48dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Localidad"/>
+                android:text="Metodología"/>
 
-            <EditText
+            <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_localidad"
+                android:id="@+id/spinner_metodologia"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unidad Muestreal"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_unidad_muestreal"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
 
             <TextView
                 android:id="@+id/tv_este"
@@ -186,6 +144,20 @@
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clima"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_clima"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
@@ -286,14 +258,14 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Autor"/>
+                android:text="Nombre Local"/>
 
-            <Spinner
+            <EditText
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_autor"
+                android:id="@+id/et_nombre_local"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_marginTop="12dp"
@@ -314,42 +286,28 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DAP (cm)"/>
+                android:text="Tipo de Registro"/>
 
-            <EditText
+            <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_dap"
+                android:id="@+id/spinner_tipo_registro"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="48dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Altura (cm)"/>
+                android:text="Categoría x abundancia"/>
 
-            <EditText
+            <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_altura"
+                android:id="@+id/spinner_cat_x_abundancia"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Valor Cobertura"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_valor_cobertura"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="48dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
@@ -361,6 +319,34 @@
             <Spinner
                 android:layout_marginBottom="12dp"
                 android:id="@+id/spinner_habito"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Grupo Trofico"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_grupo_trofico"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Indicador"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_indicador"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -384,11 +370,39 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fenología"/>
+                android:text="Sexo"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_fenologia"
+                android:id="@+id/spinner_sexo"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Condicion Reproductiva"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_condicion_reproductiva"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UICN 2021-3"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_uicn_2021_3"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -431,47 +445,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Usos"/>
+                android:text="Comentario"/>
 
             <EditText
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_usos"
-                android:background="@drawable/spinner_background"
-                android:inputType="textMultiLine"
-                android:gravity="top|start"
-                android:lines="5"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Observaciones"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_valor_observaciones"
-                android:background="@drawable/spinner_background"
-                android:inputType="textMultiLine"
-                android:gravity="top|start"
-                android:lines="5"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Datos de la Planta"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_valor_datos_planta"
+                android:id="@+id/et_comentario"
                 android:background="@drawable/spinner_background"
                 android:inputType="textMultiLine"
                 android:gravity="top|start"

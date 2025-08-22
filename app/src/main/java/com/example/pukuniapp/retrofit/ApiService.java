@@ -19,8 +19,10 @@ import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.Provincia;
 import com.example.pukuniapp.classes.SubParcela;
+import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
+import com.example.pukuniapp.classes.Zona;
 
 import java.util.List;
 
@@ -103,4 +105,10 @@ public interface ApiService {
 
     @GET("/fenologias")
     Call<List<Fenologia>> getFenologias(@Header("Authorization") String token);
+
+    @GET("/temporadas_evaluacion")
+    Call<List<TemporadaEvaluacion>> getTemporadasEvaluacion(@Header("Authorization") String token);
+
+    @GET("/zonas")
+    Call<List<Zona>> getZonas(@Header("Authorization") String token);
 }
