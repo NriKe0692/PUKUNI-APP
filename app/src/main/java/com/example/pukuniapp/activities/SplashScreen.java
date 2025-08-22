@@ -1,4 +1,4 @@
-package com.example.pukuniapp;
+package com.example.pukuniapp.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +8,7 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pukuniapp.R;
 import com.example.pukuniapp.retrofit.ApiClient;
 import com.example.pukuniapp.retrofit.ApiService;
 

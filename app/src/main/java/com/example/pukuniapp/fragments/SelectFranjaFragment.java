@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.pukuniapp.LoginActivity;
+import com.example.pukuniapp.activities.LoginActivity;
 import com.example.pukuniapp.R;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.retrofit.ApiClient;

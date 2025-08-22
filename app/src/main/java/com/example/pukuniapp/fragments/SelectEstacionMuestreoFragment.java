@@ -1,45 +1,27 @@
 package com.example.pukuniapp.fragments;
 
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_DEPARTAMENTO;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_DISTRITO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTACION_MUESTREO;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_PROVINCIA;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pukuniapp.LoginActivity;
+import com.example.pukuniapp.activities.LoginActivity;
 import com.example.pukuniapp.R;
 import com.example.pukuniapp.classes.EstacionMuestreo;
-import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.helpers.DBHelper;
-import com.example.pukuniapp.retrofit.ApiClient;
-import com.example.pukuniapp.retrofit.ApiService;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.

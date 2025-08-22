@@ -26,31 +26,31 @@
         android:theme="@style/Theme.PukuniApp"
         tools:targetApi="31">
         <activity
-            android:name=".ViewFormsActivity"
+            android:name=".activities.ViewFormsActivity"
             android:exported="false"
             android:theme="@style/Theme.PukuniApp.NoActionBar" />
         <activity
-            android:name=".FormActivity"
+            android:name=".activities.FormActivity"
             android:exported="false"
             android:theme="@style/Theme.PukuniApp.NoActionBar" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.HomeActivity"
             android:exported="false"
             android:theme="@style/Theme.PukuniApp.NoActionBar" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.PukuniApp.NoActionBar" />
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".activities.ForgotPasswordActivity"
             android:exported="false"
             android:theme="@style/Theme.PukuniApp.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.PukuniApp.NoActionBar" />
         <activity
-            android:name=".SplashScreen"
+            android:name=".activities.SplashScreen"
             android:exported="true"
             android:theme="@style/Theme.PukuniApp.NoActionBar">
             <intent-filter>

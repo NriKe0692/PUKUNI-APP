@@ -1,6 +1,5 @@
-package com.example.pukuniapp;
+package com.example.pukuniapp.activities;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -16,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.pukuniapp.R;
 import com.example.pukuniapp.fragments.FormListFragment;
 
 public class FormActivity extends AppCompatActivity {

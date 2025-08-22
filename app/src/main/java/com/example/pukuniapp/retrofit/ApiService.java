@@ -2,6 +2,7 @@ package com.example.pukuniapp.retrofit;
 
 import com.example.pukuniapp.classes.Autor;
 import com.example.pukuniapp.classes.Clase;
+import com.example.pukuniapp.classes.Clima;
 import com.example.pukuniapp.classes.Departamento;
 import com.example.pukuniapp.classes.Distrito;
 import com.example.pukuniapp.classes.Especie;
@@ -14,12 +15,14 @@ import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Location;
+import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.Provincia;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
+import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.classes.Zona;
@@ -111,4 +114,13 @@ public interface ApiService {
 
     @GET("/zonas")
     Call<List<Zona>> getZonas(@Header("Authorization") String token);
+
+    @GET("/metodologias")
+    Call<List<Metodologia>> getMetodologias(@Header("Authorization") String token);
+
+    @GET("/climas")
+    Call<List<Clima>> getClimas(@Header("Authorization") String token);
+
+    @GET("/unidad_muestreal")
+    Call<List<UnidadMuestreal>> getUnidadesMuestreal(@Header("Authorization") String token);
 }

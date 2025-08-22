@@ -1,16 +1,22 @@
 package com.example.pukuniapp.fragments;
 
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLIMA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_METODOLOGIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TEMPORADA_EVALUACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREAL;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_VEGETACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ZONA;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,13 +36,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.pukuniapp.R;
+import com.example.pukuniapp.classes.Clima;
 import com.example.pukuniapp.classes.Franja;
+import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
+import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.classes.Zona;
 import com.example.pukuniapp.helpers.DBHelper;
@@ -56,7 +66,6 @@ public class OrnitoFaunaFragment extends Fragment {
     private Spinner spinnerUnidadVegetacion;
     private Spinner spinnerZona;
     private Spinner spinnerMetodologia;
-    private Spinner spinnerUnidadMuestreal;
     private Spinner spinnerClima;
     private Spinner spinnerTipoRegistro;
     private Spinner spinnerCatXAbundancia;
@@ -67,6 +76,10 @@ public class OrnitoFaunaFragment extends Fragment {
     private Spinner spinnerSexo;
     private Spinner spinnerCondicionReproductiva;
     private Spinner spinnerUICN20213;
+    private Spinner spinnerUnidadMuestreal;
+    private TextView textViewEste;
+    private TextView textViewNorte;
+    private TextView textViewAltitud;
     private ImageView imgPreview;
     private Uri photoUri;
     private ActivityResultLauncher<Intent> galleryLauncher;
@@ -128,7 +141,6 @@ public class OrnitoFaunaFragment extends Fragment {
         spinnerUnidadVegetacion = view.findViewById(R.id.spinner_unidad_vegetacion);
         spinnerZona = view.findViewById(R.id.spinner_zona);
         spinnerMetodologia = view.findViewById(R.id.spinner_metodologia);
-        spinnerUnidadMuestreal = view.findViewById(R.id.spinner_unidad_muestreal);
         spinnerClima = view.findViewById(R.id.spinner_clima);
         spinnerTipoRegistro = view.findViewById(R.id.spinner_tipo_registro);
         spinnerCatXAbundancia = view.findViewById(R.id.spinner_cat_x_abundancia);
@@ -139,6 +151,11 @@ public class OrnitoFaunaFragment extends Fragment {
         spinnerSexo = view.findViewById(R.id.spinner_sexo);
         spinnerCondicionReproductiva = view.findViewById(R.id.spinner_condicion_reproductiva);
         spinnerUICN20213 = view.findViewById(R.id.spinner_uicn_2021_3);
+        spinnerUnidadMuestreal = view.findViewById(R.id.spinner_unidad_muestreal);
+
+        textViewEste = view.findViewById(R.id.tv_este);
+        textViewNorte = view.findViewById(R.id.tv_norte);
+        textViewAltitud = view.findViewById(R.id.tv_altitud);
 
         imgPreview = view.findViewById(R.id.img_preview);
         Button btnCamera = view.findViewById(R.id.btnCamera);
@@ -171,9 +188,8 @@ public class OrnitoFaunaFragment extends Fragment {
         setTemporadaEvaluacionValues(db);
         setUnidadDeVegetacionValues(db);
         setZonaValues(db);
-//        setMetodologiaValues(db);
-//        setUnidadMuestrealValues(db);
-//        setClimaValues(db);
+        setMetodologiaValues(db);
+        setClimaValues(db);
 //        setTipoRegristroValues(db);
 //        setCatXAbundanciaValues(db);
 //        setHabitoValues(db);
@@ -184,7 +200,69 @@ public class OrnitoFaunaFragment extends Fragment {
 //        setCondicionReproductivaValues(db);
 //        setUICN20213Values(db);
 
+        getCoordinates();
+
         return view;
+    }
+
+    private void getCoordinates(){
+        LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Solicita permisos
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }
+
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if (location != null) {
+            double lat = location.getLatitude();
+            double lon = location.getLongitude();
+            double alt = location.getAltitude();
+
+            UTMConverter(lat, lon, alt);
+        }
+    }
+
+    private void UTMConverter(double latitude, double longitude, double altitude) {
+        int zone = (int) Math.floor(longitude / 6 + 31);
+        char hemisphere = (latitude < 0) ? 'S' : 'N';
+
+        double a = 6378137; // WGS84 major axis
+        double e = 0.081819191; // WGS84 eccentricity
+
+        double latRad = Math.toRadians(latitude);
+        double lonRad = Math.toRadians(longitude);
+        double lonOrigin = (zone - 1) * 6 - 180 + 3;  // +3 puts origin in middle of zone
+        double lonOriginRad = Math.toRadians(lonOrigin);
+
+        double N = a / Math.sqrt(1 - Math.pow(e * Math.sin(latRad), 2));
+        double T = Math.pow(Math.tan(latRad), 2);
+        double C = Math.pow(e, 2) / (1 - Math.pow(e, 2)) * Math.pow(Math.cos(latRad), 2);
+        double A = Math.cos(latRad) * (lonRad - lonOriginRad);
+
+        double M = a * ((1 - Math.pow(e, 2) / 4 - 3 * Math.pow(e, 4) / 64 - 5 * Math.pow(e, 6) / 256) * latRad
+                - (3 * Math.pow(e, 2) / 8 + 3 * Math.pow(e, 4) / 32 + 45 * Math.pow(e, 6) / 1024) * Math.sin(2 * latRad)
+                + (15 * Math.pow(e, 4) / 256 + 45 * Math.pow(e, 6) / 1024) * Math.sin(4 * latRad)
+                - (35 * Math.pow(e, 6) / 3072) * Math.sin(6 * latRad));
+
+        double easting = (0.9996 * N * (A + (1 - T + C) * Math.pow(A, 3) / 6
+                + (5 - 18 * T + T * T + 72 * C - 58 * Math.pow(e, 2) / (1 - Math.pow(e, 2)))
+                * Math.pow(A, 5) / 120) + 500000);
+
+        double northing = (0.9996 * (M + N * Math.tan(latRad) * (Math.pow(A, 2) / 2
+                + (5 - T + 9 * C + 4 * C * C) * Math.pow(A, 4) / 24
+                + (61 - 58 * T + T * T + 600 * C - 330 * Math.pow(e, 2) / (1 - Math.pow(e, 2)))
+                * Math.pow(A, 6) / 720)));
+
+        if (latitude < 0) {
+            northing += 10000000; // Offset for southern hemisphere
+        }
+
+        textViewEste.setText("Este (" + easting + ")");
+        textViewNorte.setText("Norte (" + northing + ")");
+        textViewAltitud.setText("Altitud (" + altitude + ")");
     }
 
     private void setSubEstacionesValues(SQLiteDatabase db) {
@@ -221,6 +299,56 @@ public class OrnitoFaunaFragment extends Fragment {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                 spinnerSubEstacionMuestreo.setAdapter(adapter);
+
+                spinnerSubEstacionMuestreo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        List<UnidadMuestreal> unidadMuestrealList = new ArrayList<>();
+
+                        Franja franja = (Franja) spinnerSubEstacionMuestreo.getSelectedItem();
+                        Metodologia metodologia = (Metodologia) spinnerMetodologia.getSelectedItem();
+
+                        if(franja != null && metodologia != null){
+                            Cursor cursor2 = db.rawQuery(
+                                    "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ?",
+                                    new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()) }
+                            );
+
+                            if (cursor2.moveToFirst()) {
+                                do {
+                                    int id = cursor2.getInt(cursor2.getColumnIndexOrThrow("unidad_muestreal_id"));
+                                    String unidad_muestreal_name = cursor2.getString(cursor2.getColumnIndexOrThrow("unidad_muestreal_name"));
+                                    int franja_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("franja_id"));
+                                    int metodologia_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("metodologia_id"));
+
+                                    UnidadMuestreal unidadMuestreal = new UnidadMuestreal();
+                                    unidadMuestreal.setUnidad_muestreal_id(id);
+                                    unidadMuestreal.setUnidad_muestreal_name(unidad_muestreal_name);
+                                    unidadMuestreal.setFranja_id(franja_id);
+                                    unidadMuestreal.setMetodologia_id(metodologia_id);
+
+                                    unidadMuestrealList.add(unidadMuestreal);
+                                } while (cursor2.moveToNext());
+                            }
+
+                            cursor2.close();
+
+                            ArrayAdapter<UnidadMuestreal> adapter2 = new ArrayAdapter<>(
+                                    requireContext(),
+                                    android.R.layout.simple_spinner_item,
+                                    unidadMuestrealList
+                            );
+                            adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                            spinnerUnidadMuestreal.setAdapter(adapter2);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
             }
         }
     }
@@ -322,6 +450,122 @@ public class OrnitoFaunaFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerZona.setAdapter(adapter);
+    }
+
+    private void setMetodologiaValues(SQLiteDatabase db){
+        List<Metodologia> metodologiasList = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(
+            "SELECT * FROM " + TABLE_METODOLOGIA,
+            null
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("metodologia_id"));
+                String metodologia_name = cursor.getString(cursor.getColumnIndexOrThrow("metodologia_name"));
+
+                Metodologia metodologia = new Metodologia();
+                metodologia.setMetodologia_id(id);
+                metodologia.setMetodologia_name(metodologia_name);
+
+                metodologiasList.add(metodologia);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        ArrayAdapter<Metodologia> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                metodologiasList
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerMetodologia.setAdapter(adapter);
+
+        spinnerMetodologia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                List<UnidadMuestreal> unidadMuestrealList = new ArrayList<>();
+
+                Franja franja = (Franja) spinnerSubEstacionMuestreo.getSelectedItem();
+                Metodologia metodologia = (Metodologia) spinnerMetodologia.getSelectedItem();
+
+                if(franja != null && metodologia != null){
+                    Cursor cursor2 = db.rawQuery(
+                            "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ?",
+                            new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()) }
+                    );
+
+                    if (cursor2.moveToFirst()) {
+                        do {
+                            int id = cursor2.getInt(cursor2.getColumnIndexOrThrow("unidad_muestreal_id"));
+                            String unidad_muestreal_name = cursor2.getString(cursor2.getColumnIndexOrThrow("unidad_muestreal_name"));
+                            int franja_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("franja_id"));
+                            int metodologia_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("metodologia_id"));
+
+                            UnidadMuestreal unidadMuestreal = new UnidadMuestreal();
+                            unidadMuestreal.setUnidad_muestreal_id(id);
+                            unidadMuestreal.setUnidad_muestreal_name(unidad_muestreal_name);
+                            unidadMuestreal.setFranja_id(franja_id);
+                            unidadMuestreal.setMetodologia_id(metodologia_id);
+
+                            unidadMuestrealList.add(unidadMuestreal);
+                        } while (cursor2.moveToNext());
+                    }
+
+                    cursor2.close();
+
+                    ArrayAdapter<UnidadMuestreal> adapter2 = new ArrayAdapter<>(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            unidadMuestrealList
+                    );
+                    adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    spinnerUnidadMuestreal.setAdapter(adapter2);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void setClimaValues(SQLiteDatabase db){
+        List<Clima> climasList = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(
+            "SELECT * FROM " + TABLE_CLIMA,
+            null
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("clima_id"));
+                String clima_name = cursor.getString(cursor.getColumnIndexOrThrow("clima_name"));
+
+                Clima clima = new Clima();
+                clima.setClima_id(id);
+                clima.setClima_name(clima_name);
+
+                climasList.add(clima);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        ArrayAdapter<Clima> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                climasList
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerClima.setAdapter(adapter);
     }
 
     private boolean hasPermission(String permission) {

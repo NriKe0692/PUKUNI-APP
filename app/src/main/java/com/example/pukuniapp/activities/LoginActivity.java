@@ -1,7 +1,8 @@
-package com.example.pukuniapp;
+package com.example.pukuniapp.activities;
 
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_AUTOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLASE;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLIMA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTACION_MUESTREO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADIO;
@@ -11,11 +12,13 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_FOROFITO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_METODOLOGIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ORDEN;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_PAIS;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_PARCELA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUB_PARCELA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TEMPORADA_EVALUACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREAL;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_VEGETACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ZONA;
@@ -35,8 +38,10 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pukuniapp.R;
 import com.example.pukuniapp.classes.Autor;
 import com.example.pukuniapp.classes.Clase;
+import com.example.pukuniapp.classes.Clima;
 import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.EstacionMuestreo;
 import com.example.pukuniapp.classes.Estadio;
@@ -46,11 +51,13 @@ import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.Habito;
+import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
+import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.classes.Zona;
@@ -197,6 +204,9 @@ public class LoginActivity extends AppCompatActivity {
             loadUnidadVegetacion(db, api, token, TABLE_UNIDAD_VEGETACION);
             loadTemporadasEvaluacion(db, api, token, TABLE_TEMPORADA_EVALUACION);
             loadZonas(db, api, token, TABLE_ZONA);
+            loadMetodologias(db, api, token, TABLE_METODOLOGIA);
+            loadClimas(db, api, token, TABLE_CLIMA);
+            loadUnidadesMuestreal(db, api, token, TABLE_UNIDAD_MUESTREAL);
         }
     }
 
@@ -251,6 +261,92 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Zona>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    public void loadMetodologias(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME){
+        api.getMetodologias("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Metodologia>> call, Response<List<Metodologia>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Metodologia> metodologiaList = response.body();
+
+                    db.delete(TABLE_NAME, null, null);
+                    db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                    for(Metodologia metodologia : metodologiaList){
+                        ContentValues values = new ContentValues();
+                        values.put("metodologia_id", metodologia.getMetodologia_id());
+                        values.put("metodologia_name", metodologia.getMetodologia_name());
+                        db.insert(TABLE_NAME, null, values);
+                    }
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Metodologia>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    public void loadClimas(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME){
+        api.getClimas("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Clima>> call, Response<List<Clima>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Clima> climaList = response.body();
+
+                    db.delete(TABLE_NAME, null, null);
+                    db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                    for(Clima clima : climaList){
+                        ContentValues values = new ContentValues();
+                        values.put("clima_id", clima.getClima_id());
+                        values.put("clima_name", clima.getClima_name());
+                        db.insert(TABLE_NAME, null, values);
+                    }
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Clima>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadUnidadesMuestreal(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME){
+        api.getUnidadesMuestreal("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<UnidadMuestreal>> call, Response<List<UnidadMuestreal>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<UnidadMuestreal> unidadMuestrealList = response.body();
+
+                    db.delete(TABLE_NAME, null, null);
+                    db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                    for(UnidadMuestreal unidadMuestreal : unidadMuestrealList){
+                        ContentValues values = new ContentValues();
+                        values.put("unidad_muestreal_id", unidadMuestreal.getUnidad_muestreal_id());
+                        values.put("unidad_muestreal_name", unidadMuestreal.getUnidad_muestreal_name());
+                        values.put("franja_id", unidadMuestreal.getFranja_id());
+                        values.put("metodologia_id", unidadMuestreal.getMetodologia_id());
+                        db.insert(TABLE_NAME, null, values);
+                    }
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UnidadMuestreal>> call, Throwable t) {
                 irALogin();
             }
         });

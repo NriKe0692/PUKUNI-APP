@@ -1,4 +1,4 @@
-package com.example.pukuniapp;
+package com.example.pukuniapp.activities;
 
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_FLORA;
 
@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pukuniapp.R;
 import com.example.pukuniapp.adapters.FormFloraAdapter;
 import com.example.pukuniapp.classes.FormFlora;
 import com.example.pukuniapp.helpers.DBHelper;

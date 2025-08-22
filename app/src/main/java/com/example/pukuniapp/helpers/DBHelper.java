@@ -34,6 +34,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_USERS = "users";
     public static final String TABLE_TEMPORADA_EVALUACION = "temporada_evaluacion";
     public static final String TABLE_ZONA = "zona";
+    public static final String TABLE_METODOLOGIA = "metodologia";
+    public static final String TABLE_CLIMA = "clima";
+    public static final String TABLE_UNIDAD_MUESTREAL = "unidad_muestreal";
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -66,6 +69,9 @@ public class DBHelper extends SQLiteOpenHelper {
         createUserTable(db);
         createTemporadaEvaluacionTable(db);
         createZonaTable(db);
+        createMetodologiaTable(db);
+        createClimaTable(db);
+        createUnidadMuestrealTable(db);
     }
 
     private void createAutorTable(SQLiteDatabase db){
@@ -291,6 +297,32 @@ public class DBHelper extends SQLiteOpenHelper {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "zona_id INTEGER, " +
             "zona_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createMetodologiaTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_METODOLOGIA + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "metodologia_id INTEGER, " +
+            "metodologia_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createClimaTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_CLIMA + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "clima_id INTEGER, " +
+            "clima_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createUnidadMuestrealTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_UNIDAD_MUESTREAL + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "unidad_muestreal_id INTEGER, " +
+            "unidad_muestreal_name TEXT, " +
+            "franja_id INTEGER, " +
+            "metodologia_id INTEGER)";
         db.execSQL(sqlQuery);
     }
 

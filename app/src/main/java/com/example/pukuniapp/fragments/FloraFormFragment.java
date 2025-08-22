@@ -51,8 +51,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pukuniapp.HomeActivity;
-import com.example.pukuniapp.LoginActivity;
+import com.example.pukuniapp.activities.HomeActivity;
+import com.example.pukuniapp.activities.LoginActivity;
 import com.example.pukuniapp.R;
 import com.example.pukuniapp.classes.Autor;
 import com.example.pukuniapp.classes.Clase;

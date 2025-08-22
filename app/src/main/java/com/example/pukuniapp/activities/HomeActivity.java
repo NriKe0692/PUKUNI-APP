@@ -1,16 +1,11 @@
-package com.example.pukuniapp;
-
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_FLORA;
+package com.example.pukuniapp.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -24,7 +19,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.pukuniapp.helpers.DBHelper;
+import com.example.pukuniapp.R;
 
 public class HomeActivity extends AppCompatActivity {
 

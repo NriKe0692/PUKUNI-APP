@@ -1,4 +1,4 @@
-package com.example.pukuniapp;
+package com.example.pukuniapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.pukuniapp.R;
 import com.example.pukuniapp.retrofit.ApiClient;
 import com.example.pukuniapp.retrofit.ApiService;
 import com.example.pukuniapp.retrofit.RegisterRequest;
