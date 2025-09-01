@@ -90,7 +90,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/form_masto_click"
+                android:id="@+id/form_mamiferos_menores_click"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_background"
@@ -113,10 +113,10 @@
                     tools:ignore="UseAppTint"/>
 
                 <TextView
-                    android:id="@+id/form_masto_text"
+                    android:id="@+id/form_mamiferos_menores_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Masto"
+                    android:text="Mamíferos Menores"
                     android:textSize="16sp"
                     android:textColor="#35553f"
                     android:textStyle="bold"/>
@@ -129,7 +129,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/form_quiropteros_click"
+                android:id="@+id/form_mamiferos_mayores_click"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_background"
@@ -152,49 +152,10 @@
                     tools:ignore="UseAppTint"/>
 
                 <TextView
-                    android:id="@+id/form_quiropteros_text"
+                    android:id="@+id/form_mamiferos_mayores_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quiropteros"
-                    android:textSize="16sp"
-                    android:textColor="#35553f"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/form_roedores_click"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_background"
-                android:orientation="horizontal"
-                android:elevation="4dp"
-                android:padding="16dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_form"
-                    android:layout_marginEnd="16dp"
-                    android:tint="#35553f"
-                    tools:ignore="UseAppTint"/>
-
-                <TextView
-                    android:id="@+id/form_roedores_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Roedores"
+                    android:text="Mamíferos Mayores"
                     android:textSize="16sp"
                     android:textColor="#35553f"
                     android:textStyle="bold"/>

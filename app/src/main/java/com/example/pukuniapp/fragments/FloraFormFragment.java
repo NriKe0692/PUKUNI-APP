@@ -6,6 +6,7 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADIO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FAMILIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FENOLOGIA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_FLORA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FOROFITO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
@@ -38,6 +39,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +62,7 @@ import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.Estadio;
 import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.Fenologia;
+import com.example.pukuniapp.classes.FormFlora;
 import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
@@ -72,8 +75,11 @@ import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.helpers.DBHelper;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,6 +87,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class FloraFormFragment extends Fragment {
+    private static int TIPO_FORM_ID = 1;
     Spinner spinnerSubEstacionMuestreo;
     Spinner spinnerUnidadMuestreo;
     Spinner spinnerParcela;
@@ -107,6 +114,12 @@ public class FloraFormFragment extends Fragment {
     EditText et_usos;
     EditText et_valor_observaciones;
     EditText et_valor_datos_planta;
+    EditText et_tamanio_unidad;
+    EditText et_localidad;
+    EditText et_codigo_placa;
+    EditText et_este;
+    EditText et_norte;
+    EditText et_altitud;
     Button saveForm;
     List<Clase> clasesList;
     List<Orden> ordenesList;
@@ -120,15 +133,17 @@ public class FloraFormFragment extends Fragment {
     private ActivityResultLauncher<Uri> cameraLauncher;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private static final int REQUEST_GALLERY_PERMISSION = 101;
+    FormFlora form = null;
 
     public FloraFormFragment() {
         // Required empty public constructor
     }
-    public static FloraFormFragment newInstance(String estacionName, int estacionId) {
+    public static FloraFormFragment newInstance(int estacionId, int formularioId) {
         FloraFormFragment fragment = new FloraFormFragment();
         Bundle args = new Bundle();
+        args.putInt("formulario_id", formularioId);
         args.putInt("estacion_id", estacionId);
-        args.putString("estacion_name", estacionName);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -166,7 +181,10 @@ public class FloraFormFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_flora_form, container, false);
 
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
-        label.setText("Formulario Flora");
+
+        if(label != null){
+            label.setText("Formulario Flora");
+        }
 
         spinnerSubEstacionMuestreo = view.findViewById(R.id.spinner_sub_estacion_muestreo);
         spinnerUnidadMuestreo = view.findViewById(R.id.spinner_unidad_muestreo);
@@ -181,7 +199,6 @@ public class FloraFormFragment extends Fragment {
         textViewEste = view.findViewById(R.id.tv_este);
         textViewNorte = view.findViewById(R.id.tv_norte);
         textViewAltitud = view.findViewById(R.id.tv_altitud);
-        saveForm = view.findViewById(R.id.save_form);
         et_clase= view.findViewById(R.id.et_clase);
         et_orden = view.findViewById(R.id.et_orden);
         et_familia = view.findViewById(R.id.et_familia);
@@ -195,6 +212,12 @@ public class FloraFormFragment extends Fragment {
         et_usos = view.findViewById(R.id.et_usos);
         et_valor_observaciones = view.findViewById(R.id.et_valor_observaciones);
         et_valor_datos_planta = view.findViewById(R.id.et_valor_datos_planta);
+        et_tamanio_unidad = view.findViewById(R.id.et_tamanio_unidad);
+        et_localidad = view.findViewById(R.id.et_localidad);
+        et_codigo_placa = view.findViewById(R.id.et_codigo_placa);
+        et_este = view.findViewById(R.id.et_este);
+        et_norte = view.findViewById(R.id.et_norte);
+        et_altitud = view.findViewById(R.id.et_altitud);
 
         imgPreview = view.findViewById(R.id.img_preview);
         Button btnCamera = view.findViewById(R.id.btnCamera);
@@ -220,19 +243,131 @@ public class FloraFormFragment extends Fragment {
             }
         });
 
+        saveForm = view.findViewById(R.id.save_form);
 
         DBHelper dbHelper = new DBHelper(requireContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+        if(getArguments() != null) {
+            int formularioId = getArguments().getInt("formulario_id");
+
+            if(formularioId != -1){
+                Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FORMULARIO_FLORA + " WHERE id = ?", new String[]{String.valueOf(formularioId)});
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        int estacion_muestreo_id = cursor.getInt(cursor.getColumnIndexOrThrow("estacion_muestreo_id"));
+                        int lugar_id = cursor.getInt(cursor.getColumnIndexOrThrow("lugar_id"));
+                        String fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"));
+                        int franja_id = cursor.getInt(cursor.getColumnIndexOrThrow("franja_id"));
+                        int unidad_muestreo_id = cursor.getInt(cursor.getColumnIndexOrThrow("unidad_muestreo_id"));
+                        int parcela_id = cursor.getInt(cursor.getColumnIndexOrThrow("parcela_id"));
+                        int forofito_id = cursor.getInt(cursor.getColumnIndexOrThrow("forofito_id"));
+                        int sub_parcela_id = cursor.getInt(cursor.getColumnIndexOrThrow("sub_parcela_id"));
+                        String tamanio = cursor.getString(cursor.getColumnIndexOrThrow("tamanio"));
+                        int unidad_vegetacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("unidad_vegetacion_id"));
+                        int pais_id = cursor.getInt(cursor.getColumnIndexOrThrow("pais_id"));
+                        int departamento_id = cursor.getInt(cursor.getColumnIndexOrThrow("departamento_id"));
+                        int provincia_id = cursor.getInt(cursor.getColumnIndexOrThrow("provincia_id"));
+                        int distrito_id = cursor.getInt(cursor.getColumnIndexOrThrow("distrito_id"));
+                        String localidad = cursor.getString(cursor.getColumnIndexOrThrow("localidad"));
+                        Double este = cursor.getDouble(cursor.getColumnIndexOrThrow("este"));
+                        Double norte = cursor.getDouble(cursor.getColumnIndexOrThrow("norte"));
+                        Double altitud = cursor.getDouble(cursor.getColumnIndexOrThrow("altitud"));
+                        int clase_id = cursor.getInt(cursor.getColumnIndexOrThrow("clase_id"));
+                        int orden_id = cursor.getInt(cursor.getColumnIndexOrThrow("orden_id"));
+                        int familia_id = cursor.getInt(cursor.getColumnIndexOrThrow("familia_id"));
+                        int genero_id = cursor.getInt(cursor.getColumnIndexOrThrow("genero_id"));
+                        int especie_id = cursor.getInt(cursor.getColumnIndexOrThrow("especie_id"));
+                        String nombre_comun = cursor.getString(cursor.getColumnIndexOrThrow("nombre_comun"));
+                        int autor_id = cursor.getInt(cursor.getColumnIndexOrThrow("autor_id"));
+                        int individuos = cursor.getInt(cursor.getColumnIndexOrThrow("individuos"));
+                        Double dap = cursor.getDouble(cursor.getColumnIndexOrThrow("dap"));
+                        Double altura = cursor.getDouble(cursor.getColumnIndexOrThrow("altura"));
+                        Double valor_cobertura = cursor.getDouble(cursor.getColumnIndexOrThrow("valor_cobertura"));
+                        int habito_id = cursor.getInt(cursor.getColumnIndexOrThrow("habito_id"));
+                        int estadio_id = cursor.getInt(cursor.getColumnIndexOrThrow("estadio_id"));
+                        int fenologia_id = cursor.getInt(cursor.getColumnIndexOrThrow("fenologia_id"));
+                        String usos = cursor.getString(cursor.getColumnIndexOrThrow("usos"));
+                        String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
+                        String observaciones = cursor.getString(cursor.getColumnIndexOrThrow("observaciones"));
+                        String datos_planta = cursor.getString(cursor.getColumnIndexOrThrow("datos_planta"));
+                        String codigo_placa = cursor.getString(cursor.getColumnIndexOrThrow("codigo_placa"));
+
+                        Log.d("setUnidad_muestreo_id", String.valueOf(unidad_muestreo_id));
+
+                        form = new FormFlora();
+
+                        form.setId(formularioId);
+                        form.setEstacion_muestreo_id(estacion_muestreo_id);
+                        form.setLugar_id(lugar_id);
+                        form.setFecha(fecha);
+                        form.setFranja_id(franja_id);
+                        form.setUnidad_muestreo_id(unidad_muestreo_id);
+                        form.setParcela_id(parcela_id);
+                        form.setForofito_id(forofito_id);
+                        form.setSub_parcela_id(sub_parcela_id);
+                        form.setTamanio(tamanio);
+                        form.setUnidad_vegetacion_id(unidad_vegetacion_id);
+                        form.setPais_id(pais_id);
+                        form.setDepartamento_id(departamento_id);
+                        form.setProvincia_id(provincia_id);
+                        form.setDistrito_id(distrito_id);
+                        form.setLocalidad(localidad);
+                        form.setEste(este);
+                        form.setNorte(norte);
+                        form.setAltitud(altitud);
+                        form.setClase_id(clase_id);
+                        form.setOrden_id(orden_id);
+                        form.setFamilia_id(familia_id);
+                        form.setGenero_id(genero_id);
+                        form.setEspecie_id(especie_id);
+                        form.setNombre_comun(nombre_comun);
+                        form.setAutor_id(autor_id);
+                        form.setIndividuos(individuos);
+                        form.setDap(dap);
+                        form.setAltura(altura);
+                        form.setValor_cobertura(valor_cobertura);
+                        form.setHabito_id(habito_id);
+                        form.setEstadio_id(estadio_id);
+                        form.setFenologia_id(fenologia_id);
+                        form.setUsos(usos);
+                        form.setImageUri(image_uri);
+                        form.setObservaciones(observaciones);
+                        form.setDatosPlanta(datos_planta);
+                        form.setCodigo_placa(codigo_placa);
+                    } while (cursor.moveToNext());
+                }
+            }
+        }
+
         setSubEstacionesValues(db);
         setUnidadeDeMuestreoValues(db);
         setUnidadDeVegetacionValues(db);
-        getCoordinates();
-        setupAutocompleteTv(db);
         setAutoresValues(db);
         setHabitosValues(db);
         setEstadiosValues(db);
         setFenologiasValues(db);
+        setupAutocompleteTv(db);
+        getCoordinates();
+
+        if(form != null){
+            et_tamanio_unidad.setText(String.valueOf(form.getTamanio()));
+            et_codigo_placa.setText(String.valueOf(form.getCodigo_placa()));
+            et_localidad.setText(String.valueOf(form.getLocalidad()));
+            et_este.setText(String.valueOf(form.getEste()));
+            et_norte.setText(String.valueOf(form.getNorte()));
+            et_altitud.setText(String.valueOf(form.getAltitud()));
+            et_nombre_comun.setText(String.valueOf(form.getNombre_comun()));
+            et_individuos.setText(String.valueOf(form.getIndividuos()));
+            et_dap.setText(String.valueOf(form.getDap()));
+            et_altura.setText(String.valueOf(form.getAltura()));
+            et_valor_cobertura.setText(String.valueOf(form.getValor_cobertura()));
+            et_usos.setText(String.valueOf(form.getUsos()));
+            et_valor_observaciones.setText(String.valueOf(form.getObservaciones()));
+            et_valor_datos_planta.setText(String.valueOf(form.getDatosPlanta()));
+            imgPreview.setImageURI(Uri.parse(form.getImageUri()));
+        }
 
         saveForm.setOnClickListener(v -> {
             saveForm(db);
@@ -242,7 +377,6 @@ public class FloraFormFragment extends Fragment {
     }
 
     private void saveForm(SQLiteDatabase db){
-        // Recoger valores de los spinners
         Franja subEstacion = (Franja) spinnerSubEstacionMuestreo.getSelectedItem();
         UnidadMuestreo unidadMuestreo = (UnidadMuestreo) spinnerUnidadMuestreo.getSelectedItem();
         Parcela parcela = (Parcela) spinnerParcela.getSelectedItem();
@@ -254,17 +388,53 @@ public class FloraFormFragment extends Fragment {
         Estadio estadio = (Estadio) spinnerEstadio.getSelectedItem();
         Fenologia fenologia = (Fenologia) spinnerFenologia.getSelectedItem();
 
-        // Recoger valores de los campos de texto
-        String clase = et_clase.getText().toString();
-        String orden = et_orden.getText().toString();
-        String familia = et_familia.getText().toString();
-        String genero = et_genero.getText().toString();
-        String especie = et_especie.getText().toString();
-        String este = textViewEste.getText().toString();
-        String norte = textViewNorte.getText().toString();
-        String altitud = textViewAltitud.getText().toString();
+        Log.d("FOROFITO", forofito.getForofito_name());
 
-        // Ejemplo de campos adicionales (los tendrías que tener en tu layout)
+        String este = et_este.getText().toString();
+        String norte = et_norte.getText().toString();
+        String altitud = et_altitud.getText().toString();
+
+        Clase clase = null;
+        Orden orden = null;
+        Familia familia = null;
+        Genero genero = null;
+        Especie especie = null;
+
+        for(Clase c: clasesList){
+            if(c.getClase_name().equals(et_clase.getText().toString())){
+                clase = c;
+                break;
+            }
+        }
+
+        for(Orden o: ordenesList){
+            if(o.getOrden_name().equals(et_orden.getText().toString())){
+                orden = o;
+                break;
+            }
+        }
+
+        for(Familia f: familiasList){
+            if(f.getFamilia_name().equals(et_familia.getText().toString())){
+                familia = f;
+                break;
+            }
+        }
+
+        for(Genero g: generosList){
+            if(g.getGenero_name().equals(et_genero.getText().toString())){
+                genero = g;
+                break;
+            }
+        }
+
+        for(Especie e: especiesList){
+            if(e.getEspecie_name().equals(et_especie.getText().toString())){
+                especie = e;
+                break;
+            }
+        }
+
         String nombreComun = et_nombre_comun.getText().toString();
         String numIndividuos = et_individuos.getText().toString();
         String dap = et_dap.getText().toString();
@@ -274,8 +444,24 @@ public class FloraFormFragment extends Fragment {
         String observaciones = et_valor_observaciones.getText().toString();
         String datosPlanta = et_valor_datos_planta.getText().toString();
         String uriString = (photoUri != null) ? photoUri.toString() : "";
+        String tamanioUnidad = et_tamanio_unidad.getText().toString();
+        String localidad = et_localidad.getText().toString();
+        String codigoPlaca = et_codigo_placa.getText().toString();
+
+
+        int estacionId = -1;
+
+        Bundle args = getArguments();
+        if (args != null) {
+            estacionId = args.getInt("estacion_id");
+        }
+
+        SimpleDateFormat sdfFecha = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        Date ahora = new Date();
 
         ContentValues values = new ContentValues();
+        values.put("estacion_muestreo_id", estacionId != -1 ? estacionId : null);
         values.put("franja_id", subEstacion != null ? subEstacion.getFranja_id() : null);
         values.put("unidad_muestreo_id", unidadMuestreo != null ? unidadMuestreo.getUnidad_muestreo_id() : null);
         values.put("parcela_id", parcela != null ? parcela.getParcela_id() : null);
@@ -286,12 +472,11 @@ public class FloraFormFragment extends Fragment {
         values.put("habito_id", habito != null ? habito.getHabito_id() : null);
         values.put("estadio_id", estadio != null ? estadio.getEstadio_id() : null);
         values.put("fenologia_id", fenologia != null ? fenologia.getFenologia_id() : null);
-
-        values.put("clase_id", clase);
-        values.put("orden_id", orden);
-        values.put("familia_id", familia);
-        values.put("genero_id", genero);
-        values.put("especie_id", especie);
+        values.put("clase_id", clase != null ? clase.getClase_id() : null);
+        values.put("orden_id", orden != null ? orden.getOrden_id() : null);
+        values.put("familia_id", familia != null ? familia.getFamilia_id() : null);
+        values.put("genero_id", genero != null ? genero.getGenero_id() : null);
+        values.put("especie_id", especie != null ? especie.getEspecie_id() : null);
         values.put("nombre_comun", nombreComun);
         values.put("este", este);
         values.put("norte", norte);
@@ -304,13 +489,30 @@ public class FloraFormFragment extends Fragment {
         values.put("observaciones", observaciones);
         values.put("datos_planta", datosPlanta);
         values.put("image_uri", uriString);
+        values.put("fecha", sdfFecha.format(ahora));
+        values.put("tamanio", tamanioUnidad);
+        values.put("localidad", localidad);
+        values.put("codigo_placa", codigoPlaca);
 
-        long newRowId = db.insert("flora", null, values);
+        long newRowId;
 
-        if (newRowId != -1) {
-            Toast.makeText(requireContext(), "Registro guardado correctamente", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(requireContext(), "Error al guardar el registro", Toast.LENGTH_SHORT).show();
+        if(form != null){
+            Log.d("UPDATE!", String.valueOf(form.getId()));
+            newRowId = db.update(TABLE_FORMULARIO_FLORA, values, " id = ?", new String[]{String.valueOf(form.getId())});
+
+            if (newRowId != -1) {
+                Toast.makeText(requireContext(), "Registro actualizado correctamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), "Error al actualizar el registro", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            newRowId = db.insert(TABLE_FORMULARIO_FLORA, null, values);
+
+            if (newRowId != -1) {
+                Toast.makeText(requireContext(), "Registro guardado correctamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), "Error al guardar el registro", Toast.LENGTH_SHORT).show();
+            }
         }
 
         db.close();
@@ -355,18 +557,20 @@ public class FloraFormFragment extends Fragment {
         clasesList = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(
-            "SELECT * FROM " + TABLE_CLASE,
-            null
+                "SELECT * FROM " + TABLE_CLASE + " WHERE tipo_form_id = ?",
+                new String[]{String.valueOf(TIPO_FORM_ID)}
         );
 
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("clase_id"));
                 String clase_name = cursor.getString(cursor.getColumnIndexOrThrow("clase_name"));
+                int tipo_form_id = cursor.getInt(cursor.getColumnIndexOrThrow("tipo_form_id"));
 
                 Clase clase = new Clase();
                 clase.setClase_id(id);
                 clase.setClase_name(clase_name);
+                clase.setTipo_form_id(tipo_form_id);
 
                 clasesList.add(clase);
             } while (cursor.moveToNext());
@@ -374,28 +578,37 @@ public class FloraFormFragment extends Fragment {
 
         cursor.close();
 
-        List<String> clasesNames = new ArrayList<>();
-
-        for (Clase clase : clasesList) {
-            clasesNames.add(clase.getClase_name());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-            requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
-            clasesNames
+        ArrayAdapter<Clase> claseAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                clasesList
         );
 
-        et_clase.setAdapter(adapter);
+        et_clase.setAdapter(claseAdapter);
         et_clase.setThreshold(1);
+
+        if(form != null){
+            String claseSelected = "";
+
+            for (int it = 0; it < clasesList.size(); it++) {
+                if(clasesList.get(it).getClase_id() == form.getClase_id()){
+                    claseSelected = clasesList.get(it).getClase_name();
+                    break;
+                }
+            }
+
+            if(!claseSelected.isEmpty()){
+                et_clase.setText(claseSelected);
+            }
+        }
         // End set clases values
 
         // Start set ordenes values
         ordenesList = new ArrayList<>();
 
         cursor = db.rawQuery(
-            "SELECT * FROM " + TABLE_ORDEN,
-            null
+                "SELECT * FROM " + TABLE_ORDEN + " WHERE tipo_form_id = ?",
+                new String[]{String.valueOf(TIPO_FORM_ID)}
         );
 
         if (cursor.moveToFirst()) {
@@ -415,23 +628,17 @@ public class FloraFormFragment extends Fragment {
 
         cursor.close();
 
-        List<String> ordenesNames = new ArrayList<>();
-
-        for (Orden orden : ordenesList) {
-            ordenesNames.add(orden.getOrden_name());
-        }
-
-        adapter = new ArrayAdapter<>(
-            requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
-            ordenesNames
+        ArrayAdapter<Orden> ordenAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                ordenesList
         );
 
-        et_orden.setAdapter(adapter);
+        et_orden.setAdapter(ordenAdapter);
         et_orden.setThreshold(1);
 
         et_orden.setOnItemClickListener((parent, view, position, id) -> {
-            String ordenName = (String) parent.getItemAtPosition(position);
+            String ordenName = parent.getItemAtPosition(position).toString();
 
             Orden ordenSeleccionada = null;
             for (Orden orden : ordenesList) {
@@ -451,14 +658,29 @@ public class FloraFormFragment extends Fragment {
                 }
             }
         });
+
+        if(form != null){
+            String ordenSelected = "";
+
+            for (int it = 0; it < ordenesList.size(); it++) {
+                if(ordenesList.get(it).getOrden_id() == form.getOrden_id()){
+                    ordenSelected = ordenesList.get(it).getOrden_name();
+                    break;
+                }
+            }
+
+            if(!ordenSelected.isEmpty()){
+                et_orden.setText(ordenSelected);
+            }
+        }
         // End set ordenes values
 
         // Start set familias values
         familiasList = new ArrayList<>();
 
         cursor = db.rawQuery(
-            "SELECT * FROM " + TABLE_FAMILIA,
-            null
+                "SELECT * FROM " + TABLE_FAMILIA + " WHERE tipo_form_id = ?",
+                new String[]{String.valueOf(TIPO_FORM_ID)}
         );
 
         if (cursor.moveToFirst()) {
@@ -478,23 +700,17 @@ public class FloraFormFragment extends Fragment {
 
         cursor.close();
 
-        List<String> familiasNames = new ArrayList<>();
-
-        for (Familia familia : familiasList) {
-            familiasNames.add(familia.getFamilia_name());
-        }
-
-        adapter = new ArrayAdapter<>(
-            requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
-            familiasNames
+        ArrayAdapter<Familia> familiaAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                familiasList
         );
 
-        et_familia.setAdapter(adapter);
+        et_familia.setAdapter(familiaAdapter);
         et_familia.setThreshold(1);
 
         et_familia.setOnItemClickListener((parent, view, position, id) -> {
-            String familiaName = (String) parent.getItemAtPosition(position);
+            String familiaName = parent.getItemAtPosition(position).toString();
 
             Familia familiaSeleccionada = null;
             for (Familia familia : familiasList) {
@@ -528,14 +744,29 @@ public class FloraFormFragment extends Fragment {
                 }
             }
         });
+
+        if(form != null){
+            String familiaSelected = "";
+
+            for (int it = 0; it < familiasList.size(); it++) {
+                if(familiasList.get(it).getFamilia_id() == form.getFamilia_id()){
+                    familiaSelected = familiasList.get(it).getFamilia_name();
+                    break;
+                }
+            }
+
+            if(!familiaSelected.isEmpty()){
+                et_familia.setText(familiaSelected);
+            }
+        }
         // End set familias values
 
         // Start set generos values
         generosList = new ArrayList<>();
 
         cursor = db.rawQuery(
-            "SELECT * FROM " + TABLE_GENERO,
-            null
+                "SELECT * FROM " + TABLE_GENERO + " WHERE tipo_form_id = ?",
+                new String[]{String.valueOf(TIPO_FORM_ID)}
         );
 
         if (cursor.moveToFirst()) {
@@ -555,25 +786,22 @@ public class FloraFormFragment extends Fragment {
 
         cursor.close();
 
-        List<String> generosNames = new ArrayList<>();
-
-        for (Genero genero : generosList) {
-            generosNames.add(genero.getGenero_name());
-        }
-
-        adapter = new ArrayAdapter<>(
+        ArrayAdapter<Genero> generoAdapter = new ArrayAdapter<>(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
-                generosNames
+                generosList
         );
 
-        et_genero.setAdapter(adapter);
+        et_genero.setAdapter(generoAdapter);
         et_genero.setThreshold(1);
 
         et_genero.setOnItemClickListener((parent, view, position, id) -> {
-            String generoName = (String) parent.getItemAtPosition(position);
+            String generoName = parent.getItemAtPosition(position).toString();
+
+            Toast.makeText(getActivity(), generoName, Toast.LENGTH_SHORT).show();
 
             Genero generoSeleccionado = null;
+
             for (Genero genero : generosList) {
                 if (genero.getGenero_name().equalsIgnoreCase(generoName)) {
                     generoSeleccionado = genero;
@@ -619,14 +847,29 @@ public class FloraFormFragment extends Fragment {
                 }
             }
         });
+
+        if(form != null){
+            String generoSelected = "";
+
+            for (int it = 0; it < generosList.size(); it++) {
+                if(generosList.get(it).getGenero_id() == form.getGenero_id()){
+                    generoSelected = generosList.get(it).getGenero_name();
+                    break;
+                }
+            }
+
+            if(!generoSelected.isEmpty()){
+                et_genero.setText(generoSelected);
+            }
+        }
         // End set generos values
 
         // Start set especies values
         especiesList = new ArrayList<>();
 
         cursor = db.rawQuery(
-            "SELECT * FROM " + TABLE_ESPECIE,
-            null
+                "SELECT * FROM " + TABLE_ESPECIE + " WHERE tipo_form_id = ?",
+                new String[]{String.valueOf(TIPO_FORM_ID)}
         );
 
         if (cursor.moveToFirst()) {
@@ -646,22 +889,17 @@ public class FloraFormFragment extends Fragment {
 
         cursor.close();
 
-        List<String> especieNames = new ArrayList<>();
-        for (Especie especie : especiesList) {
-            especieNames.add(especie.getEspecie_name());
-        }
-
-        adapter = new ArrayAdapter<>(
+        ArrayAdapter<Especie> especieAdapter = new ArrayAdapter<>(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
-                especieNames
+                especiesList
         );
 
-        et_especie.setAdapter(adapter);
+        et_especie.setAdapter(especieAdapter);
         et_especie.setThreshold(1);
 
         et_especie.setOnItemClickListener((parent, view, position, id) -> {
-            String especieName = (String) parent.getItemAtPosition(position);
+            String especieName = parent.getItemAtPosition(position).toString();
 
             Especie especieSeleccionada = null;
             for (Especie especie : especiesList) {
@@ -723,6 +961,21 @@ public class FloraFormFragment extends Fragment {
                 }
             }
         });
+
+        if(form != null){
+            String especieSelected = "";
+
+            for (int it = 0; it < especiesList.size(); it++) {
+                if(especiesList.get(it).getEspecie_id() == form.getEspecie_id()){
+                    especieSelected = especiesList.get(it).getEspecie_name();
+                    break;
+                }
+            }
+
+            if(!especieSelected.isEmpty()){
+                et_especie.setText(especieSelected);
+            }
+        }
         // End set especies values
     }
 
@@ -750,8 +1003,8 @@ public class FloraFormFragment extends Fragment {
         List<Habito> habitosList = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(
-            "SELECT * FROM " + TABLE_HABITO,
-            null
+            "SELECT * FROM " + TABLE_HABITO + " WHERE tipo_form_id = ?",
+            new String[]{String.valueOf(TIPO_FORM_ID)}
         );
 
         if (cursor.moveToFirst()) {
@@ -777,6 +1030,21 @@ public class FloraFormFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerHabito.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < habitosList.size(); i++) {
+                if (habitosList.get(i).getHabito_id() == form.getHabito_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerHabito.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void setEstadiosValues(SQLiteDatabase db){
@@ -810,6 +1078,21 @@ public class FloraFormFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerEstadio.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < estdiosList.size(); i++) {
+                if (estdiosList.get(i).getEstadio_id() == form.getEstadio_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerEstadio.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void setFenologiasValues(SQLiteDatabase db){
@@ -843,6 +1126,21 @@ public class FloraFormFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerFenologia.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < fenologiaList.size(); i++) {
+                if (fenologiaList.get(i).getFenologia_id() == form.getFenologia_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerFenologia.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void setAutoresValues(SQLiteDatabase db){
@@ -876,6 +1174,21 @@ public class FloraFormFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerAutores.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < autoresList.size(); i++) {
+                if (autoresList.get(i).getAutor_id() == form.getAutor_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerAutores.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void setSubEstacionesValues(SQLiteDatabase db) {
@@ -928,6 +1241,21 @@ public class FloraFormFragment extends Fragment {
 
                     }
                 });
+
+                if(form != null){
+                    int defaultPosition = -1;
+
+                    for (int i = 0; i < franjasList.size(); i++) {
+                        if (franjasList.get(i).getFranja_id() == form.getFranja_id()) {
+                            defaultPosition = i;
+                            break;
+                        }
+                    }
+
+                    if(defaultPosition != -1){
+                        spinnerSubEstacionMuestreo.setSelection(defaultPosition);
+                    }
+                }
             }
         }
     }
@@ -990,6 +1318,21 @@ public class FloraFormFragment extends Fragment {
 
             }
         });
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < unidadMuestreoList.size(); i++) {
+                if (unidadMuestreoList.get(i).getUnidad_muestreo_id() == form.getUnidad_muestreo_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerUnidadMuestreo.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void setParcelaValues(SQLiteDatabase db, Franja franjaSeleccionada){
@@ -1065,6 +1408,21 @@ public class FloraFormFragment extends Fragment {
                 // No hacer nada
             }
         });
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < parcelaList.size(); i++) {
+                if (parcelaList.get(i).getParcela_id() == form.getParcela_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerParcela.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void setForofitosValues(int parcelaId, SQLiteDatabase db){
@@ -1118,6 +1476,21 @@ public class FloraFormFragment extends Fragment {
         };
 
         spinnerForofito.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < forofitoList.size(); i++) {
+                if (forofitoList.get(i).getForofito_id() == form.getForofito_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerForofito.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void setSubparcelasValues(SQLiteDatabase db, int parcelaId){
@@ -1131,13 +1504,13 @@ public class FloraFormFragment extends Fragment {
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("subparcela_id"));
-                int parcela_id = cursor.getInt(cursor.getColumnIndexOrThrow("parcela_id"));
                 String subparcela_name = cursor.getString(cursor.getColumnIndexOrThrow("subparcela_name"));
+                int parcela_id = cursor.getInt(cursor.getColumnIndexOrThrow("parcela_id"));
 
                 SubParcela subParcela = new SubParcela();
                 subParcela.setSubparcela_id(id);
                 subParcela.setSubparcela_name(subparcela_name);
-                subParcela.setParcela_id(parcela_id);
+                subParcela.setParcela_id(parcelaId);
 
                 subParcelaList.add(subParcela);
             } while (cursor.moveToNext());
@@ -1153,6 +1526,21 @@ public class FloraFormFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerSubParcela.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < subParcelaList.size(); i++) {
+                if (subParcelaList.get(i).getSubparcela_id() == form.getSub_parcela_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerSubParcela.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void removeForofitosValues(){
@@ -1176,7 +1564,7 @@ public class FloraFormFragment extends Fragment {
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("unidad_vegetacion_id"));
-                String unidad_vegetacion_name = cursor.getString(cursor.getColumnIndexOrThrow("unidad_vegetacion_id"));
+                String unidad_vegetacion_name = cursor.getString(cursor.getColumnIndexOrThrow("unidad_vegetacion_name"));
 
                 UnidadVegetacion unidadVegetacion = new UnidadVegetacion();
                 unidadVegetacion.setUnidad_vegetacion_id(id);
@@ -1196,6 +1584,21 @@ public class FloraFormFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerUnidadVegetacion.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < unidadVegetacionList.size(); i++) {
+                if (unidadVegetacionList.get(i).getUnidad_vegetacion_id() == form.getUnidad_vegetacion_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinnerUnidadVegetacion.setSelection(defaultPosition);
+            }
+        }
     }
 
     private void UTMConverter(double latitude, double longitude, double altitude) {
@@ -1233,9 +1636,15 @@ public class FloraFormFragment extends Fragment {
             northing += 10000000; // Offset for southern hemisphere
         }
 
-        textViewEste.setText("Este (" + easting + ")");
-        textViewNorte.setText("Norte (" + northing + ")");
-        textViewAltitud.setText("Altitud (" + altitude + ")");
+        if(form != null){
+            textViewEste.setText("Este (" + form.getEste() + ")");
+            textViewNorte.setText("Norte (" + form.getNorte() + ")");
+            textViewAltitud.setText("Altitud (" + form.getAltitud() + ")");
+        }else{
+            textViewEste.setText("Este (" + easting + ")");
+            textViewNorte.setText("Norte (" + northing + ")");
+            textViewAltitud.setText("Altitud (" + altitude + ")");
+        }
     }
     private void irALogin() {
         Intent intent = new Intent(getActivity(), LoginActivity.class);

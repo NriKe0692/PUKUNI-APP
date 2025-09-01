@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.FormActivity">
+    tools:context=".activities.EditFormActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,21 +52,10 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <TextView
-            android:id="@+id/tv_fragment_title"
-            android:padding="24dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#4CAF50"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingTop="24dp"
-            android:paddingBottom="8dp" />
-
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>

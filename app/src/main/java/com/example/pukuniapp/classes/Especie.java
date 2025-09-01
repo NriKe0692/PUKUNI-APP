@@ -4,6 +4,7 @@ public class Especie {
     private int especie_id;
     private String especie_name;
     private int genero_id;
+    private int tipo_form_id;
 
     public int getEspecie_id() {
         return especie_id;
@@ -27,5 +28,18 @@ public class Especie {
 
     public void setGenero_id(int genero_id) {
         this.genero_id = genero_id;
+    }
+
+    public int getTipo_form_id() {
+        return tipo_form_id;
+    }
+
+    public void setTipo_form_id(int tipo_form_id) {
+        this.tipo_form_id = tipo_form_id;
+    }
+
+    @Override
+    public String toString() {
+        return especie_name;
     }
 }

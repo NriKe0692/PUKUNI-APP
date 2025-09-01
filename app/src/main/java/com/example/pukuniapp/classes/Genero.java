@@ -4,6 +4,7 @@ public class Genero {
     private int genero_id;
     private String genero_name;
     private int familia_id;
+    private int tipo_form_id;
 
     public int getGenero_id() {
         return genero_id;
@@ -27,5 +28,18 @@ public class Genero {
 
     public void setFamilia_id(int familia_id) {
         this.familia_id = familia_id;
+    }
+
+    public int getTipo_form_id() {
+        return tipo_form_id;
+    }
+
+    public void setTipo_form_id(int tipo_form_id) {
+        this.tipo_form_id = tipo_form_id;
+    }
+
+    @Override
+    public String toString() {
+        return genero_name;
     }
 }

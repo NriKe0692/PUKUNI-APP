@@ -123,7 +123,7 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                 btn.setOnClickListener(v -> {
                     switch (finalFormName){
                         case "Flora": {
-                            FloraFormFragment newFragment = FloraFormFragment.newInstance(estacion.getEstacion_muestreo_name(), estacion.getEstacion_muestreo_id());
+                            FloraFormFragment newFragment = FloraFormFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)
@@ -132,7 +132,7 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                             break;
                         }
                         case "Ornitofauna": {
-                            OrnitoFaunaFragment newFragment = OrnitoFaunaFragment.newInstance(estacion.getEstacion_muestreo_name(), estacion.getEstacion_muestreo_id());
+                            OrnitoFaunaFragment newFragment = OrnitoFaunaFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)

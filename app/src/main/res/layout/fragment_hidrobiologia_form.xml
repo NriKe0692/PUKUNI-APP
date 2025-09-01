@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.FloraFormFragment">
+    tools:context=".fragments.HidrobiologiaFormFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,20 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sub Estación de Muestreo"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_sub_estacion_muestreo"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"
@@ -49,11 +35,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Unidad de Vegetación"/>
+                android:text="Tipo de Ambiente Acuático"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_unidad_vegetacion"
+                android:id="@+id/spinner_tipo_ambiente_acuatico"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -63,11 +49,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Zona"/>
+                android:text="Estación"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_zona"
+                android:id="@+id/spinner_estacion"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -77,25 +63,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Metodología"/>
+                android:text="Punto de Muestreo"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_metodologia"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Unidad Muestreal"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_unidad_muestreal"
+                android:id="@+id/spinner_punto_muestreo"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -150,11 +122,431 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Pendiente Cauce"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_pendiente"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Clima"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
                 android:id="@+id/spinner_clima"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ancho Cauce Sector (m)"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_ancho_cauce_sector"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo Orilla"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_tipo_orilla"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo de Agua"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_tipo_agua"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Color Aparente del Agua"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_color_aparente_agua"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Metodología"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_metodologia"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Longitud muestreo"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_longitud_muestreo"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ancho muestreo"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_ancho_muestreo"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Área de muestreo"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_area_muestreo"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Velocidad de Corriente"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_velocidad_corriente"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profundidad máxima de muestreo"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_profundidad_maxima_muestreo"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profundidad máxima de sector"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_profundidad_maxima_sector"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transparencia (m)"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_transparencia"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegetacion Emergente"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_vegetacion_emergente"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegetacion Sumergida"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_vegetacion_sumergida"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegetacion Flotante"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_vegetacion_flotante"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Habitat % Long caída"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_habitat_long_caida"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Habitat % Long rifle"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_habitat_long_rifle"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Habitat % Long corridas"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_habitat_long_corridas"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Habitat % Long pozos"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_habitat_long_pozos"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Habitat % Long remanso"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_habitat_long_remanso"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sustrato % Arena"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_sustrato_arena"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sustrato % Arcilla"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_sustrato_arcilla"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sustrato % Limo"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_sustrato_limo"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sustrato % Grava"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_sustrato_grava"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sustrato % Organico (Hojarasca)"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_sustrato_organico_hojarasca"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sustrato % Organico (Ramas, Palizadas)"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_sustrato_organico_ramas"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sustrato % Organico (Enraizados)"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_sustrato_organico_enraizados"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unidad de Vegetación"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_unidad_vegetacion"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegetación circundante"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_vegetacion_circundante"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -258,20 +650,6 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nombre Local"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_nombre_local"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="N° Individuos"/>
 
             <EditText
@@ -286,81 +664,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tipo de Registro"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_tipo_registro"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Categoría x abundancia"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_cat_x_abundancia"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hábito"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_habito"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Grupo Trofico"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_grupo_trofico"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Indicador"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_indicador"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Largo Cola (cm)"/>
+                android:text="UICN"/>
 
             <EditText
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_largo_cola"
+                android:id="@+id/et_uicn"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -370,11 +678,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Largo Pata (cm)"/>
+                android:text="CITES"/>
 
             <EditText
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_largo_pata"
+                android:id="@+id/et_cites"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -384,11 +692,53 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Longitud Total (cm)"/>
+                android:text="Nivel trófico-fishbase (Valoración)"/>
 
             <EditText
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_long_total"
+                android:id="@+id/et_nivel_trofico_fishbase"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hábitos alimenticios"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_habitos_alimenticios"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo de Usos"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_usos"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LT (cm)"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_lt_cm"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -412,11 +762,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Estado de Conservación del Hábitat"/>
+                android:text="Hábitats peces"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_estado_conservacion"
+                android:id="@+id/spinner_habitat_peces"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -426,11 +776,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Estadío"/>
+                android:text="Etapa Reproductiva"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_estadio"
+                android:id="@+id/spinner_etapa_reproductiva"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -440,67 +790,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sexo"/>
-
-            <Spinner
-                android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_sexo"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="UICN 2021-3"/>
+                android:text="Observaciones"/>
 
             <EditText
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_uicn_2021_3"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CITES 2021.3"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_cites_2021_3"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="IBAS"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_ibas"
-                android:background="@drawable/spinner_background"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Usos"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_usos"
+                android:id="@+id/et_observaciones"
                 android:background="@drawable/spinner_background"
                 android:inputType="textMultiLine"
                 android:gravity="top|start"
@@ -542,24 +836,6 @@
                 android:scaleType="centerCrop"
                 android:layout_marginTop="8dp"/>
 
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Comentario"/>
-
-            <EditText
-                android:layout_marginBottom="12dp"
-                android:id="@+id/et_comentario"
-                android:background="@drawable/spinner_background"
-                android:inputType="textMultiLine"
-                android:gravity="top|start"
-                android:lines="5"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <android.widget.Button
                 android:id="@+id/save_form"
                 android:layout_marginTop="12dp"
@@ -570,10 +846,7 @@
                 android:layout_height="wrap_content"
                 android:text="Guardar Formulario"
                 android:background="@drawable/rounded_background">
-            </android.widget.Button>
-
         </LinearLayout>
-
     </ScrollView>
 
 </FrameLayout>

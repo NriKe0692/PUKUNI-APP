@@ -7,7 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "pukuni_db.db";
     private static final int DATABASE_VERSION = 1;
-    public static final String TABLE_FORMULARIO_FLORA = "flora";
+    public static final String TABLE_FORMULARIO_FLORA = "form_flora";
+    public static final String TABLE_FORMULARIO_ORNITOFAUNA = "form_ornitofauna";
     public static final String TABLE_AUTOR = "autor";
     public static final String TABLE_CLASE = "clase";
     public static final String TABLE_DEPARTAMENTO = "departamento";
@@ -37,6 +38,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_METODOLOGIA = "metodologia";
     public static final String TABLE_CLIMA = "clima";
     public static final String TABLE_UNIDAD_MUESTREAL = "unidad_muestreal";
+    public static final String TABLE_TIPO_REGISTRO = "tipo_registro";
+    public static final String TABLE_CATEGORIA_ABUNDANCIA = "categoria_abundancia";
+    public static final String TABLE_GRUPO_TROFICO = "grupo_trofico";
+    public static final String TABLE_INDICADOR = "indicador";
+    public static final String TABLE_ESTADO_CONSERVACION = "estado_conservacion";
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -52,7 +58,6 @@ public class DBHelper extends SQLiteOpenHelper {
         createEstadioTable(db);
         createFamiliaTable(db);
         createFenologiaTable(db);
-        createFormFloraTable(db);
         createForofitoTable(db);
         createFranjaTable(db);
         createGeneroTable(db);
@@ -72,6 +77,14 @@ public class DBHelper extends SQLiteOpenHelper {
         createMetodologiaTable(db);
         createClimaTable(db);
         createUnidadMuestrealTable(db);
+        createTipoRegistroTable(db);
+        createCategoriaAbundanciaTable(db);
+        createGruposTroficosTable(db);
+        createIndicadorTable(db);
+        createEstadoConservacionTable(db);
+
+        createFormFloraTable(db);
+        createFormOrnitofaunaTable(db);
     }
 
     private void createAutorTable(SQLiteDatabase db){
@@ -82,11 +95,20 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(sqlQuery);
     }
 
+    private void createEstadoConservacionTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_ESTADO_CONSERVACION + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "estado_conservacion_habitat_id INTEGER, " +
+            "estado_conservacion_habitat_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
     private void createClaseTable(SQLiteDatabase db){
         String sqlQuery = "CREATE TABLE " + TABLE_CLASE + " (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "clase_id INTEGER, " +
-            "clase_name TEXT)";
+            "clase_name TEXT," +
+            "tipo_form_id INTEGER)";
         db.execSQL(sqlQuery);
     }
 
@@ -113,7 +135,8 @@ public class DBHelper extends SQLiteOpenHelper {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "especie_id INTEGER, " +
             "genero_id INTEGER, " +
-            "especie_name TEXT)";
+            "especie_name TEXT," +
+            "tipo_form_id INTEGER)";
         db.execSQL(sqlQuery);
     }
 
@@ -146,7 +169,8 @@ public class DBHelper extends SQLiteOpenHelper {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "familia_id INTEGER, " +
             "orden_id INTEGER, " +
-            "familia_name TEXT)";
+            "familia_name TEXT, " +
+            "tipo_form_id INTEGER)";
         db.execSQL(sqlQuery);
     }
 
@@ -182,22 +206,40 @@ public class DBHelper extends SQLiteOpenHelper {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "genero_id INTEGER, " +
             "familia_id INTEGER, " +
-            "genero_name TEXT)";
+            "genero_name TEXT, " +
+            "tipo_form_id INTEGER)";
         db.execSQL(sqlQuery);
     }
     private void createHabitoTable(SQLiteDatabase db) {
         String sqlQuery = "CREATE TABLE " + TABLE_HABITO + " (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "habito_id INTEGER, " +
-            "habito_name TEXT)";
+            "habito_name TEXT, " +
+            "tipo_form_id INTEGER)";
         db.execSQL(sqlQuery);
     }
 
     private void createNombreComunTable(SQLiteDatabase db) {
         String sqlQuery = "CREATE TABLE " + TABLE_NOMBRE_COMUN + " (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "nombre_comun_id INTEGER, " +
-            "nombre_comun_name TEXT)";
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "nombre_comun_id INTEGER, " +
+                "nombre_comun_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createGruposTroficosTable(SQLiteDatabase db) {
+        String sqlQuery = "CREATE TABLE " + TABLE_GRUPO_TROFICO + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "grupo_trofico_id INTEGER, " +
+                "grupo_trofico_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createIndicadorTable(SQLiteDatabase db) {
+        String sqlQuery = "CREATE TABLE " + TABLE_INDICADOR + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "indicador_id INTEGER, " +
+                "indicador_name TEXT)";
         db.execSQL(sqlQuery);
     }
 
@@ -206,7 +248,8 @@ public class DBHelper extends SQLiteOpenHelper {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "orden_id INTEGER, " +
             "clase_id INTEGER, " +
-            "orden_name TEXT)";
+            "orden_name TEXT, " +
+            "tipo_form_id INTEGER)";
         db.execSQL(sqlQuery);
     }
 
@@ -316,6 +359,22 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(sqlQuery);
     }
 
+    private void createTipoRegistroTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_TIPO_REGISTRO + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "tipo_registro_id INTEGER, " +
+                "tipo_registro_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createCategoriaAbundanciaTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_CATEGORIA_ABUNDANCIA + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "categoria_abundancia_id INTEGER, " +
+                "categoria_abundancia_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
     private void createUnidadMuestrealTable(SQLiteDatabase db){
         String sqlQuery = "CREATE TABLE " + TABLE_UNIDAD_MUESTREAL + " (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -327,49 +386,98 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createFormFloraTable(SQLiteDatabase db){
-        String createTableFloraForm = "CREATE TABLE " + TABLE_FORMULARIO_FLORA + " (" +
+        String createTableForm = "CREATE TABLE " + TABLE_FORMULARIO_FLORA + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "estacion_muestreo_id INTEGER," +
+            "lugar_id INTEGER, " +
+            "fecha DATE," +
+            "franja_id INTEGER," +
+            "unidad_muestreo_id INTEGER," +
+            "parcela_id INTEGER," +
+            "forofito_id INTEGER," +
+            "sub_parcela_id INTEGER," +
+            "tamanio TEXT," +
+            "codigo_placa TEXT," +
+            "unidad_vegetacion_id INTEGER," +
+            "pais_id INTEGER," +
+            "departamento_id INTEGER," +
+            "provincia_id INTEGER," +
+            "distrito_id INTEGER," +
+            "localidad TEXT," +
+            "este REAL," +
+            "norte REAL," +
+            "altitud REAL," +
+            "clase_id INTEGER," +
+            "orden_id INTEGER," +
+            "familia_id INTEGER," +
+            "genero_id INTEGER," +
+            "especie_id INTEGER," +
+            "nombre_comun TEXT," +
+            "autor_id INTEGER," +
+            "individuos INTEGER," +
+            "dap REAL," +
+            "altura REAL," +
+            "valor_cobertura REAL," +
+            "habito_id INTEGER," +
+            "estadio_id INTEGER," +
+            "fenologia_id INTEGER," +
+            "usos TEXT," +
+            "image_uri TEXT," +
+            "observaciones TEXT," +
+            "datos_planta TEXT)";
+        db.execSQL(createTableForm);
+    }
+
+    private void createFormOrnitofaunaTable(SQLiteDatabase db){
+        String createTableForm = "CREATE TABLE " + TABLE_FORMULARIO_ORNITOFAUNA + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "lugar_id INTEGER, " +
-                "fecha DATE," +
-                "franja_id INTEGER," +
-                "unidad_muestreo_id INTEGER," +
-                "parcela_id INTEGER," +
-                "forofito_id INTEGER," +
-                "sub_parcela_id INTEGER," +
-                "tamanio TEXT," +
+                "franja_id INTEGER, " +
+                "temporada_evaluacion_id INTEGER," +
+                "estacion_muestreo_id INTEGER," +
+                "metodologia_id INTEGER," +
+                "unidad_muestreal_id INTEGER," +
                 "unidad_vegetacion_id INTEGER," +
-                "pais_id INTEGER," +
-                "departamento_id INTEGER," +
-                "provincia_id INTEGER," +
-                "distrito_id INTEGER," +
-                "localidad TEXT," +
+                "zona_id INTEGER," +
                 "este REAL," +
-                "norte REAL," +
-                "altitud REAL," +
+                "norte REAL ," +
+                "altitud REAL ," +
+                "fecha DATE," +
+                "hora TIME," +
+                "clima_id INTEGER," +
                 "clase_id INTEGER," +
                 "orden_id INTEGER," +
                 "familia_id INTEGER," +
                 "genero_id INTEGER," +
                 "especie_id INTEGER," +
                 "nombre_comun TEXT," +
-                "autor_id INTEGER," +
-                "individuos INTEGER," +
-                "dap REAL," +
-                "altura REAL," +
-                "valor_cobertura REAL," +
-                "habito_id INTEGER," +
+                "nombre_local TEXT," +
+                "numero_individuos INTEGER," +
+                "tipo_registro_id INTEGER," +
+                "categoria_abundancia_id INTEGER ," +
+                "habito_id INTEGER ," +
+                "grupo_trofico_id INTEGER ," +
+                "indicador_id INTEGER ," +
+                "largo_cola REAL," +
+                "largo_pata REAL," +
+                "longitud_total REAL," +
+                "peso REAL," +
                 "estadio_id INTEGER," +
-                "fenologia_id INTEGER," +
+                "sexo TEXT," +
+                "uicn TEXT," +
+                "cites TEXT," +
+                "ibas TEXT," +
                 "usos TEXT," +
+                "comentario TEXT," +
                 "image_uri TEXT," +
-                "observaciones TEXT," +
-                "datos_planta TEXT)";
-        db.execSQL(createTableFloraForm);
+                "especialista_id INTEGER," +
+                "estado_conservacion_id INTEGER)";
+        db.execSQL(createTableForm);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_FLORA);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_ORNITOFAUNA);
         onCreate(db);
     }
 }

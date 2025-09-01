@@ -5,6 +5,8 @@ public class Familia {
     private String familia_name;
     private int orden_id;
 
+    private int tipo_form_id;
+
     public int getFamilia_id() {
         return familia_id;
     }
@@ -27,5 +29,18 @@ public class Familia {
 
     public void setOrden_id(int orden_id) {
         this.orden_id = orden_id;
+    }
+
+    public int getTipo_form_id() {
+        return tipo_form_id;
+    }
+
+    public void setTipo_form_id(int tipo_form_id) {
+        this.tipo_form_id = tipo_form_id;
+    }
+
+    @Override
+    public String toString() {
+        return familia_name;
     }
 }

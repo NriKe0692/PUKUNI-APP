@@ -1,6 +1,7 @@
 package com.example.pukuniapp.retrofit;
 
 import com.example.pukuniapp.classes.Autor;
+import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Clima;
 import com.example.pukuniapp.classes.Departamento;
@@ -8,12 +9,15 @@ import com.example.pukuniapp.classes.Distrito;
 import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.EstacionMuestreo;
 import com.example.pukuniapp.classes.Estadio;
+import com.example.pukuniapp.classes.EstadoConservacion;
 import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.Fenologia;
 import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
+import com.example.pukuniapp.classes.GrupoTrofico;
 import com.example.pukuniapp.classes.Habito;
+import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Location;
 import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.Orden;
@@ -22,6 +26,7 @@ import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.Provincia;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
+import com.example.pukuniapp.classes.TipoRegistro;
 import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
@@ -123,4 +128,18 @@ public interface ApiService {
 
     @GET("/unidad_muestreal")
     Call<List<UnidadMuestreal>> getUnidadesMuestreal(@Header("Authorization") String token);
+
+    @GET("/tipo_registros")
+    Call<List<TipoRegistro>> getTipoRegistros(@Header("Authorization") String token);
+
+    @GET("/categoria_abundancia")
+    Call<List<CategoriaAbundancia>> getCategoriaXAbundancia(@Header("Authorization") String token);
+
+    @GET("/grupos_troficos")
+    Call<List<GrupoTrofico>> getGruposTroficos(@Header("Authorization") String token);
+
+    @GET("/indicadores")
+    Call<List<Indicador>> getIndicadores(@Header("Authorization") String token);
+    @GET("/estados_conservacion")
+    Call<List<EstadoConservacion>> getEstadosConservacion(@Header("Authorization") String token);
 }

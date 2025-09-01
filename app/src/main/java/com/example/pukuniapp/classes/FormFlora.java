@@ -3,6 +3,7 @@ package com.example.pukuniapp.classes;
 import java.util.Date;
 
 public class FormFlora {
+    private int id;
     private int lugar_id;
     private String fecha;
     private int franja_id;
@@ -11,6 +12,7 @@ public class FormFlora {
     private int forofito_id;
     private int sub_parcela_id;
     private String tamanio;
+    private String codigo_placa;
     private int unidad_vegetacion_id;
     private int pais_id;
     private int departamento_id;
@@ -38,8 +40,16 @@ public class FormFlora {
     private String observaciones;
     private String datosPlanta;
     private boolean formularioEnviado;
-
+    private int estacion_muestreo_id;
     private String imageUri;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getImageUri() {
         return imageUri;
@@ -327,5 +337,21 @@ public class FormFlora {
 
     public void setFormularioEnviado(boolean formularioEnviado) {
         this.formularioEnviado = formularioEnviado;
+    }
+
+    public int getEstacion_muestreo_id() {
+        return estacion_muestreo_id;
+    }
+
+    public void setEstacion_muestreo_id(int estacion_muestreo_id) {
+        this.estacion_muestreo_id = estacion_muestreo_id;
+    }
+
+    public String getCodigo_placa() {
+        return codigo_placa;
+    }
+
+    public void setCodigo_placa(String codigo_placa) {
+        this.codigo_placa = codigo_placa;
     }
 }
