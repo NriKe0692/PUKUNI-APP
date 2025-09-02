@@ -20,6 +20,7 @@ import com.example.pukuniapp.R;
 import com.example.pukuniapp.adapters.CustomAdapter;
 import com.example.pukuniapp.classes.FormFlora;
 import com.example.pukuniapp.classes.FormOrnitofauna;
+import com.example.pukuniapp.classes.TipoUsos;
 import com.example.pukuniapp.helpers.DBHelper;
 
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class SavedFormListFragment extends Fragment {
                 int habito_id = cursor.getInt(cursor.getColumnIndexOrThrow("habito_id"));
                 int estadio_id = cursor.getInt(cursor.getColumnIndexOrThrow("estadio_id"));
                 int fenologia_id = cursor.getInt(cursor.getColumnIndexOrThrow("fenologia_id"));
-                String usos = cursor.getString(cursor.getColumnIndexOrThrow("usos"));
+                int uso_id = cursor.getInt(cursor.getColumnIndexOrThrow("uso_id"));
                 String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
                 String observaciones = cursor.getString(cursor.getColumnIndexOrThrow("observaciones"));
                 String datos_planta = cursor.getString(cursor.getColumnIndexOrThrow("datos_planta"));
@@ -182,7 +183,7 @@ public class SavedFormListFragment extends Fragment {
                 formFloraTemp.setHabito_id(habito_id);
                 formFloraTemp.setEstadio_id(estadio_id);
                 formFloraTemp.setFenologia_id(fenologia_id);
-                formFloraTemp.setUsos(usos);
+                formFloraTemp.setUso_id(uso_id);
                 formFloraTemp.setImageUri(image_uri);
                 formFloraTemp.setObservaciones(observaciones);
                 formFloraTemp.setDatosPlanta(datos_planta);

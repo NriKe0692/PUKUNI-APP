@@ -22,12 +22,8 @@ public class FaunaListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
-    public static FaunaListFragment newInstance(String formName) {
+    public static FaunaListFragment newInstance() {
         FaunaListFragment fragment = new FaunaListFragment();
-        Bundle args = new Bundle();
-        args.putString("form_name", formName);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -108,54 +104,6 @@ public class FaunaListFragment extends Fragment {
         };
 
         view.findViewById(R.id.form_mamiferos_mayores_click).setOnClickListener(mamiferosMayoresClickListener);
-
-//        // Quiropteros Click
-//        View.OnClickListener quiropterosClickListener = v -> {
-//            TextView quiropterosFormText = v.findViewById(R.id.form_quiropteros_text);
-//            String formName = quiropterosFormText.getText().toString();
-//
-//            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
-//
-//            requireActivity().getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.fragment_container, newFragment)
-//                    .addToBackStack(null)
-//                    .commit();
-//        };
-//
-//        view.findViewById(R.id.form_quiropteros_click).setOnClickListener(quiropterosClickListener);
-//
-//        // Roedores Click
-//        View.OnClickListener roedoresClickListener = v -> {
-//            TextView roedoresFormText = v.findViewById(R.id.form_roedores_text);
-//            String formName = roedoresFormText.getText().toString();
-//
-//            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
-//
-//            requireActivity().getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.fragment_container, newFragment)
-//                    .addToBackStack(null)
-//                    .commit();
-//        };
-//
-//        view.findViewById(R.id.form_roedores_click).setOnClickListener(roedoresClickListener);
-
-        // Hidrobiologia Click
-        View.OnClickListener hidrobiologiaClickListener = v -> {
-            TextView hidrobiologiaFormText = v.findViewById(R.id.form_hidrobiologia_text);
-            String formName = hidrobiologiaFormText.getText().toString();
-
-            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
-
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, newFragment)
-                    .addToBackStack(null)
-                    .commit();
-        };
-
-        view.findViewById(R.id.form_hidrobiologia_click).setOnClickListener(hidrobiologiaClickListener);
 
         return view;
     }

@@ -13,6 +13,45 @@
         android:paddingEnd="24dp">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/form_entomologia_click"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_background"
+                android:orientation="horizontal"
+                android:elevation="4dp"
+                android:padding="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_form"
+                    android:layout_marginEnd="16dp"
+                    android:tint="#35553f"
+                    tools:ignore="UseAppTint"/>
+
+                <TextView
+                    android:id="@+id/form_entomologia_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Entomología"
+                    android:textSize="16sp"
+                    android:textColor="#35553f"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/form_ornitofauna_click"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,7 +155,7 @@
                     android:id="@+id/form_mamiferos_menores_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mamíferos Menores"
+                    android:text="Mamíferos Pequeños"
                     android:textSize="16sp"
                     android:textColor="#35553f"
                     android:textStyle="bold"/>
@@ -155,46 +194,7 @@
                     android:id="@+id/form_mamiferos_mayores_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mamíferos Mayores"
-                    android:textSize="16sp"
-                    android:textColor="#35553f"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/form_hidrobiologia_click"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_background"
-                android:orientation="horizontal"
-                android:elevation="4dp"
-                android:padding="16dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_form"
-                    android:layout_marginEnd="16dp"
-                    android:tint="#35553f"
-                    tools:ignore="UseAppTint"/>
-
-                <TextView
-                    android:id="@+id/form_hidrobiologia_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hidrobiología"
+                    android:text="Mamíferos Medianos y Grandes"
                     android:textSize="16sp"
                     android:textColor="#35553f"
                     android:textStyle="bold"/>

@@ -74,7 +74,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             floraHolder.tv_localidad.setText("Localidad: " + flora.getLocalidad());
             floraHolder.tv_especie.setText("Especie: " + flora.getEspecie_id());
             floraHolder.tv_altura.setText("Altura: " + flora.getAltura() + " cm");
-            floraHolder.tv_usos.setText("Usos: " + flora.getUsos());
+            floraHolder.tv_usos.setText("Usos: " + flora.getUso_id());
             floraHolder.img_preview.setImageURI(Uri.parse(flora.getImageUri()));
 
             floraHolder.itemView.setOnClickListener(v -> {

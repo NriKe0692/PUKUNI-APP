@@ -909,8 +909,8 @@ public class OrnitoFaunaFragment extends Fragment {
         List<Metodologia> metodologiasList = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(
-            "SELECT * FROM " + TABLE_METODOLOGIA,
-            null
+            "SELECT * FROM " + TABLE_METODOLOGIA + " WHERE tipo_formulario_id = ?",
+                new String[]{ String.valueOf(TIPO_FORM_ID) }
         );
 
         if (cursor.moveToFirst()) {

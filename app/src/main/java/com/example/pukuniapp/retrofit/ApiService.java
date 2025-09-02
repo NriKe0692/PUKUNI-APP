@@ -4,6 +4,7 @@ import com.example.pukuniapp.classes.Autor;
 import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Clima;
+import com.example.pukuniapp.classes.CondicionReproductiva;
 import com.example.pukuniapp.classes.Departamento;
 import com.example.pukuniapp.classes.Distrito;
 import com.example.pukuniapp.classes.Especie;
@@ -27,6 +28,8 @@ import com.example.pukuniapp.classes.Provincia;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.TipoRegistro;
+import com.example.pukuniapp.classes.TipoTrampa;
+import com.example.pukuniapp.classes.TipoUsos;
 import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
@@ -140,6 +143,16 @@ public interface ApiService {
 
     @GET("/indicadores")
     Call<List<Indicador>> getIndicadores(@Header("Authorization") String token);
+
     @GET("/estados_conservacion")
     Call<List<EstadoConservacion>> getEstadosConservacion(@Header("Authorization") String token);
+
+    @GET("/condiciones_reproductivas")
+    Call<List<CondicionReproductiva>> getCondicionesReproductivas(@Header("Authorization") String token);
+
+    @GET("/tipos_trampa")
+    Call<List<TipoTrampa>> getTiposTrampa(@Header("Authorization") String token);
+
+    @GET("/usos")
+    Call<List<TipoUsos>> getUsos(@Header("Authorization") String token);
 }

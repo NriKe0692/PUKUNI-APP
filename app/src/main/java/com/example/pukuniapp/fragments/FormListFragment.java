@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pukuniapp.R;
 
@@ -50,10 +51,7 @@ public class FormListFragment extends Fragment {
         label.setText("Seleccione un Tipo de Formulario");
 
         View.OnClickListener floraClickListener = v -> {
-            TextView floraFormText = v.findViewById(R.id.form_flora_text);
-            String formName = floraFormText.getText().toString();
-
-            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
+            FloraListFragment newFragment = FloraListFragment.newInstance();
 
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -65,10 +63,7 @@ public class FormListFragment extends Fragment {
         view.findViewById(R.id.form_flora_click).setOnClickListener(floraClickListener);
 
         View.OnClickListener faunaClickListener = v -> {
-            TextView faunaFormText = v.findViewById(R.id.form_fauna_text);
-            String formName = faunaFormText.getText().toString();
-
-            FaunaListFragment newFragment = FaunaListFragment.newInstance(formName);
+            FaunaListFragment newFragment = FaunaListFragment.newInstance();
 
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -78,6 +73,40 @@ public class FormListFragment extends Fragment {
         };
 
         view.findViewById(R.id.form_fauna_click).setOnClickListener(faunaClickListener);
+
+        // Hidrobiologia Click
+        View.OnClickListener hidrobiologiaClickListener = v -> {
+            TextView hidrobiologiaFormText = v.findViewById(R.id.form_hidrobiologia_text);
+            String formName = hidrobiologiaFormText.getText().toString();
+
+            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, newFragment)
+                    .addToBackStack(null)
+                    .commit();
+        };
+
+        view.findViewById(R.id.form_hidrobiologia_click).setOnClickListener(hidrobiologiaClickListener);
+
+        // Forestal Click
+        View.OnClickListener forestalClickListener = v -> {
+            TextView forestalFormText = v.findViewById(R.id.form_forestal_text);
+            String formName = forestalFormText.getText().toString();
+
+            Toast.makeText(getContext(), formName, Toast.LENGTH_SHORT).show();
+
+//            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
+//
+//            requireActivity().getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.fragment_container, newFragment)
+//                    .addToBackStack(null)
+//                    .commit();
+        };
+
+        view.findViewById(R.id.form_forestal_click).setOnClickListener(forestalClickListener);
 
         return view;
     }

@@ -34,13 +34,6 @@ public class SelectEstacionMuestreoFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SelectEstacionMuestreoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SelectEstacionMuestreoFragment newInstance(String formName) {
         SelectEstacionMuestreoFragment fragment = new SelectEstacionMuestreoFragment();
         Bundle args = new Bundle();
@@ -122,13 +115,23 @@ public class SelectEstacionMuestreoFragment extends Fragment {
 
                 btn.setOnClickListener(v -> {
                     switch (finalFormName){
-                        case "Flora": {
+                        case "Botánica": {
                             FloraFormFragment newFragment = FloraFormFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)
                                     .addToBackStack(null)
                                     .commit();
+                            break;
+                        }
+                        case "Líquenes": {
+                            Toast.makeText(getContext(), "Líquenes", Toast.LENGTH_SHORT).show();
+//                            FloraFormFragment newFragment = FloraFormFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+//                            requireActivity().getSupportFragmentManager()
+//                                    .beginTransaction()
+//                                    .replace(R.id.fragment_container, newFragment)
+//                                    .addToBackStack(null)
+//                                    .commit();
                             break;
                         }
                         case "Ornitofauna": {
@@ -141,23 +144,48 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                             break;
                         }
                         case "Herpetología": {
-                            Toast.makeText(getContext(), "Herpetología", Toast.LENGTH_SHORT).show();
+                            HerpetologiaFragment newFragment = HerpetologiaFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
                             break;
                         }
-                        case "Masto": {
-                            Toast.makeText(getContext(), "Masto", Toast.LENGTH_SHORT).show();
+                        case "Mamíferos Mayores": {
+                            MamiferosMayoresFragment newFragment = MamiferosMayoresFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
                             break;
                         }
                         case "Quiropteros": {
-                            Toast.makeText(getContext(), "Quiropteros", Toast.LENGTH_SHORT).show();
+                            QuiropterosFragment newFragment = QuiropterosFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
                             break;
                         }
                         case "Roedores": {
-                            Toast.makeText(getContext(), "Roedores", Toast.LENGTH_SHORT).show();
+                            RoedoresFragment newFragment = RoedoresFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
                             break;
                         }
                         case "Hidrobiología": {
-                            Toast.makeText(getContext(), "Hidrobiología", Toast.LENGTH_SHORT).show();
+                            HidrobiologiaFormFragment newFragment = HidrobiologiaFormFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
                             break;
                         }
                     }

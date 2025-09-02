@@ -13,16 +13,17 @@ import com.example.pukuniapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HidrobiologiaFormFragment#newInstance} factory method to
+ * Use the {@link RoedoresFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HidrobiologiaFormFragment extends Fragment {
-    public HidrobiologiaFormFragment() {
+public class RoedoresFragment extends Fragment {
+
+    public RoedoresFragment() {
         // Required empty public constructor
     }
 
-    public static HidrobiologiaFormFragment newInstance(int estacionMuestreoId, int formId) {
-        HidrobiologiaFormFragment fragment = new HidrobiologiaFormFragment();
+    public static RoedoresFragment newInstance(int estacionMuestreoId, int formId) {
+        RoedoresFragment fragment = new RoedoresFragment();
         Bundle args = new Bundle();
         args.putInt("estacion_id", estacionMuestreoId);
         args.putInt("formulario_id", formId);
@@ -41,12 +42,12 @@ public class HidrobiologiaFormFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_hidrobiologia_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_roedores, container, false);
 
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
 
         if(label != null){
-            label.setText("Formulario Hidrobioloía");
+            label.setText("Formulario Roedores");
         }
 
         return view;

@@ -4,6 +4,7 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_AUTOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CATEGORIA_ABUNDANCIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLASE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLIMA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_CONDICION_REPRODUCTIVA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTACION_MUESTREO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADIO;
@@ -23,9 +24,11 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_PARCELA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUB_PARCELA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TEMPORADA_EVALUACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TIPO_REGISTRO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_TIPO_TRAMPA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREAL;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_VEGETACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_USOS;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ZONA;
 
 import android.content.ContentValues;
@@ -50,6 +53,7 @@ import com.example.pukuniapp.classes.Autor;
 import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Clima;
+import com.example.pukuniapp.classes.CondicionReproductiva;
 import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.EstacionMuestreo;
 import com.example.pukuniapp.classes.Estadio;
@@ -69,6 +73,8 @@ import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.TipoRegistro;
+import com.example.pukuniapp.classes.TipoTrampa;
+import com.example.pukuniapp.classes.TipoUsos;
 import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
@@ -255,6 +261,15 @@ public class LoginActivity extends AppCompatActivity {
                                                                                                                     Log.d("TESTING!", "FIN 26");
                                                                                                                     loadSubParcela(db, api, token, TABLE_SUB_PARCELA, executor, handler, () -> {
                                                                                                                         Log.d("TESTING!", "FIN 27");
+                                                                                                                        loadCondicionReproductiva(db, api, token, TABLE_CONDICION_REPRODUCTIVA, executor, handler, () -> {
+                                                                                                                            Log.d("TESTING!", "FIN 28");
+                                                                                                                            loadTipoTrampa(db, api, token, TABLE_TIPO_TRAMPA, executor, handler, () -> {
+                                                                                                                                Log.d("TESTING!", "FIN 29");
+                                                                                                                                loadUsosValues(db, api, token, TABLE_USOS, executor, handler, () -> {
+                                                                                                                                    Log.d("TESTING!", "FIN 30");
+                                                                                                                                });
+                                                                                                                            });
+                                                                                                                        });
                                                                                                                     });
                                                                                                                 });
                                                                                                             });
@@ -285,6 +300,39 @@ public class LoginActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    public void loadUsosValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getUsos("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<TipoUsos>> call, Response<List<TipoUsos>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<TipoUsos> usosList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(TipoUsos uso : usosList){
+                            ContentValues values = new ContentValues();
+                            values.put("usos_id", uso.getUsos_id());
+                            values.put("usos_name", uso.getUsos_name());
+                            values.put("tipo_form_id", uso.getTipo_form_id());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TipoUsos>> call, Throwable t) {
+                irALogin();
+            }
+        });
     }
 
     public void loadTemporadasEvaluacion(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
@@ -366,6 +414,7 @@ public class LoginActivity extends AppCompatActivity {
                             ContentValues values = new ContentValues();
                             values.put("metodologia_id", metodologia.getMetodologia_id());
                             values.put("metodologia_name", metodologia.getMetodologia_name());
+                            values.put("tipo_formulario_id", metodologia.getTipo_formulario_id());
                             db.insert(TABLE_NAME, null, values);
                         }
 
@@ -1115,6 +1164,70 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<SubParcela>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadCondicionReproductiva(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete) {
+        api.getCondicionesReproductivas("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CondicionReproductiva>> call, Response<List<CondicionReproductiva>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<CondicionReproductiva> condicionReproductivaList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for (CondicionReproductiva condicionReproductiva : condicionReproductivaList) {
+                            ContentValues values = new ContentValues();
+                            values.put("condicion_reproductiva_id", condicionReproductiva.getCondicion_reproductiva_id());
+                            values.put("condicion_reproductiva_name", condicionReproductiva.getCondicion_reproductiva_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CondicionReproductiva>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadTipoTrampa(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete) {
+        api.getTiposTrampa("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<TipoTrampa>> call, Response<List<TipoTrampa>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<TipoTrampa> tipoTrampaList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for (TipoTrampa tipoTrampa : tipoTrampaList) {
+                            ContentValues values = new ContentValues();
+                            values.put("tipo_trampa_id", tipoTrampa.getTipo_trampa_id());
+                            values.put("tipo_trampa_name", tipoTrampa.getTipo_trampa_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TipoTrampa>> call, Throwable t) {
                 irALogin();
             }
         });

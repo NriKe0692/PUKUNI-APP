@@ -846,6 +846,7 @@
                 android:layout_height="wrap_content"
                 android:text="Guardar Formulario"
                 android:background="@drawable/rounded_background">
+            </android.widget.Button>
         </LinearLayout>
     </ScrollView>
 

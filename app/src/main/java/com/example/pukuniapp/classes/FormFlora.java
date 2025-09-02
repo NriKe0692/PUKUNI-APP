@@ -36,7 +36,7 @@ public class FormFlora {
     private int habito_id;
     private int estadio_id;
     private int fenologia_id;
-    private String usos;
+    private int uso_id;
     private String observaciones;
     private String datosPlanta;
     private boolean formularioEnviado;
@@ -307,12 +307,12 @@ public class FormFlora {
         this.fenologia_id = fenologia_id;
     }
 
-    public String getUsos() {
-        return usos;
+    public int getUso_id() {
+        return uso_id;
     }
 
-    public void setUsos(String usos) {
-        this.usos = usos;
+    public void setUso_id(int uso_id) {
+        this.uso_id = uso_id;
     }
 
     public String getObservaciones() {

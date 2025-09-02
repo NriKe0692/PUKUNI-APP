@@ -1,5 +1,6 @@
 package com.example.pukuniapp.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_AUTOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLASE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
@@ -16,12 +17,14 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_PARCELA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUB_PARCELA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_VEGETACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_USOS;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -70,6 +73,7 @@ import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.SubParcela;
+import com.example.pukuniapp.classes.TipoUsos;
 import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.helpers.DBHelper;
@@ -98,6 +102,7 @@ public class FloraFormFragment extends Fragment {
     Spinner spinnerHabito;
     Spinner spinnerEstadio;
     Spinner spinnerFenologia;
+    Spinner spinner_usos;
     TextView textViewEste;
     TextView textViewNorte;
     TextView textViewAltitud;
@@ -111,7 +116,6 @@ public class FloraFormFragment extends Fragment {
     EditText et_dap;
     EditText et_altura;
     EditText et_valor_cobertura;
-    EditText et_usos;
     EditText et_valor_observaciones;
     EditText et_valor_datos_planta;
     EditText et_tamanio_unidad;
@@ -196,6 +200,7 @@ public class FloraFormFragment extends Fragment {
         spinnerHabito = view.findViewById(R.id.spinner_habito);
         spinnerEstadio = view.findViewById(R.id.spinner_estadio);
         spinnerFenologia = view.findViewById(R.id.spinner_fenologia);
+        spinner_usos = view.findViewById(R.id.spinner_usos);
         textViewEste = view.findViewById(R.id.tv_este);
         textViewNorte = view.findViewById(R.id.tv_norte);
         textViewAltitud = view.findViewById(R.id.tv_altitud);
@@ -209,7 +214,6 @@ public class FloraFormFragment extends Fragment {
         et_dap = view.findViewById(R.id.et_dap);
         et_altura = view.findViewById(R.id.et_altura);
         et_valor_cobertura = view.findViewById(R.id.et_valor_cobertura);
-        et_usos = view.findViewById(R.id.et_usos);
         et_valor_observaciones = view.findViewById(R.id.et_valor_observaciones);
         et_valor_datos_planta = view.findViewById(R.id.et_valor_datos_planta);
         et_tamanio_unidad = view.findViewById(R.id.et_tamanio_unidad);
@@ -288,7 +292,7 @@ public class FloraFormFragment extends Fragment {
                         int habito_id = cursor.getInt(cursor.getColumnIndexOrThrow("habito_id"));
                         int estadio_id = cursor.getInt(cursor.getColumnIndexOrThrow("estadio_id"));
                         int fenologia_id = cursor.getInt(cursor.getColumnIndexOrThrow("fenologia_id"));
-                        String usos = cursor.getString(cursor.getColumnIndexOrThrow("usos"));
+                        int uso_id = cursor.getInt(cursor.getColumnIndexOrThrow("uso_id"));
                         String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
                         String observaciones = cursor.getString(cursor.getColumnIndexOrThrow("observaciones"));
                         String datos_planta = cursor.getString(cursor.getColumnIndexOrThrow("datos_planta"));
@@ -331,7 +335,7 @@ public class FloraFormFragment extends Fragment {
                         form.setHabito_id(habito_id);
                         form.setEstadio_id(estadio_id);
                         form.setFenologia_id(fenologia_id);
-                        form.setUsos(usos);
+                        form.setUso_id(uso_id);
                         form.setImageUri(image_uri);
                         form.setObservaciones(observaciones);
                         form.setDatosPlanta(datos_planta);
@@ -348,6 +352,7 @@ public class FloraFormFragment extends Fragment {
         setHabitosValues(db);
         setEstadiosValues(db);
         setFenologiasValues(db);
+        setUsosValues(db);
         setupAutocompleteTv(db);
         getCoordinates();
 
@@ -363,7 +368,6 @@ public class FloraFormFragment extends Fragment {
             et_dap.setText(String.valueOf(form.getDap()));
             et_altura.setText(String.valueOf(form.getAltura()));
             et_valor_cobertura.setText(String.valueOf(form.getValor_cobertura()));
-            et_usos.setText(String.valueOf(form.getUsos()));
             et_valor_observaciones.setText(String.valueOf(form.getObservaciones()));
             et_valor_datos_planta.setText(String.valueOf(form.getDatosPlanta()));
             imgPreview.setImageURI(Uri.parse(form.getImageUri()));
@@ -387,6 +391,7 @@ public class FloraFormFragment extends Fragment {
         Habito habito = (Habito) spinnerHabito.getSelectedItem();
         Estadio estadio = (Estadio) spinnerEstadio.getSelectedItem();
         Fenologia fenologia = (Fenologia) spinnerFenologia.getSelectedItem();
+        TipoUsos uso = (TipoUsos) spinner_usos.getSelectedItem();
 
         Log.d("FOROFITO", forofito.getForofito_name());
 
@@ -440,7 +445,6 @@ public class FloraFormFragment extends Fragment {
         String dap = et_dap.getText().toString();
         String altura = et_altura.getText().toString();
         String valorCobertura = et_valor_cobertura.getText().toString();
-        String usos = et_usos.getText().toString();
         String observaciones = et_valor_observaciones.getText().toString();
         String datosPlanta = et_valor_datos_planta.getText().toString();
         String uriString = (photoUri != null) ? photoUri.toString() : "";
@@ -459,6 +463,9 @@ public class FloraFormFragment extends Fragment {
         SimpleDateFormat sdfFecha = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
         Date ahora = new Date();
+
+        SharedPreferences prefs = getActivity().getSharedPreferences("PukuniPrefs", MODE_PRIVATE);
+        int userId = prefs.getInt("user_id", -1);
 
         ContentValues values = new ContentValues();
         values.put("estacion_muestreo_id", estacionId != -1 ? estacionId : null);
@@ -485,7 +492,7 @@ public class FloraFormFragment extends Fragment {
         values.put("dap", dap);
         values.put("altura", altura);
         values.put("valor_cobertura", valorCobertura);
-        values.put("usos", usos);
+        values.put("uso_id", uso.getUsos_id());
         values.put("observaciones", observaciones);
         values.put("datos_planta", datosPlanta);
         values.put("image_uri", uriString);
@@ -493,6 +500,7 @@ public class FloraFormFragment extends Fragment {
         values.put("tamanio", tamanioUnidad);
         values.put("localidad", localidad);
         values.put("codigo_placa", codigoPlaca);
+        values.put("especialista_id", userId);
 
         long newRowId;
 
@@ -1139,6 +1147,56 @@ public class FloraFormFragment extends Fragment {
 
             if(defaultPosition != -1){
                 spinnerFenologia.setSelection(defaultPosition);
+            }
+        }
+    }
+
+    private void setUsosValues(SQLiteDatabase db){
+        List<TipoUsos> usosList = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(
+            "SELECT * FROM " + TABLE_USOS + " WHERE tipo_form_id = ?",
+                new String[]{String.valueOf(TIPO_FORM_ID)}
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("usos_id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("usos_name"));
+                int tipo_form_id = cursor.getInt(cursor.getColumnIndexOrThrow("tipo_form_id"));
+
+                TipoUsos uso = new TipoUsos();
+                uso.setUsos_id(id);
+                uso.setUsos_name(name);
+                uso.setTipo_form_id(tipo_form_id);
+
+                usosList.add(uso);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        ArrayAdapter<TipoUsos> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                usosList
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner_usos.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < usosList.size(); i++) {
+                if (usosList.get(i).getUsos_id() == form.getUso_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinner_usos.setSelection(defaultPosition);
             }
         }
     }

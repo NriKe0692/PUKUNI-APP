@@ -83,7 +83,7 @@
                         android:id="@+id/form_roedores_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Roedores"
+                        android:text="Roedores y Marsupiales"
                         android:textSize="16sp"
                         android:textColor="#35553f"
                         android:textStyle="bold"/>
