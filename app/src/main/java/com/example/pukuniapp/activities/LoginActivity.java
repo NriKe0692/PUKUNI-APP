@@ -1,5 +1,6 @@
 package com.example.pukuniapp.activities;
 
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ACTIVIDAD;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_AUTOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CATEGORIA_ABUNDANCIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLASE;
@@ -18,10 +19,12 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_GRUPO_TROFICO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_INDICADOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_METODOLOGIA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_MICROHABITAT;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ORDEN;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_PAIS;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_PARCELA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUB_PARCELA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUSTRATO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TEMPORADA_EVALUACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TIPO_REGISTRO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TIPO_TRAMPA;
@@ -49,6 +52,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pukuniapp.R;
+import com.example.pukuniapp.classes.Actividad;
 import com.example.pukuniapp.classes.Autor;
 import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
@@ -67,10 +71,12 @@ import com.example.pukuniapp.classes.GrupoTrofico;
 import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Metodologia;
+import com.example.pukuniapp.classes.Microhabitat;
 import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.SubParcela;
+import com.example.pukuniapp.classes.Sustrato;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.TipoRegistro;
 import com.example.pukuniapp.classes.TipoTrampa;
@@ -267,6 +273,15 @@ public class LoginActivity extends AppCompatActivity {
                                                                                                                                 Log.d("TESTING!", "FIN 29");
                                                                                                                                 loadUsosValues(db, api, token, TABLE_USOS, executor, handler, () -> {
                                                                                                                                     Log.d("TESTING!", "FIN 30");
+                                                                                                                                    loadActividadesValues(db, api, token, TABLE_ACTIVIDAD, executor, handler, () -> {
+                                                                                                                                        Log.d("TESTING!", "FIN 31");
+                                                                                                                                        loadSustratosValues(db, api, token, TABLE_SUSTRATO, executor, handler, () -> {
+                                                                                                                                            Log.d("TESTING!", "FIN 32");
+                                                                                                                                            loadMicrohabitatValues(db, api, token, TABLE_MICROHABITAT, executor, handler, () -> {
+                                                                                                                                                Log.d("TESTING!", "FIN 33");
+                                                                                                                                            });
+                                                                                                                                        });
+                                                                                                                                    });
                                                                                                                                 });
                                                                                                                             });
                                                                                                                         });
@@ -330,6 +345,102 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<TipoUsos>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    public void loadActividadesValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getActividades("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Actividad> actividadList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(Actividad actividad : actividadList){
+                            ContentValues values = new ContentValues();
+                            values.put("actividad_id", actividad.getActividad_id());
+                            values.put("actividad_name", actividad.getActividad_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Actividad>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    public void loadSustratosValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getSustratos("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Sustrato>> call, Response<List<Sustrato>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Sustrato> sustratoList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(Sustrato sustrato : sustratoList){
+                            ContentValues values = new ContentValues();
+                            values.put("sustrato_id", sustrato.getSustrato_id());
+                            values.put("sustrato_name", sustrato.getSustrato_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Sustrato>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    public void loadMicrohabitatValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getMicrohabitat("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Microhabitat>> call, Response<List<Microhabitat>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Microhabitat> microhabitatList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(Microhabitat microhabitat : microhabitatList){
+                            ContentValues values = new ContentValues();
+                            values.put("microhabitat_id", microhabitat.getMicrohabitat_id());
+                            values.put("microhabitat_name", microhabitat.getMicrohabitat_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Microhabitat>> call, Throwable t) {
                 irALogin();
             }
         });
@@ -1013,8 +1124,6 @@ public class LoginActivity extends AppCompatActivity {
                         db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
 
                         for (Habito habito : habitosList) {
-                            Log.d("TEST Habito", "habito_name: " + habito.getHabito_name());
-                            Log.d("TEST Habito", "form id: " + habito.getTipo_form_id());
                             ContentValues values = new ContentValues();
                             values.put("habito_id", habito.getHabito_id());
                             values.put("habito_name", habito.getHabito_name());

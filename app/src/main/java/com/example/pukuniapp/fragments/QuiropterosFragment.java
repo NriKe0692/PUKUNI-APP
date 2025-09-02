@@ -9,7 +9,6 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADIO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADO_CONSERVACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FAMILIA;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ORNITOFAUNA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_QUIROPTEROS;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
@@ -71,7 +70,6 @@ import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.Estadio;
 import com.example.pukuniapp.classes.EstadoConservacion;
 import com.example.pukuniapp.classes.Familia;
-import com.example.pukuniapp.classes.FormOrnitofauna;
 import com.example.pukuniapp.classes.FormQuiroptero;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
@@ -81,12 +79,10 @@ import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
-import com.example.pukuniapp.classes.TipoRegistro;
 import com.example.pukuniapp.classes.TipoTrampa;
 import com.example.pukuniapp.classes.TipoUsos;
 import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadVegetacion;
-import com.example.pukuniapp.classes.Zona;
 import com.example.pukuniapp.helpers.DBHelper;
 
 import java.io.File;
@@ -580,6 +576,8 @@ public class QuiropterosFragment extends Fragment {
         values.put("ebas", ebas);
         values.put("comentario", comentario);
         values.put("image_uri", uriString);
+        values.put("uso_id", uso != null ? uso.getUsos_id() : null);
+        values.put("especialista_id", userId);
 //        values.put("proyecto_id", );
         values.put("estado_conservacion_id", estadoConservacion != null ? estadoConservacion.getEstado_conservacion_habitat_id() : null);
 
@@ -938,7 +936,6 @@ public class QuiropterosFragment extends Fragment {
                 Familia familiaSeleccionada = null;
 
                 for (Familia familia : familiasList) {
-                    Log.d("TEST", "Current familia ID: " + familia.getFamilia_id());
                     if (familia.getFamilia_id() == familiaId) {
                         familiaSeleccionada = familia;
                         break;

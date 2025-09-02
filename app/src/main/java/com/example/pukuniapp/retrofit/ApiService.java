@@ -1,5 +1,6 @@
 package com.example.pukuniapp.retrofit;
 
+import com.example.pukuniapp.classes.Actividad;
 import com.example.pukuniapp.classes.Autor;
 import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
@@ -21,11 +22,13 @@ import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Location;
 import com.example.pukuniapp.classes.Metodologia;
+import com.example.pukuniapp.classes.Microhabitat;
 import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.Provincia;
 import com.example.pukuniapp.classes.SubParcela;
+import com.example.pukuniapp.classes.Sustrato;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.TipoRegistro;
 import com.example.pukuniapp.classes.TipoTrampa;
@@ -155,4 +158,13 @@ public interface ApiService {
 
     @GET("/usos")
     Call<List<TipoUsos>> getUsos(@Header("Authorization") String token);
+
+    @GET("/actividades")
+    Call<List<Actividad>> getActividades(@Header("Authorization") String token);
+
+    @GET("/sustratos")
+    Call<List<Sustrato>> getSustratos(@Header("Authorization") String token);
+
+    @GET("/microhabitats")
+    Call<List<Microhabitat>> getMicrohabitat(@Header("Authorization") String token);
 }

@@ -170,7 +170,7 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                                     .commit();
                             break;
                         }
-                        case "Roedores": {
+                        case "Roedores y Marsupiales": {
                             RoedoresFragment newFragment = RoedoresFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()

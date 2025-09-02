@@ -393,8 +393,6 @@ public class FloraFormFragment extends Fragment {
         Fenologia fenologia = (Fenologia) spinnerFenologia.getSelectedItem();
         TipoUsos uso = (TipoUsos) spinner_usos.getSelectedItem();
 
-        Log.d("FOROFITO", forofito.getForofito_name());
-
         String este = et_este.getText().toString();
         String norte = et_norte.getText().toString();
         String altitud = et_altitud.getText().toString();
@@ -492,7 +490,7 @@ public class FloraFormFragment extends Fragment {
         values.put("dap", dap);
         values.put("altura", altura);
         values.put("valor_cobertura", valorCobertura);
-        values.put("uso_id", uso.getUsos_id());
+        values.put("uso_id", uso != null ? uso.getUsos_id() : null);
         values.put("observaciones", observaciones);
         values.put("datos_planta", datosPlanta);
         values.put("image_uri", uriString);
