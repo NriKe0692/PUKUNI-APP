@@ -87,10 +87,10 @@ import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FloraFormFragment#newInstance} factory method to
+ * Use the {@link FormFloraFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FloraFormFragment extends Fragment {
+public class FormFloraFragment extends Fragment {
     private static int TIPO_FORM_ID = 1;
     Spinner spinnerSubEstacionMuestreo;
     Spinner spinnerUnidadMuestreo;
@@ -139,15 +139,14 @@ public class FloraFormFragment extends Fragment {
     private static final int REQUEST_GALLERY_PERMISSION = 101;
     FormFlora form = null;
 
-    public FloraFormFragment() {
+    public FormFloraFragment() {
         // Required empty public constructor
     }
-    public static FloraFormFragment newInstance(int estacionId, int formularioId) {
-        FloraFormFragment fragment = new FloraFormFragment();
+    public static FormFloraFragment newInstance(int estacionId, int formularioId) {
+        FormFloraFragment fragment = new FormFloraFragment();
         Bundle args = new Bundle();
         args.putInt("formulario_id", formularioId);
         args.putInt("estacion_id", estacionId);
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -187,7 +186,7 @@ public class FloraFormFragment extends Fragment {
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
 
         if(label != null){
-            label.setText("Formulario Flora");
+            label.setText("Formulario Botánica");
         }
 
         spinnerSubEstacionMuestreo = view.findViewById(R.id.spinner_sub_estacion_muestreo);

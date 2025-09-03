@@ -3,6 +3,7 @@ package com.example.pukuniapp.fragments;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_FLORA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_HERPETOLOGIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_HIDROBIOLOGIA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_MAMIFEROS_GRANDES;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ORNITOFAUNA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_QUIROPTEROS;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ROEDORES;
@@ -25,10 +26,10 @@ import com.example.pukuniapp.adapters.CustomAdapter;
 import com.example.pukuniapp.classes.FormFlora;
 import com.example.pukuniapp.classes.FormHerpetologia;
 import com.example.pukuniapp.classes.FormHidrobiologia;
+import com.example.pukuniapp.classes.FormMamiferosGrandes;
 import com.example.pukuniapp.classes.FormOrnitofauna;
 import com.example.pukuniapp.classes.FormQuiroptero;
 import com.example.pukuniapp.classes.FormRoedor;
-import com.example.pukuniapp.classes.TipoUsos;
 import com.example.pukuniapp.helpers.DBHelper;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class SavedFormListFragment extends Fragment {
     List<FormRoedor> roedoresList;
     List<FormHerpetologia> herpetologiaList;
     List<FormHidrobiologia> hidrobiologiaList;
+    List<FormMamiferosGrandes> mamiferosGrandesList;
 
     public SavedFormListFragment() {
         // Required empty public constructor
@@ -84,14 +86,15 @@ public class SavedFormListFragment extends Fragment {
         roedoresList = getRoedoresListFromDB(db);
         herpetologiaList = getHerpetologiaListFromDB(db);
         hidrobiologiaList = getHidrobiologiaListFromDB(db);
+        mamiferosGrandesList = getMamiferosGrandesListFromDB(db);
         db.close();
 
-        customAdapter = new CustomAdapter(formFloraList, formOrnitofaunaList, quiropterosList, roedoresList, herpetologiaList, hidrobiologiaList);
+        customAdapter = new CustomAdapter(formFloraList, formOrnitofaunaList, quiropterosList, roedoresList, herpetologiaList, hidrobiologiaList, mamiferosGrandesList);
 
         customAdapter.setOnItemClickListener(new CustomAdapter.OnItemClickListener() {
             @Override
             public void onFloraClick(FormFlora flora, int position) {
-                FloraFormFragment newFragment = FloraFormFragment.newInstance(flora.getEstacion_muestreo_id(), flora.getId());
+                FormFloraFragment newFragment = FormFloraFragment.newInstance(flora.getEstacion_muestreo_id(), flora.getId());
 
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
@@ -103,7 +106,7 @@ public class SavedFormListFragment extends Fragment {
             @Override
             public void onOrnitofaunaClick(FormOrnitofauna ornito, int position) {
                 Log.d("Ornito", ornito.toString());
-                OrnitoFaunaFragment newFragment = OrnitoFaunaFragment.newInstance(ornito.getEstacion_muestreo_id(), ornito.getId());
+                FormOrnitofaunaFragment newFragment = FormOrnitofaunaFragment.newInstance(ornito.getEstacion_muestreo_id(), ornito.getId());
 
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
@@ -115,7 +118,7 @@ public class SavedFormListFragment extends Fragment {
             @Override
             public void onQuiropteroClick(FormQuiroptero quiroptero, int position) {
                 Log.d("Quiroptero", quiroptero.toString());
-                QuiropterosFragment newFragment = QuiropterosFragment.newInstance(quiroptero.getEstacion_muestreo_id(), quiroptero.getId());
+                FormQuiropterosFragment newFragment = FormQuiropterosFragment.newInstance(quiroptero.getEstacion_muestreo_id(), quiroptero.getId());
 
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
@@ -127,7 +130,7 @@ public class SavedFormListFragment extends Fragment {
             @Override
             public void onRoedorClick(FormRoedor roedor, int position) {
                 Log.d("Roedor", roedor.toString());
-                RoedoresFragment newFragment = RoedoresFragment.newInstance(roedor.getEstacion_muestreo_id(), roedor.getId());
+                FormRoedoresFragment newFragment = FormRoedoresFragment.newInstance(roedor.getEstacion_muestreo_id(), roedor.getId());
 
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
@@ -139,7 +142,7 @@ public class SavedFormListFragment extends Fragment {
             @Override
             public void onHerpetologiaClick(FormHerpetologia herpetologia, int position) {
                 Log.d("Herpetologia", herpetologia.toString());
-                HerpetologiaFragment newFragment = HerpetologiaFragment.newInstance(herpetologia.getEstacion_muestreo_id(), herpetologia.getId());
+                FormHerpetologiaFragment newFragment = FormHerpetologiaFragment.newInstance(herpetologia.getEstacion_muestreo_id(), herpetologia.getId());
 
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
@@ -151,7 +154,19 @@ public class SavedFormListFragment extends Fragment {
             @Override
             public void onHidrobiologiaClick(FormHidrobiologia hidrobiologia, int position) {
                 Log.d("Hidrobiologia", hidrobiologia.toString());
-                HidrobiologiaFormFragment newFragment = HidrobiologiaFormFragment.newInstance(hidrobiologia.getEstacion_muestreo_id(), hidrobiologia.getId());
+                FormHidrobiologiaFragment newFragment = FormHidrobiologiaFragment.newInstance(hidrobiologia.getEstacion_muestreo_id(), hidrobiologia.getId());
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, newFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+
+            @Override
+            public void onMamiferosGrandesClick(FormMamiferosGrandes mamiferosGrandes, int position) {
+                Log.d("Mamiferos Medianos y Grandes", mamiferosGrandes.toString());
+                FormMamiferosGrandesFragment newFragment = FormMamiferosGrandesFragment.newInstance(mamiferosGrandes.getEstacion_muestreo_id(), mamiferosGrandes.getId());
 
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
@@ -568,6 +583,106 @@ public class SavedFormListFragment extends Fragment {
                 formFloraTemp.setEstado_conservacion_id(estado_conservacion_id);
 
                 list.add(formFloraTemp);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return list;
+    }
+
+    private List<FormMamiferosGrandes> getMamiferosGrandesListFromDB(SQLiteDatabase db){
+        List<FormMamiferosGrandes> list = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FORMULARIO_MAMIFEROS_GRANDES, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
+                int proyecto_id = cursor.getInt(cursor.getColumnIndexOrThrow("proyecto_id"));
+                int estacion_muestreo_id = cursor.getInt(cursor.getColumnIndexOrThrow("estacion_muestreo_id"));
+                int temporada_evaluacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("temporada_evaluacion_id"));
+                int unidad_vegetacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("unidad_vegetacion_id"));
+                String fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"));
+                String hora = cursor.getString(cursor.getColumnIndexOrThrow("hora"));
+                int clima_id = cursor.getInt(cursor.getColumnIndexOrThrow("clima_id"));
+                int franja_id = cursor.getInt(cursor.getColumnIndexOrThrow("franja_id"));
+                int tipo_registro_id = cursor.getInt(cursor.getColumnIndexOrThrow("tipo_registro_id"));
+                int metodologia_id = cursor.getInt(cursor.getColumnIndexOrThrow("metodologia_id"));
+                String unidad_muestreal = cursor.getString(cursor.getColumnIndexOrThrow("unidad_muestreal"));
+                int clase_id = cursor.getInt(cursor.getColumnIndexOrThrow("clase_id"));
+                int orden_id = cursor.getInt(cursor.getColumnIndexOrThrow("orden_id"));
+                int familia_id = cursor.getInt(cursor.getColumnIndexOrThrow("familia_id"));
+                int genero_id = cursor.getInt(cursor.getColumnIndexOrThrow("genero_id"));
+                int especie_id = cursor.getInt(cursor.getColumnIndexOrThrow("especie_id"));
+                int nombre_comun = cursor.getInt(cursor.getColumnIndexOrThrow("nombre_comun"));
+                float este = cursor.getFloat(cursor.getColumnIndexOrThrow("este"));
+                float norte = cursor.getFloat(cursor.getColumnIndexOrThrow("norte"));
+                float altitud = cursor.getFloat(cursor.getColumnIndexOrThrow("altitud"));
+                int individuos = cursor.getInt(cursor.getColumnIndexOrThrow("individuos"));
+                float edad = cursor.getFloat(cursor.getColumnIndexOrThrow("edad"));
+                String sexo = cursor.getString(cursor.getColumnIndexOrThrow("sexo"));
+                int condicion_reproductiva_id = cursor.getInt(cursor.getColumnIndexOrThrow("condicion_reproductiva_id"));
+                int categoria_abundancia_id = cursor.getInt(cursor.getColumnIndexOrThrow("categoria_abundancia_id"));
+                int habito_id = cursor.getInt(cursor.getColumnIndexOrThrow("habito_id"));
+                int grupo_trofico_id = cursor.getInt(cursor.getColumnIndexOrThrow("grupo_trofico_id"));
+                int indicador_id = cursor.getInt(cursor.getColumnIndexOrThrow("indicador_id"));
+                String uicn = cursor.getString(cursor.getColumnIndexOrThrow("uicn"));
+                String cites = cursor.getString(cursor.getColumnIndexOrThrow("cites"));
+                String dsn = cursor.getString(cursor.getColumnIndexOrThrow("dsn"));
+                String libro_rojo = cursor.getString(cursor.getColumnIndexOrThrow("libro_rojo"));
+                String endemismo = cursor.getString(cursor.getColumnIndexOrThrow("endemismo"));
+                String distribucion_endemismo = cursor.getString(cursor.getColumnIndexOrThrow("distribucion_endemismo"));
+                int uso_id = cursor.getInt(cursor.getColumnIndexOrThrow("uso_id"));
+                int estado_conservacion_habitat_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_habitat_id"));
+                String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
+                String img_uri = cursor.getString(cursor.getColumnIndexOrThrow("img_uri"));
+
+                FormMamiferosGrandes form = new FormMamiferosGrandes();
+
+                form.setId(id);
+                form.setEspecialista_id(especialista_id);
+                form.setProyecto_id(proyecto_id);
+                form.setEstacion_muestreo_id(estacion_muestreo_id);
+                form.setTemporada_evaluacion_id(temporada_evaluacion_id);
+                form.setUnidad_vegetacion_id(unidad_vegetacion_id);
+                form.setFecha(fecha);
+                form.setHora(hora);
+                form.setClima_id(clima_id);
+                form.setFranja_id(franja_id);
+                form.setTipo_registro_id(tipo_registro_id);
+                form.setMetodologia_id(metodologia_id);
+                form.setUnidad_muestreal(unidad_muestreal);
+                form.setClase_id(clase_id);
+                form.setOrden_id(orden_id);
+                form.setFamilia_id(familia_id);
+                form.setGenero_id(genero_id);
+                form.setEspecie_id(especie_id);
+                form.setNombre_comun(nombre_comun);
+                form.setEste(este);
+                form.setNorte(norte);
+                form.setAltitud(altitud);
+                form.setIndividuos(individuos);
+                form.setEdad(edad);
+                form.setSexo(sexo);
+                form.setCondicion_reproductiva_id(condicion_reproductiva_id);
+                form.setCategoria_abundancia_id(categoria_abundancia_id);
+                form.setHabito_id(habito_id);
+                form.setGrupo_trofico_id(grupo_trofico_id);
+                form.setIndicador_id(indicador_id);
+                form.setUicn(uicn);
+                form.setCites(cites);
+                form.setDsn(dsn);
+                form.setLibro_rojo(libro_rojo);
+                form.setEndemismo(endemismo);
+                form.setDistribucion_endemismo(distribucion_endemismo);
+                form.setUso_id(uso_id);
+                form.setEstado_conservacion_habitat_id(estado_conservacion_habitat_id);
+                form.setComentario(comentario);
+                form.setImg_uri(img_uri);
+
+                list.add(form);
             } while (cursor.moveToNext());
         }
 

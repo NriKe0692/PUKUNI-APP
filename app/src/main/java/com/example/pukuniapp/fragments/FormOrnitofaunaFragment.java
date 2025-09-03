@@ -61,7 +61,6 @@ import android.widget.Toast;
 
 import com.example.pukuniapp.R;
 import com.example.pukuniapp.activities.HomeActivity;
-import com.example.pukuniapp.classes.Autor;
 import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Clima;
@@ -69,10 +68,7 @@ import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.Estadio;
 import com.example.pukuniapp.classes.EstadoConservacion;
 import com.example.pukuniapp.classes.Familia;
-import com.example.pukuniapp.classes.Fenologia;
-import com.example.pukuniapp.classes.FormFlora;
 import com.example.pukuniapp.classes.FormOrnitofauna;
-import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.GrupoTrofico;
@@ -80,12 +76,9 @@ import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.Orden;
-import com.example.pukuniapp.classes.Parcela;
-import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.TipoRegistro;
 import com.example.pukuniapp.classes.UnidadMuestreal;
-import com.example.pukuniapp.classes.UnidadMuestreo;
 import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.classes.Zona;
 import com.example.pukuniapp.helpers.DBHelper;
@@ -99,10 +92,10 @@ import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link OrnitoFaunaFragment#newInstance} factory method to
+ * Use the {@link FormOrnitofaunaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OrnitoFaunaFragment extends Fragment {
+public class FormOrnitofaunaFragment extends Fragment {
     private Spinner spinnerSubEstacionMuestreo;
     private Spinner spinnerTemporadaEvaluacion;
     private Spinner spinnerUnidadVegetacion;
@@ -156,12 +149,12 @@ public class OrnitoFaunaFragment extends Fragment {
     private static int TIPO_FORM_ID = 2;
     FormOrnitofauna form = null;
 
-    public OrnitoFaunaFragment() {
+    public FormOrnitofaunaFragment() {
         // Required empty public constructor
     }
 
-    public static OrnitoFaunaFragment newInstance(int estacionId, int formularioId) {
-        OrnitoFaunaFragment fragment = new OrnitoFaunaFragment();
+    public static FormOrnitofaunaFragment newInstance(int estacionId, int formularioId) {
+        FormOrnitofaunaFragment fragment = new FormOrnitofaunaFragment();
         Bundle args = new Bundle();
         args.putInt("formulario_id", formularioId);
         args.putInt("estacion_id", estacionId);

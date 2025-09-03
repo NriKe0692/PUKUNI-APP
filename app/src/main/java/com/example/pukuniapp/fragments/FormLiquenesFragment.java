@@ -13,19 +13,20 @@ import com.example.pukuniapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MamiferosMayoresFragment#newInstance} factory method to
+ * Use the {@link FormLiquenesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MamiferosMayoresFragment extends Fragment {
-    public MamiferosMayoresFragment() {
+public class FormLiquenesFragment extends Fragment {
+
+    public FormLiquenesFragment() {
         // Required empty public constructor
     }
 
-    public static MamiferosMayoresFragment newInstance(int estacionMuestreoId, int formId) {
-        MamiferosMayoresFragment fragment = new MamiferosMayoresFragment();
+    public static FormLiquenesFragment newInstance(int estacionId, int formularioId) {
+        FormLiquenesFragment fragment = new FormLiquenesFragment();
         Bundle args = new Bundle();
-        args.putInt("estacion_id", estacionMuestreoId);
-        args.putInt("formulario_id", formId);
+        args.putInt("formulario_id", formularioId);
+        args.putInt("estacion_id", estacionId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -33,20 +34,18 @@ public class MamiferosMayoresFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
 
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mamiferos_mayores, container, false);
+        View view = inflater.inflate(R.layout.fragment_liquenes, container, false);
 
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
 
         if(label != null){
-            label.setText("Formulario Mamiferos Mayores");
+            label.setText("Formulario Líquenes");
         }
 
         return view;

@@ -11,20 +11,20 @@ import com.example.pukuniapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MamiferosMenoresFragment#newInstance} factory method to
+ * Use the {@link MamiferosMenoresListFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class MamiferosMenoresFragment extends Fragment {
-    public static MamiferosMenoresFragment newInstance(String formName) {
-        MamiferosMenoresFragment fragment = new MamiferosMenoresFragment();
+public class MamiferosMenoresListFragment extends Fragment {
+    public static MamiferosMenoresListFragment newInstance(String formName) {
+        MamiferosMenoresListFragment fragment = new MamiferosMenoresListFragment();
         Bundle args = new Bundle();
         args.putString("form_name", formName);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MamiferosMenoresFragment() {
+    public MamiferosMenoresListFragment() {
         // Required empty public constructor
     }
 

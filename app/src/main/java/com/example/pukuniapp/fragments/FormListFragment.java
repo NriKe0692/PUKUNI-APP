@@ -95,15 +95,13 @@ public class FormListFragment extends Fragment {
             TextView forestalFormText = v.findViewById(R.id.form_forestal_text);
             String formName = forestalFormText.getText().toString();
 
-            Toast.makeText(getContext(), formName, Toast.LENGTH_SHORT).show();
+            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
 
-//            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
-//
-//            requireActivity().getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.fragment_container, newFragment)
-//                    .addToBackStack(null)
-//                    .commit();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, newFragment)
+                    .addToBackStack(null)
+                    .commit();
         };
 
         view.findViewById(R.id.form_forestal_click).setOnClickListener(forestalClickListener);

@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.pukuniapp.activities.LoginActivity;
 import com.example.pukuniapp.R;
@@ -116,7 +115,7 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                 btn.setOnClickListener(v -> {
                     switch (finalFormName){
                         case "Botánica": {
-                            FloraFormFragment newFragment = FloraFormFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            FormFloraFragment newFragment = FormFloraFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)
@@ -125,17 +124,16 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                             break;
                         }
                         case "Líquenes": {
-                            Toast.makeText(getContext(), "Líquenes", Toast.LENGTH_SHORT).show();
-//                            FloraFormFragment newFragment = FloraFormFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
-//                            requireActivity().getSupportFragmentManager()
-//                                    .beginTransaction()
-//                                    .replace(R.id.fragment_container, newFragment)
-//                                    .addToBackStack(null)
-//                                    .commit();
+                            FormLiquenesFragment newFragment = FormLiquenesFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
                             break;
                         }
                         case "Ornitofauna": {
-                            OrnitoFaunaFragment newFragment = OrnitoFaunaFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            FormOrnitofaunaFragment newFragment = FormOrnitofaunaFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)
@@ -144,7 +142,7 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                             break;
                         }
                         case "Herpetología": {
-                            HerpetologiaFragment newFragment = HerpetologiaFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            FormHerpetologiaFragment newFragment = FormHerpetologiaFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)
@@ -152,8 +150,8 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                                     .commit();
                             break;
                         }
-                        case "Mamíferos Mayores": {
-                            MamiferosMayoresFragment newFragment = MamiferosMayoresFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                        case "Mamíferos Medianos y Grandes": {
+                            FormMamiferosGrandesFragment newFragment = FormMamiferosGrandesFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)
@@ -162,7 +160,7 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                             break;
                         }
                         case "Quiropteros": {
-                            QuiropterosFragment newFragment = QuiropterosFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            FormQuiropterosFragment newFragment = FormQuiropterosFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)
@@ -171,7 +169,7 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                             break;
                         }
                         case "Roedores y Marsupiales": {
-                            RoedoresFragment newFragment = RoedoresFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            FormRoedoresFragment newFragment = FormRoedoresFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)
@@ -180,7 +178,25 @@ public class SelectEstacionMuestreoFragment extends Fragment {
                             break;
                         }
                         case "Hidrobiología": {
-                            HidrobiologiaFormFragment newFragment = HidrobiologiaFormFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            FormHidrobiologiaFragment newFragment = FormHidrobiologiaFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                            break;
+                        }
+                        case "Entomología": {
+                            FormEntomologiaFragment newFragment = FormEntomologiaFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, newFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                            break;
+                        }
+                        case "Forestal": {
+                            FormForestalFragment newFragment = FormForestalFragment.newInstance(estacion.getEstacion_muestreo_id(), -1);
                             requireActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, newFragment)

@@ -78,7 +78,7 @@ public class FaunaListFragment extends Fragment {
             TextView mastoFormText = v.findViewById(R.id.form_mamiferos_menores_text);
             String formName = mastoFormText.getText().toString();
 
-            MamiferosMenoresFragment newFragment = MamiferosMenoresFragment.newInstance(formName);
+            MamiferosMenoresListFragment newFragment = MamiferosMenoresListFragment.newInstance(formName);
 
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -104,6 +104,22 @@ public class FaunaListFragment extends Fragment {
         };
 
         view.findViewById(R.id.form_mamiferos_mayores_click).setOnClickListener(mamiferosMayoresClickListener);
+
+        // Entomologia Click
+        View.OnClickListener entomologiaClickListener = v -> {
+            TextView entomologiaFormText = v.findViewById(R.id.form_entomologia_text);
+            String formName = entomologiaFormText.getText().toString();
+
+            SelectEstacionMuestreoFragment newFragment = SelectEstacionMuestreoFragment.newInstance(formName);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, newFragment)
+                    .addToBackStack(null)
+                    .commit();
+        };
+
+        view.findViewById(R.id.form_entomologia_click).setOnClickListener(entomologiaClickListener);
 
         return view;
     }

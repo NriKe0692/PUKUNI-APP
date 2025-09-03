@@ -9,7 +9,7 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADIO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADO_CONSERVACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FAMILIA;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_QUIROPTEROS;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ROEDORES;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GRUPO_TROFICO;
@@ -46,7 +46,6 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,7 @@ import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.Estadio;
 import com.example.pukuniapp.classes.EstadoConservacion;
 import com.example.pukuniapp.classes.Familia;
-import com.example.pukuniapp.classes.FormQuiroptero;
+import com.example.pukuniapp.classes.FormRoedor;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.GrupoTrofico;
@@ -94,22 +93,22 @@ import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link QuiropterosFragment#newInstance} factory method to
+ * Use the {@link FormRoedoresFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuiropterosFragment extends Fragment {
+public class FormRoedoresFragment extends Fragment {
     private Spinner spinner_temporada_evaluacion;
     private Spinner spinner_unidad_vegetacion;
     private Spinner spinner_clima;
     private Spinner spinner_metodologia;
     private Spinner spinner_tipo_trampa;
+    private Spinner spinner_unidad_muestreal;
     private Spinner spinner_franja;
     private Spinner spinner_estadio;
     private Spinner spinner_sexo;
     private Spinner spinner_condicion_reproductiva;
     private Spinner spinner_cat_x_abundancia;
     private Spinner spinner_habito;
-    private Spinner spinner_unidad_muestreal;
     private Spinner spinner_grupo_trofico;
     private Spinner spinner_indicador;
     private Spinner spinner_usos;
@@ -119,19 +118,16 @@ public class QuiropterosFragment extends Fragment {
     private EditText et_altitud;
     private EditText et_nombre_comun;
     private EditText et_individuos;
-    private EditText et_endemismo;
-    private EditText et_longitud_antebrazo;
+    private EditText et_longitud_cuerpo;
     private EditText et_longitud_cola;
     private EditText et_longitud_oreja;
-    private EditText et_longitud_tibia;
-    private EditText et_peso;
+    private EditText et_longitud_pata;
     private EditText et_uicn;
     private EditText et_cites;
     private EditText et_dsn;
     private EditText et_libro_rojo;
+    private EditText et_endemismo;
     private EditText et_distribucion_endemismo;
-    private EditText et_ibas;
-    private EditText et_ebas;
     private EditText et_observaciones;
     private AutoCompleteTextView et_clase;
     private AutoCompleteTextView et_orden;
@@ -153,15 +149,15 @@ public class QuiropterosFragment extends Fragment {
     List<Familia> familiasList;
     List<Genero> generosList;
     List<Especie> especiesList;
-    private static int TIPO_FORM_ID = 34;
-    FormQuiroptero form = null;
+    private static int TIPO_FORM_ID = 67;
+    FormRoedor form = null;
 
-    public QuiropterosFragment() {
+    public FormRoedoresFragment() {
         // Required empty public constructor
     }
 
-    public static QuiropterosFragment newInstance(int estacionMuestreoId, int formId) {
-        QuiropterosFragment fragment = new QuiropterosFragment();
+    public static FormRoedoresFragment newInstance(int estacionMuestreoId, int formId) {
+        FormRoedoresFragment fragment = new FormRoedoresFragment();
         Bundle args = new Bundle();
         args.putInt("estacion_id", estacionMuestreoId);
         args.putInt("formulario_id", formId);
@@ -199,12 +195,12 @@ public class QuiropterosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_quiropteros, container, false);
+        View view = inflater.inflate(R.layout.fragment_roedores, container, false);
 
         TextView label = getActivity().findViewById(R.id.tv_fragment_title);
 
         if(label != null){
-            label.setText("Formulario Quirópteros");
+            label.setText("Formulario Roedores Y Marsupiales");
         }
 
         spinner_temporada_evaluacion = view.findViewById(R.id.spinner_temporada_evaluacion);
@@ -229,18 +225,15 @@ public class QuiropterosFragment extends Fragment {
         et_altitud = view.findViewById(R.id.et_altitud);
         et_nombre_comun = view.findViewById(R.id.et_nombre_comun);
         et_individuos = view.findViewById(R.id.et_individuos);
-        et_longitud_antebrazo = view.findViewById(R.id.et_longitud_antebrazo);
+        et_longitud_cuerpo = view.findViewById(R.id.et_longitud_cuerpo);
         et_longitud_cola = view.findViewById(R.id.et_longitud_cola);
         et_longitud_oreja = view.findViewById(R.id.et_longitud_oreja);
-        et_longitud_tibia = view.findViewById(R.id.et_longitud_tibia);
-        et_peso = view.findViewById(R.id.et_peso);
+        et_longitud_pata = view.findViewById(R.id.et_longitud_pata);
         et_uicn = view.findViewById(R.id.et_uicn);
         et_cites = view.findViewById(R.id.et_cites);
         et_dsn = view.findViewById(R.id.et_dsn);
         et_libro_rojo = view.findViewById(R.id.et_libro_rojo);
         et_distribucion_endemismo = view.findViewById(R.id.et_distribucion_endemismo);
-        et_ibas = view.findViewById(R.id.et_ibas);
-        et_ebas = view.findViewById(R.id.et_ebas);
         et_observaciones = view.findViewById(R.id.et_observaciones);
         et_clase = view.findViewById(R.id.et_clase);
         et_orden = view.findViewById(R.id.et_orden);
@@ -282,7 +275,7 @@ public class QuiropterosFragment extends Fragment {
             int formularioId = getArguments().getInt("formulario_id");
 
             if(formularioId != -1){
-                Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FORMULARIO_QUIROPTEROS + " WHERE id = ?", new String[]{String.valueOf(formularioId)});
+                Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FORMULARIO_ROEDORES + " WHERE id = ?", new String[]{String.valueOf(formularioId)});
                 if (cursor.moveToFirst()) {
                     do {
                         int estacion_muestreo_id = cursor.getInt(cursor.getColumnIndexOrThrow("estacion_muestreo_id"));
@@ -311,11 +304,10 @@ public class QuiropterosFragment extends Fragment {
                         int categoria_abundancia_id = cursor.getInt(cursor.getColumnIndexOrThrow("categoria_abundancia_id"));
                         int habito_id = cursor.getInt(cursor.getColumnIndexOrThrow("habito_id"));
                         int grupo_trofico_id = cursor.getInt(cursor.getColumnIndexOrThrow("grupo_trofico_id"));
-                        float longitud_antebrazo = cursor.getFloat(cursor.getColumnIndexOrThrow("longitud_antebrazo"));
+                        float longitud_cuerpo = cursor.getFloat(cursor.getColumnIndexOrThrow("longitud_cuerpo"));
                         float longitud_oreja = cursor.getFloat(cursor.getColumnIndexOrThrow("longitud_oreja"));
                         float longitud_cola = cursor.getFloat(cursor.getColumnIndexOrThrow("longitud_cola"));
-                        float longitud_tibia = cursor.getFloat(cursor.getColumnIndexOrThrow("longitud_tibia"));
-                        float peso = cursor.getFloat(cursor.getColumnIndexOrThrow("peso"));
+                        float longitud_pata = cursor.getFloat(cursor.getColumnIndexOrThrow("longitud_pata"));
                         int indicador_id = cursor.getInt(cursor.getColumnIndexOrThrow("indicador_id"));
                         String uicn = cursor.getString(cursor.getColumnIndexOrThrow("uicn"));
                         String cites = cursor.getString(cursor.getColumnIndexOrThrow("cites"));
@@ -323,13 +315,11 @@ public class QuiropterosFragment extends Fragment {
                         String libro_rojo = cursor.getString(cursor.getColumnIndexOrThrow("libro_rojo"));
                         String endemismo = cursor.getString(cursor.getColumnIndexOrThrow("endemismo"));
                         String distribucion_endemismo = cursor.getString(cursor.getColumnIndexOrThrow("distribucion_endemismo"));
-                        String ibas = cursor.getString(cursor.getColumnIndexOrThrow("ibas"));
-                        String ebas = cursor.getString(cursor.getColumnIndexOrThrow("ebas"));
                         String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
                         String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
                         int estado_conservacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_id"));
 
-                        form = new FormQuiroptero();
+                        form = new FormRoedor();
 
                         form.setId(formularioId);
                         form.setEstacion_muestreo_id(estacion_muestreo_id);
@@ -358,11 +348,10 @@ public class QuiropterosFragment extends Fragment {
                         form.setCategoria_abundancia_id(categoria_abundancia_id);
                         form.setHabito_id(habito_id);
                         form.setGrupo_trofico_id(grupo_trofico_id);
-                        form.setLongitud_antebrazo(longitud_antebrazo);
+                        form.setLongitud_cuerpo(longitud_cuerpo);
                         form.setLongitud_oreja(longitud_oreja);
                         form.setLongitud_cola(longitud_cola);
-                        form.setLongitud_tibia(longitud_tibia);
-                        form.setPeso(peso);
+                        form.setLongitud_pata(longitud_pata);
                         form.setIndicador_id(indicador_id);
                         form.setUicn(uicn);
                         form.setCites(cites);
@@ -370,8 +359,6 @@ public class QuiropterosFragment extends Fragment {
                         form.setLibro_rojo(libro_rojo);
                         form.setEndemismo(endemismo);
                         form.setDistribucion_endemismo(distribucion_endemismo);
-                        form.setIbas(ibas);
-                        form.setEbas(ebas);
                         form.setComentario(comentario);
                         form.setImage_uri(image_uri);
                         form.setEstado_conservacion_id(estado_conservacion_id);
@@ -408,18 +395,15 @@ public class QuiropterosFragment extends Fragment {
             et_altitud.setText(String.valueOf(form.getAltitud()));
             et_nombre_comun.setText(String.valueOf(form.getNombre_comun()));
             et_individuos.setText(String.valueOf(form.getNumero_individuos()));
-            et_longitud_antebrazo.setText(String.valueOf(form.getLongitud_antebrazo()));
+            et_longitud_cuerpo.setText(String.valueOf(form.getLongitud_cuerpo()));
             et_longitud_cola.setText(String.valueOf(form.getLongitud_cola()));
             et_longitud_oreja.setText(String.valueOf(form.getLongitud_oreja()));
-            et_longitud_tibia.setText(String.valueOf(form.getLongitud_tibia()));
-            et_peso.setText(String.valueOf(form.getPeso()));
+            et_longitud_pata.setText(String.valueOf(form.getLongitud_pata()));
             et_uicn.setText(String.valueOf(form.getUicn()));
             et_cites.setText(String.valueOf(form.getCites()));
             et_dsn.setText(String.valueOf(form.getDsn()));
             et_libro_rojo.setText(String.valueOf(form.getLibro_rojo()));
             et_distribucion_endemismo.setText(String.valueOf(form.getDistribucion_endemismo()));
-            et_ibas.setText(String.valueOf(form.getIbas()));
-            et_ebas.setText(String.valueOf(form.getEbas()));
             et_observaciones.setText(String.valueOf(form.getComentario()));
             img_preview.setImageURI(Uri.parse(form.getImage_uri()));
         }
@@ -457,18 +441,15 @@ public class QuiropterosFragment extends Fragment {
         String altitud = et_altitud.getText().toString();
         String nombre_comun = et_nombre_comun.getText().toString();
         String individuos = et_individuos.getText().toString();
-        String longitud_antebrazo = et_longitud_antebrazo.getText().toString();
+        String longitud_cuerpo = et_longitud_cuerpo.getText().toString();
         String longitud_cola = et_longitud_cola.getText().toString();
         String longitud_oreja = et_longitud_oreja.getText().toString();
-        String longitud_tibia = et_longitud_tibia.getText().toString();
-        String peso = et_peso.getText().toString();
+        String longitud_pata = et_longitud_pata.getText().toString();
         String uicn = et_uicn.getText().toString();
         String cites = et_cites.getText().toString();
         String dsn = et_dsn.getText().toString();
         String libro_rojo = et_libro_rojo.getText().toString();
         String distribucion_endemismo = et_distribucion_endemismo.getText().toString();
-        String ibas = et_ibas.getText().toString();
-        String ebas = et_ebas.getText().toString();
         String comentario = et_observaciones.getText().toString();
 
         Clase clase = null;
@@ -560,11 +541,10 @@ public class QuiropterosFragment extends Fragment {
         values.put("categoria_abundancia_id", categoriaAbundancia != null ? categoriaAbundancia.getCategoria_abundancia_id() : null);
         values.put("habito_id", habito != null ? habito.getHabito_id() : null);
         values.put("grupo_trofico_id", grupoTrofico != null ? grupoTrofico.getGrupo_trofico_id() : null);
-        values.put("longitud_antebrazo", longitud_antebrazo);
+        values.put("longitud_cuerpo", longitud_cuerpo);
         values.put("longitud_oreja", longitud_oreja);
         values.put("longitud_cola", longitud_cola);
-        values.put("longitud_tibia", longitud_tibia);
-        values.put("peso", peso);
+        values.put("longitud_pata", longitud_pata);
         values.put("indicador_id", indicador != null ? indicador.getIndicador_id() : null);
         values.put("uicn", uicn);
         values.put("cites", cites);
@@ -572,8 +552,6 @@ public class QuiropterosFragment extends Fragment {
         values.put("libro_rojo", libro_rojo);
         values.put("endemismo", endemismo);
         values.put("distribucion_endemismo", distribucion_endemismo);
-        values.put("ibas", ibas);
-        values.put("ebas", ebas);
         values.put("comentario", comentario);
         values.put("image_uri", uriString);
         values.put("uso_id", uso != null ? uso.getUsos_id() : null);
@@ -584,7 +562,7 @@ public class QuiropterosFragment extends Fragment {
         long newRowId;
 
         if(form != null){
-            newRowId = db.update(TABLE_FORMULARIO_QUIROPTEROS, values, " id = ?", new String[]{String.valueOf(form.getId())});
+            newRowId = db.update(TABLE_FORMULARIO_ROEDORES, values, " id = ?", new String[]{String.valueOf(form.getId())});
 
             if (newRowId != -1) {
                 Toast.makeText(requireContext(), "Registro actualizado correctamente", Toast.LENGTH_SHORT).show();
@@ -592,7 +570,7 @@ public class QuiropterosFragment extends Fragment {
                 Toast.makeText(requireContext(), "Error al actualizar el registro", Toast.LENGTH_SHORT).show();
             }
         }else{
-            newRowId = db.insert(TABLE_FORMULARIO_QUIROPTEROS, null, values);
+            newRowId = db.insert(TABLE_FORMULARIO_ROEDORES, null, values);
 
             if (newRowId != -1) {
                 Toast.makeText(requireContext(), "Registro guardado correctamente", Toast.LENGTH_SHORT).show();
@@ -627,7 +605,6 @@ public class QuiropterosFragment extends Fragment {
             UTMConverter(lat, lon, alt);
         }
     }
-
     private void UTMConverter(double latitude, double longitude, double altitude) {
         int zone = (int) Math.floor(longitude / 6 + 31);
         char hemisphere = (latitude < 0) ? 'S' : 'N';
@@ -673,7 +650,6 @@ public class QuiropterosFragment extends Fragment {
             tv_altitud.setText("Altitud (" + altitude + ")");
         }
     }
-
     private void setupAutocompleteTv(SQLiteDatabase db){
         // Start set clases values
         clasesList = new ArrayList<>();

@@ -9,18 +9,14 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FAMILIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_HIDROBIOLOGIA;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_QUIROPTEROS;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ROEDORES;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITAT;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO_ALIMENTICIO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_INDICADOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_METODOLOGIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ORDEN;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_PUNTO_MUESTREO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TEMPORADA_EVALUACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TIPO_AMBIENTE_ACUATICO;
-import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREAL;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_VEGETACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_USOS;
 
@@ -50,7 +46,6 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -65,30 +60,20 @@ import com.example.pukuniapp.activities.HomeActivity;
 import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Clima;
-import com.example.pukuniapp.classes.CondicionReproductiva;
 import com.example.pukuniapp.classes.CuencaHidrografica;
 import com.example.pukuniapp.classes.Especie;
 import com.example.pukuniapp.classes.Estacion;
-import com.example.pukuniapp.classes.Estadio;
-import com.example.pukuniapp.classes.EstadoConservacion;
-import com.example.pukuniapp.classes.EtapaReproductiva;
 import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.FormHidrobiologia;
-import com.example.pukuniapp.classes.FormRoedor;
-import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
-import com.example.pukuniapp.classes.GrupoTrofico;
 import com.example.pukuniapp.classes.HabitatPeces;
-import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.PuntoMuestreo;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.TipoAmbienteAcuatico;
-import com.example.pukuniapp.classes.TipoTrampa;
 import com.example.pukuniapp.classes.TipoUsos;
-import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.helpers.DBHelper;
 
@@ -101,10 +86,10 @@ import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HidrobiologiaFormFragment#newInstance} factory method to
+ * Use the {@link FormHidrobiologiaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HidrobiologiaFormFragment extends Fragment {
+public class FormHidrobiologiaFragment extends Fragment {
     private Spinner spinner_cuenca_hidrografica;
     private Spinner spinner_temporada_evaluacion;
     private Spinner spinner_tipo_ambiente_acuatico;
@@ -185,12 +170,12 @@ public class HidrobiologiaFormFragment extends Fragment {
     private static int TIPO_FORM_ID = 69;
     FormHidrobiologia form = null;
 
-    public HidrobiologiaFormFragment() {
+    public FormHidrobiologiaFragment() {
         // Required empty public constructor
     }
 
-    public static HidrobiologiaFormFragment newInstance(int estacionMuestreoId, int formId) {
-        HidrobiologiaFormFragment fragment = new HidrobiologiaFormFragment();
+    public static FormHidrobiologiaFragment newInstance(int estacionMuestreoId, int formId) {
+        FormHidrobiologiaFragment fragment = new FormHidrobiologiaFragment();
         Bundle args = new Bundle();
         args.putInt("estacion_id", estacionMuestreoId);
         args.putInt("formulario_id", formId);

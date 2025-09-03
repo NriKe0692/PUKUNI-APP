@@ -48,7 +48,6 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -64,13 +63,10 @@ import com.example.pukuniapp.classes.Actividad;
 import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Clima;
-import com.example.pukuniapp.classes.CondicionReproductiva;
 import com.example.pukuniapp.classes.Especie;
-import com.example.pukuniapp.classes.Estadio;
 import com.example.pukuniapp.classes.EstadoConservacion;
 import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.FormHerpetologia;
-import com.example.pukuniapp.classes.FormRoedor;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.GrupoTrofico;
@@ -82,9 +78,6 @@ import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Sustrato;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
 import com.example.pukuniapp.classes.TipoRegistro;
-import com.example.pukuniapp.classes.TipoTrampa;
-import com.example.pukuniapp.classes.TipoUsos;
-import com.example.pukuniapp.classes.UnidadMuestreal;
 import com.example.pukuniapp.classes.UnidadVegetacion;
 import com.example.pukuniapp.helpers.DBHelper;
 
@@ -97,10 +90,10 @@ import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HerpetologiaFragment#newInstance} factory method to
+ * Use the {@link FormHerpetologiaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HerpetologiaFragment extends Fragment {
+public class FormHerpetologiaFragment extends Fragment {
     private Spinner spinner_temporada_evaluacion;
     private Spinner spinner_unidad_vegetacion;
     private Spinner spinner_franja;
@@ -153,12 +146,12 @@ public class HerpetologiaFragment extends Fragment {
     List<Especie> especiesList;
     private static int TIPO_FORM_ID = 68;
     FormHerpetologia form = null;
-    public HerpetologiaFragment() {
+    public FormHerpetologiaFragment() {
         // Required empty public constructor
     }
 
-    public static HerpetologiaFragment newInstance(int estacionMuestreoId, int formId) {
-        HerpetologiaFragment fragment = new HerpetologiaFragment();
+    public static FormHerpetologiaFragment newInstance(int estacionMuestreoId, int formId) {
+        FormHerpetologiaFragment fragment = new FormHerpetologiaFragment();
         Bundle args = new Bundle();
         args.putInt("estacion_id", estacionMuestreoId);
         args.putInt("formulario_id", formId);

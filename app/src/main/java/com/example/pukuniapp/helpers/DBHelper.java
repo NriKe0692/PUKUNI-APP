@@ -13,6 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_FORMULARIO_ROEDORES = "form_roedores";
     public static final String TABLE_FORMULARIO_HERPETOLOGIA = "form_herpetologia";
     public static final String TABLE_FORMULARIO_HIDROBIOLOGIA = "form_hidrobiologia";
+    public static final String TABLE_FORMULARIO_MAMIFEROS_GRANDES = "form_mamiferos_grandes";
     public static final String TABLE_AUTOR = "autor";
     public static final String TABLE_CLASE = "clase";
     public static final String TABLE_DEPARTAMENTO = "departamento";
@@ -117,6 +118,7 @@ public class DBHelper extends SQLiteOpenHelper {
         createFormRoedoresTable(db);
         createFormHerpetologiaTable(db);
         createFormHidrobiologiaTable(db);
+        createFormMamiferosGrandesTable(db);
     }
 
     private void createAutorTable(SQLiteDatabase db){
@@ -617,6 +619,51 @@ public class DBHelper extends SQLiteOpenHelper {
                 "especialista_id INTEGER," +
                 "proyecto_id INTEGER," +
                 "estado_conservacion_id INTEGER)";
+        db.execSQL(createTableForm);
+    }
+
+    private void createFormMamiferosGrandesTable(SQLiteDatabase db){
+        String createTableForm = "CREATE TABLE " + TABLE_FORMULARIO_MAMIFEROS_GRANDES + " (" +
+                "id INTEGER," +
+                "especialista_id INTEGER," +
+                "proyecto_id INTEGER," +
+                "estacion_muestreo_id INTEGER," +
+                "temporada_evaluacion_id INTEGER," +
+                "unidad_vegetacion_id INTEGER," +
+                "fecha TEXT," +
+                "hora TEXT," +
+                "clima_id INTEGER," +
+                "franja_id INTEGER," +
+                "tipo_registro_id INTEGER," +
+                "metodologia_id INTEGER," +
+                "unidad_muestreal TEXT," +
+                "clase_id INTEGER," +
+                "orden_id INTEGER," +
+                "familia_id INTEGER," +
+                "genero_id INTEGER," +
+                "especie_id INTEGER," +
+                "nombre_comun INTEGER," +
+                "este REAL," +
+                "norte REAL," +
+                "altitud REAL," +
+                "individuos INTEGER," +
+                "edad REAL," +
+                "sexo TEXT," +
+                "condicion_reproductiva_id INTEGER," +
+                "categoria_abundancia_id INTEGER," +
+                "habito_id INTEGER ," +
+                "grupo_trofico_id INTEGER ," +
+                "indicador_id INTEGER," +
+                "uicn TEXT," +
+                "cites TEXT," +
+                "dsn TEXT," +
+                "libro_rojo TEXT," +
+                "endemismo TEXT," +
+                "distribucion_endemismo TEXT," +
+                "uso_id INTEGER," +
+                "estado_conservacion_habitat_id INTEGER," +
+                "comentario TEXT," +
+                "img_uri TEXT)";
         db.execSQL(createTableForm);
     }
 

@@ -14,6 +14,7 @@ import com.example.pukuniapp.R;
 import com.example.pukuniapp.classes.FormFlora;
 import com.example.pukuniapp.classes.FormHerpetologia;
 import com.example.pukuniapp.classes.FormHidrobiologia;
+import com.example.pukuniapp.classes.FormMamiferosGrandes;
 import com.example.pukuniapp.classes.FormOrnitofauna;
 import com.example.pukuniapp.classes.FormQuiroptero;
 import com.example.pukuniapp.classes.FormRoedor;
@@ -36,7 +37,9 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_HIDROBIOLOGIA = 9;
     private List<Object> allItems;
 
-    public CustomAdapter(List<FormFlora> floraList, List<FormOrnitofauna> ornitofaunaList, List<FormQuiroptero> quiropteroList, List<FormRoedor> roedoresList, List<FormHerpetologia> herpetologiaList, List<FormHidrobiologia> hidrobiologiaList) {
+    public CustomAdapter(List<FormFlora> floraList, List<FormOrnitofauna> ornitofaunaList, List<FormQuiroptero> quiropteroList,
+                         List<FormRoedor> roedoresList, List<FormHerpetologia> herpetologiaList, List<FormHidrobiologia> hidrobiologiaList,
+                         List<FormMamiferosGrandes> mamiferosGrandesList) {
         allItems = new ArrayList<>();
         if (floraList != null) allItems.addAll(floraList);
         if (ornitofaunaList != null) allItems.addAll(ornitofaunaList);
@@ -44,6 +47,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (roedoresList != null) allItems.addAll(roedoresList);
         if (herpetologiaList != null) allItems.addAll(herpetologiaList);
         if (hidrobiologiaList != null) allItems.addAll(hidrobiologiaList);
+        if (mamiferosGrandesList != null) allItems.addAll(mamiferosGrandesList);
     }
 
     public interface OnItemClickListener {
@@ -53,6 +57,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void onRoedorClick(FormRoedor roedor, int position);
         void onHerpetologiaClick(FormHerpetologia herpetologia, int position);
         void onHidrobiologiaClick(FormHidrobiologia hidrobiologia, int position);
+        void onMamiferosGrandesClick(FormMamiferosGrandes mamiferosGrandes, int position);
     }
 
     private OnItemClickListener listener;
@@ -77,6 +82,8 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return TYPE_HERPETOLOGIA;
         } else if (item instanceof FormHidrobiologia) {
             return TYPE_HIDROBIOLOGIA;
+        } else if (item instanceof FormMamiferosGrandes) {
+            return TYPE_MAMIFEROS_MYG;
         } else {
             throw new IllegalArgumentException("Tipo desconocido en la lista");
         }
@@ -106,6 +113,10 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_form, parent, false);
             return new HidrobiologiaViewHolder(view);
+        } else if(viewType == TYPE_MAMIFEROS_MYG){
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_form, parent, false);
+            return new MamiferosGrandesViewHolder(view);
         } else{
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_form, parent, false);
@@ -218,6 +229,22 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     listener.onHidrobiologiaClick(hidrobiologia, position);
                 }
             });
+        } else if(holder.getItemViewType() == TYPE_MAMIFEROS_MYG && item instanceof FormMamiferosGrandes) {
+            FormMamiferosGrandes mamiferosGrandes = (FormMamiferosGrandes) item;
+            MamiferosGrandesViewHolder mamiferosGrandesViewHolder = (MamiferosGrandesViewHolder) holder;
+
+            mamiferosGrandesViewHolder.tv_form_type.setText("Mamíferos Medianos y Grandes");
+            mamiferosGrandesViewHolder.tv_localidad.setText("Metodología: " + mamiferosGrandes.getMetodologia_id());
+            mamiferosGrandesViewHolder.tv_especie.setText("Especie: " + mamiferosGrandes.getEspecie_id());
+            mamiferosGrandesViewHolder.tv_altura.setVisibility(View.GONE);
+            mamiferosGrandesViewHolder.tv_usos.setVisibility(View.GONE);
+            mamiferosGrandesViewHolder.img_preview.setImageURI(Uri.parse(mamiferosGrandes.getImg_uri()));
+
+            mamiferosGrandesViewHolder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onMamiferosGrandesClick(mamiferosGrandes, position);
+                }
+            });
         }
     }
 
@@ -307,6 +334,22 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ImageView img_preview;
 
         public HidrobiologiaViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tv_form_type = itemView.findViewById(R.id.tv_form_type);
+            tv_localidad = itemView.findViewById(R.id.tv_localidad);
+            tv_especie = itemView.findViewById(R.id.tv_especie);
+            tv_altura = itemView.findViewById(R.id.tv_altura);
+            tv_usos = itemView.findViewById(R.id.tv_usos);
+            img_preview = itemView.findViewById(R.id.img_preview);
+        }
+    }
+
+    // ViewHolder para Mamiferos Medianos y Grandes
+    public static class MamiferosGrandesViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
+        ImageView img_preview;
+
+        public MamiferosGrandesViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_form_type = itemView.findViewById(R.id.tv_form_type);
             tv_localidad = itemView.findViewById(R.id.tv_localidad);

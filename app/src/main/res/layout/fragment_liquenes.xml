@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.FormLiquenesFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+
+                <android.widget.Button
+                    android:id="@+id/btnCamera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Abrir Camara"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:background="@drawable/rounded_background"/>
+
+                <android.widget.Button
+                    android:id="@+id/btnGallery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Abrir Galeria"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:background="@drawable/rounded_background"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/img_preview"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="8dp"/>
+
+            <android.widget.Button
+                android:id="@+id/save_form"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:padding="12dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar Formulario"
+                android:background="@drawable/rounded_background">
+            </android.widget.Button>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
