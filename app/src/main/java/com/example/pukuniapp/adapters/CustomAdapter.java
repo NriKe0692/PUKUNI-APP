@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pukuniapp.R;
 import com.example.pukuniapp.classes.FormFlora;
 import com.example.pukuniapp.classes.FormHerpetologia;
+import com.example.pukuniapp.classes.FormHidrobiologia;
 import com.example.pukuniapp.classes.FormOrnitofauna;
 import com.example.pukuniapp.classes.FormQuiroptero;
 import com.example.pukuniapp.classes.FormRoedor;
@@ -22,20 +23,27 @@ import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+
     private static final int TYPE_FLORA = 0;
     private static final int TYPE_ORNITOFAUNA = 1;
     private static final int TYPE_QUIROPTERO = 2;
     private static final int TYPE_ROEDOR = 3;
     private static final int TYPE_HERPETOLOGIA = 4;
+    private static final int TYPE_ENTOMOLOGIA = 5;
+    private static final int TYPE_LIQUENES = 6;
+    private static final int TYPE_MAMIFEROS_MYG = 7;
+    private static final int TYPE_FORESTAL = 8;
+    private static final int TYPE_HIDROBIOLOGIA = 9;
     private List<Object> allItems;
 
-    public CustomAdapter(List<FormFlora> floraList, List<FormOrnitofauna> ornitofaunaList, List<FormQuiroptero> quiropteroList, List<FormRoedor> roedoresList, List<FormHerpetologia> herpetologiaList) {
+    public CustomAdapter(List<FormFlora> floraList, List<FormOrnitofauna> ornitofaunaList, List<FormQuiroptero> quiropteroList, List<FormRoedor> roedoresList, List<FormHerpetologia> herpetologiaList, List<FormHidrobiologia> hidrobiologiaList) {
         allItems = new ArrayList<>();
         if (floraList != null) allItems.addAll(floraList);
         if (ornitofaunaList != null) allItems.addAll(ornitofaunaList);
         if (quiropteroList != null) allItems.addAll(quiropteroList);
         if (roedoresList != null) allItems.addAll(roedoresList);
         if (herpetologiaList != null) allItems.addAll(herpetologiaList);
+        if (hidrobiologiaList != null) allItems.addAll(hidrobiologiaList);
     }
 
     public interface OnItemClickListener {
@@ -44,6 +52,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void onQuiropteroClick(FormQuiroptero quiroptero, int position);
         void onRoedorClick(FormRoedor roedor, int position);
         void onHerpetologiaClick(FormHerpetologia herpetologia, int position);
+        void onHidrobiologiaClick(FormHidrobiologia hidrobiologia, int position);
     }
 
     private OnItemClickListener listener;
@@ -66,6 +75,8 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return TYPE_ROEDOR;
         } else if (item instanceof FormHerpetologia) {
             return TYPE_HERPETOLOGIA;
+        } else if (item instanceof FormHidrobiologia) {
+            return TYPE_HIDROBIOLOGIA;
         } else {
             throw new IllegalArgumentException("Tipo desconocido en la lista");
         }
@@ -87,10 +98,14 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_form, parent, false);
             return new QuiropterosViewHolder(view);
-        }  else if(viewType == TYPE_HERPETOLOGIA){
+        } else if(viewType == TYPE_HERPETOLOGIA){
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_form, parent, false);
             return new HerpetologiaViewHolder(view);
+        } else if(viewType == TYPE_HIDROBIOLOGIA){
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_form, parent, false);
+            return new HidrobiologiaViewHolder(view);
         } else{
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_form, parent, false);
@@ -187,6 +202,22 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     listener.onHerpetologiaClick(herpetologia, position);
                 }
             });
+        } else if(holder.getItemViewType() == TYPE_HIDROBIOLOGIA && item instanceof FormHidrobiologia) {
+            FormHidrobiologia hidrobiologia = (FormHidrobiologia) item;
+            HidrobiologiaViewHolder hidrobiologiaHolder = (HidrobiologiaViewHolder) holder;
+
+            hidrobiologiaHolder.tv_form_type.setText("Hidrobioloía");
+            hidrobiologiaHolder.tv_localidad.setText("Metodología: " + hidrobiologia.getMetodologia_id());
+            hidrobiologiaHolder.tv_especie.setText("Especie: " + hidrobiologia.getEspecie_id());
+            hidrobiologiaHolder.tv_altura.setVisibility(View.GONE);
+            hidrobiologiaHolder.tv_usos.setVisibility(View.GONE);
+            hidrobiologiaHolder.img_preview.setImageURI(Uri.parse(hidrobiologia.getImg_uri()));
+
+            hidrobiologiaHolder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onHidrobiologiaClick(hidrobiologia, position);
+                }
+            });
         }
     }
 
@@ -260,6 +291,22 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ImageView img_preview;
 
         public HerpetologiaViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tv_form_type = itemView.findViewById(R.id.tv_form_type);
+            tv_localidad = itemView.findViewById(R.id.tv_localidad);
+            tv_especie = itemView.findViewById(R.id.tv_especie);
+            tv_altura = itemView.findViewById(R.id.tv_altura);
+            tv_usos = itemView.findViewById(R.id.tv_usos);
+            img_preview = itemView.findViewById(R.id.img_preview);
+        }
+    }
+
+    // ViewHolder para Hidrobiologia
+    public static class HidrobiologiaViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
+        ImageView img_preview;
+
+        public HidrobiologiaViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_form_type = itemView.findViewById(R.id.tv_form_type);
             tv_localidad = itemView.findViewById(R.id.tv_localidad);

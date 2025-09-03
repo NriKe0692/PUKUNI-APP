@@ -17,6 +17,35 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_este"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Localidad"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_localidad"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cuenca Hidrográfica"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_cuenca_hidrografica"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
@@ -692,6 +721,20 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="DSN"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_dsn"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Nivel trófico-fishbase (Valoración)"/>
 
             <EditText
@@ -728,6 +771,62 @@
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categoría x Abundancia"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_cat_x_abundancia"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Indicador"/>
+
+            <Spinner
+                android:layout_marginBottom="12dp"
+                android:id="@+id/spinner_indicador"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Endemismo"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_endemismo"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comportamiento"/>
+
+            <EditText
+                android:layout_marginBottom="12dp"
+                android:id="@+id/et_comportamiento"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_marginTop="12dp"

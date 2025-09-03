@@ -6,9 +6,11 @@ import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Clima;
 import com.example.pukuniapp.classes.CondicionReproductiva;
+import com.example.pukuniapp.classes.CuencaHidrografica;
 import com.example.pukuniapp.classes.Departamento;
 import com.example.pukuniapp.classes.Distrito;
 import com.example.pukuniapp.classes.Especie;
+import com.example.pukuniapp.classes.Estacion;
 import com.example.pukuniapp.classes.EstacionMuestreo;
 import com.example.pukuniapp.classes.Estadio;
 import com.example.pukuniapp.classes.EstadoConservacion;
@@ -18,6 +20,7 @@ import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.GrupoTrofico;
+import com.example.pukuniapp.classes.HabitatPeces;
 import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Location;
@@ -27,9 +30,11 @@ import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
 import com.example.pukuniapp.classes.Provincia;
+import com.example.pukuniapp.classes.PuntoMuestreo;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.Sustrato;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
+import com.example.pukuniapp.classes.TipoAmbienteAcuatico;
 import com.example.pukuniapp.classes.TipoRegistro;
 import com.example.pukuniapp.classes.TipoTrampa;
 import com.example.pukuniapp.classes.TipoUsos;
@@ -167,4 +172,19 @@ public interface ApiService {
 
     @GET("/microhabitats")
     Call<List<Microhabitat>> getMicrohabitat(@Header("Authorization") String token);
+
+    @GET("/tipo_ambientes_acuaticos")
+    Call<List<TipoAmbienteAcuatico>> getTipoAmbientesAcuaticos(@Header("Authorization") String token);
+
+    @GET("/estaciones")
+    Call<List<Estacion>> getEstaciones(@Header("Authorization") String token);
+
+    @GET("/puntos_muestreo")
+    Call<List<PuntoMuestreo>> getPuntosMuestreo(@Header("Authorization") String token);
+
+    @GET("/habitats_peces")
+    Call<List<HabitatPeces>> getHabitatsPeces(@Header("Authorization") String token);
+
+    @GET("/cuencas_hidrograficas")
+    Call<List<CuencaHidrografica>> getCuencasHidrograficas(@Header("Authorization") String token);
 }

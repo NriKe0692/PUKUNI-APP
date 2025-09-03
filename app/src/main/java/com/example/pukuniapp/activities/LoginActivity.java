@@ -6,7 +6,9 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_CATEGORIA_ABUNDANCIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLASE;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CLIMA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_CONDICION_REPRODUCTIVA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_CUENCA_HIDROGRAFICA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESPECIE;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTACION;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTACION_MUESTREO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADIO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ESTADO_CONSERVACION;
@@ -16,6 +18,7 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_FOROFITO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FRANJA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GRUPO_TROFICO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITAT;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_INDICADOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_METODOLOGIA;
@@ -23,9 +26,11 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_MICROHABITAT;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ORDEN;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_PAIS;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_PARCELA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_PUNTO_MUESTREO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUB_PARCELA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_SUSTRATO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TEMPORADA_EVALUACION;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_TIPO_AMBIENTE_ACUATICO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TIPO_REGISTRO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_TIPO_TRAMPA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_UNIDAD_MUESTREAL;
@@ -58,7 +63,9 @@ import com.example.pukuniapp.classes.CategoriaAbundancia;
 import com.example.pukuniapp.classes.Clase;
 import com.example.pukuniapp.classes.Clima;
 import com.example.pukuniapp.classes.CondicionReproductiva;
+import com.example.pukuniapp.classes.CuencaHidrografica;
 import com.example.pukuniapp.classes.Especie;
+import com.example.pukuniapp.classes.Estacion;
 import com.example.pukuniapp.classes.EstacionMuestreo;
 import com.example.pukuniapp.classes.Estadio;
 import com.example.pukuniapp.classes.EstadoConservacion;
@@ -68,6 +75,7 @@ import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.GrupoTrofico;
+import com.example.pukuniapp.classes.HabitatPeces;
 import com.example.pukuniapp.classes.Habito;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Metodologia;
@@ -75,9 +83,11 @@ import com.example.pukuniapp.classes.Microhabitat;
 import com.example.pukuniapp.classes.Orden;
 import com.example.pukuniapp.classes.Pais;
 import com.example.pukuniapp.classes.Parcela;
+import com.example.pukuniapp.classes.PuntoMuestreo;
 import com.example.pukuniapp.classes.SubParcela;
 import com.example.pukuniapp.classes.Sustrato;
 import com.example.pukuniapp.classes.TemporadaEvaluacion;
+import com.example.pukuniapp.classes.TipoAmbienteAcuatico;
 import com.example.pukuniapp.classes.TipoRegistro;
 import com.example.pukuniapp.classes.TipoTrampa;
 import com.example.pukuniapp.classes.TipoUsos;
@@ -279,6 +289,21 @@ public class LoginActivity extends AppCompatActivity {
                                                                                                                                             Log.d("TESTING!", "FIN 32");
                                                                                                                                             loadMicrohabitatValues(db, api, token, TABLE_MICROHABITAT, executor, handler, () -> {
                                                                                                                                                 Log.d("TESTING!", "FIN 33");
+                                                                                                                                                loadTipoAmientesAcuaticosValues(db, api, token, TABLE_TIPO_AMBIENTE_ACUATICO, executor, handler, () -> {
+                                                                                                                                                    Log.d("TESTING!", "FIN 34");
+                                                                                                                                                    loadEstacionesValues(db, api, token, TABLE_ESTACION, executor, handler, () -> {
+                                                                                                                                                        Log.d("TESTING!", "FIN 35");
+                                                                                                                                                        loadPuntosMuestreoValues(db, api, token, TABLE_PUNTO_MUESTREO, executor, handler, () -> {
+                                                                                                                                                            Log.d("TESTING!", "FIN 36");
+                                                                                                                                                            loadHabitatPecesValues(db, api, token, TABLE_HABITAT, executor, handler, () -> {
+                                                                                                                                                                Log.d("TESTING!", "FIN 37");
+                                                                                                                                                                loadCuencasHidrograficasValues(db, api, token, TABLE_CUENCA_HIDROGRAFICA, executor, handler, () -> {
+                                                                                                                                                                    Log.d("TESTING!", "FIN 38");
+                                                                                                                                                                });
+                                                                                                                                                            });
+                                                                                                                                                        });
+                                                                                                                                                    });
+                                                                                                                                                });
                                                                                                                                             });
                                                                                                                                         });
                                                                                                                                     });
@@ -317,7 +342,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void loadUsosValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+    private void loadUsosValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
         api.getUsos("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<TipoUsos>> call, Response<List<TipoUsos>> response) {
@@ -350,7 +375,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loadActividadesValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+    private void loadActividadesValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
         api.getActividades("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
@@ -382,7 +407,137 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loadSustratosValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+    private void loadCuencasHidrograficasValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getCuencasHidrograficas("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CuencaHidrografica>> call, Response<List<CuencaHidrografica>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<CuencaHidrografica> cuencaHidrograficaList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(CuencaHidrografica cuencaHidrografica : cuencaHidrograficaList){
+                            ContentValues values = new ContentValues();
+                            values.put("cuenta_hidrografica_id", cuencaHidrografica.getCuenca_hidrografica_id());
+                            values.put("cuenta_hidrografica_name", cuencaHidrografica.getCuenca_hidrografica_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CuencaHidrografica>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadHabitatPecesValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getHabitatsPeces("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<HabitatPeces>> call, Response<List<HabitatPeces>> response) {
+                Log.d("API_RESPONSE", "Response: " + response.body().toString());
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<HabitatPeces> habitatPecesList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(HabitatPeces habitatPeces : habitatPecesList){
+                            ContentValues values = new ContentValues();
+                            values.put("habitat_id", habitatPeces.getHabitat_peces_id());
+                            values.put("habitat_name", habitatPeces.getHabitat_peces_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<HabitatPeces>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadPuntosMuestreoValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getPuntosMuestreo("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<PuntoMuestreo>> call, Response<List<PuntoMuestreo>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<PuntoMuestreo> puntoMuestreoList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(PuntoMuestreo puntoMuestreo : puntoMuestreoList){
+                            ContentValues values = new ContentValues();
+                            values.put("punto_muestreo_id", puntoMuestreo.getPunto_muestreo_id());
+                            values.put("punto_muestreo_name", puntoMuestreo.getPunto_muestreo_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PuntoMuestreo>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadEstacionesValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getEstaciones("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Estacion>> call, Response<List<Estacion>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Estacion> estacionList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(Estacion estacion : estacionList){
+                            ContentValues values = new ContentValues();
+                            values.put("estacion_id", estacion.getEstacion_id());
+                            values.put("estacion_name", estacion.getEstacion_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Estacion>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadSustratosValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
         api.getSustratos("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Sustrato>> call, Response<List<Sustrato>> response) {
@@ -414,7 +569,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loadMicrohabitatValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+    private void loadMicrohabitatValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
         api.getMicrohabitat("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Microhabitat>> call, Response<List<Microhabitat>> response) {
@@ -446,7 +601,39 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loadTemporadasEvaluacion(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+    private void loadTipoAmientesAcuaticosValues(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getTipoAmbientesAcuaticos("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<TipoAmbienteAcuatico>> call, Response<List<TipoAmbienteAcuatico>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<TipoAmbienteAcuatico> tipoAmbienteAcuaticoList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(TipoAmbienteAcuatico tipoAmbienteAcuatico : tipoAmbienteAcuaticoList){
+                            ContentValues values = new ContentValues();
+                            values.put("tipo_ambiente_acuatico_id", tipoAmbienteAcuatico.getTipo_ambiente_acuatico_id());
+                            values.put("tipo_ambiente_acuatico_name", tipoAmbienteAcuatico.getTipo_ambiente_acuatico_name());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TipoAmbienteAcuatico>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadTemporadasEvaluacion(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
         api.getTemporadasEvaluacion("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<TemporadaEvaluacion>> call, Response<List<TemporadaEvaluacion>> response) {
@@ -478,7 +665,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loadZonas(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+    private void loadZonas(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
         api.getZonas("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Zona>> call, Response<List<Zona>> response) {
@@ -510,7 +697,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loadMetodologias(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+    private void loadMetodologias(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
         api.getMetodologias("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Metodologia>> call, Response<List<Metodologia>> response) {
@@ -543,7 +730,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loadClimas(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+    private void loadClimas(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
         api.getClimas("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Clima>> call, Response<List<Clima>> response) {
@@ -769,7 +956,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loadAutores(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete) {
+    private void loadAutores(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete) {
         api.getAutores("Bearer " + token).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Autor>> call, Response<List<Autor>> response) {

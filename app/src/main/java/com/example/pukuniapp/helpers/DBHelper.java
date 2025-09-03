@@ -12,6 +12,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_FORMULARIO_QUIROPTEROS = "form_quiropteros";
     public static final String TABLE_FORMULARIO_ROEDORES = "form_roedores";
     public static final String TABLE_FORMULARIO_HERPETOLOGIA = "form_herpetologia";
+    public static final String TABLE_FORMULARIO_HIDROBIOLOGIA = "form_hidrobiologia";
     public static final String TABLE_AUTOR = "autor";
     public static final String TABLE_CLASE = "clase";
     public static final String TABLE_DEPARTAMENTO = "departamento";
@@ -51,6 +52,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_ACTIVIDAD = "actividad";
     public static final String TABLE_SUSTRATO = "sustrato";
     public static final String TABLE_MICROHABITAT = "microhabitat";
+    public static final String TABLE_CUENCA_HIDROGRAFICA = "cuenca_hidrografica";
+    public static final String TABLE_TIPO_AMBIENTE_ACUATICO = "tipo_ambiente_acuatico";
+    public static final String TABLE_ESTACION = "estacion";
+    public static final String TABLE_PUNTO_MUESTREO = "punto_muestreo";
+    public static final String TABLE_VEGETACION_CIRCUNDANTE = "vegetacion_circundante";
+    public static final String TABLE_HABITO_ALIMENTICIO = "habito_alimenticio";
+    public static final String TABLE_HABITAT = "habitat";
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -96,12 +104,19 @@ public class DBHelper extends SQLiteOpenHelper {
         createActividadTable(db);
         createSustratoTable(db);
         createMicrohabitatTable(db);
+        createCuencaHidrograficaTable(db);
+        createTipoAmbienteAcuaticoTable(db);
+        createEstacionTable(db);
+        createPuntoMuestreoTable(db);
+        createHabitoAlimenticioTable(db);
+        createHabitatTable(db);
 
         createFormFloraTable(db);
         createFormOrnitofaunaTable(db);
         createFormQuiropterosTable(db);
         createFormRoedoresTable(db);
         createFormHerpetologiaTable(db);
+        createFormHidrobiologiaTable(db);
     }
 
     private void createAutorTable(SQLiteDatabase db){
@@ -142,6 +157,63 @@ public class DBHelper extends SQLiteOpenHelper {
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "microhabitat_id INTEGER, " +
             "microhabitat_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createCuencaHidrograficaTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_CUENCA_HIDROGRAFICA + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "cuenta_hidrografica_id INTEGER, " +
+                "cuenta_hidrografica_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createTipoAmbienteAcuaticoTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_TIPO_AMBIENTE_ACUATICO + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "tipo_ambiente_acuatico_id INTEGER, " +
+            "tipo_ambiente_acuatico_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createEstacionTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_ESTACION + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "estacion_id INTEGER, " +
+                "estacion_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createPuntoMuestreoTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_PUNTO_MUESTREO + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "punto_muestreo_id INTEGER, " +
+                "estacion_id INTEGER, " +
+                "punto_muestreo_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createVegetacionCircundanteTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_VEGETACION_CIRCUNDANTE + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "vegetacion_circundante_id INTEGER, " +
+                "vegetacion_circundante_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createHabitoAlimenticioTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_HABITO_ALIMENTICIO + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "habito_alimenticio_id INTEGER, " +
+                "habito_alimenticio_name TEXT)";
+        db.execSQL(sqlQuery);
+    }
+
+    private void createHabitatTable(SQLiteDatabase db){
+        String sqlQuery = "CREATE TABLE " + TABLE_HABITAT + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "habitat_id INTEGER, " +
+                "habitat_name TEXT)";
         db.execSQL(sqlQuery);
     }
 
@@ -545,6 +617,80 @@ public class DBHelper extends SQLiteOpenHelper {
                 "especialista_id INTEGER," +
                 "proyecto_id INTEGER," +
                 "estado_conservacion_id INTEGER)";
+        db.execSQL(createTableForm);
+    }
+
+    private void createFormHidrobiologiaTable(SQLiteDatabase db){
+        String createTableForm = "CREATE TABLE " + TABLE_FORMULARIO_HIDROBIOLOGIA + " (" +
+                "id INTEGER," +
+                "especialista_id INTEGER," +
+                "proyecto_id INTEGER," +
+                "localidad TEXT," +
+                "cuenca_hidrografica_id INTEGER," +             // THIS
+                "estacion_muestreo_id INTEGER," +
+                "temporada_evaluacion_id INTEGER," +
+                "tipo_ambiente_acuatico_id INTEGER," +          // THIS
+                "estacion_id INTEGER," +                        // THIS
+                "punto_muestreo_id INTEGER," +                  // THIS
+                "este REAL," +
+                "norte REAL," +
+                "altitud REAL," +
+                "fecha TEXT," +
+                "hora TEXT," +
+                "pendiente_cauce TEXT," +
+                "clima_id INTEGER," +
+                "ancho_cauce_sector REAL," +
+                "tipo_orilla TEXT," +
+                "tipo_agua TEXT," +
+                "color_aparente_agua TEXT," +
+                "metodologia_id INTEGER," +
+                "longitud_muestreo REAL," +
+                "ancho_muestreo REAL," +
+                "area_muestreo REAL," +
+                "velocidad_corriente REAL," +
+                "profundidad_maxima_muestreo REAL," +
+                "profundidad_maxima_sector REAL," +
+                "transparencia REAL," +
+                "vegetacion_emergente TEXT," +
+                "vegetacion_sumergida TEXT," +
+                "vegetacion_flotante TEXT," +
+                "habitat_porcentaje_long_caida REAL," +
+                "habitat_porcentaje_long_rifle REAL," +
+                "habitat_porcentaje_long_corridas REAL," +
+                "habitat_porcentaje_long_pozos REAL," +
+                "habitat_porcentaje_long_remanso REAL," +
+                "sustrato_porcentaje_arena REAL," +
+                "sustrato_porcentaje_arcilla REAL," +
+                "sustrato_porcentaje_limo REAL," +
+                "sustrato_porcentaje_grava REAL," +
+                "sustrato_porcentaje_organico_hojarasca REAL," +
+                "sustrato_porcentaje_organico_ramas REAL," +
+                "sustrato_porcentaje_organico_arbustos_enraizados REAL," +
+                "unidad_vegetacion_id INTEGER," +
+                "vegetacion_circundante TEXT," +
+                "clase_id INTEGER," +
+                "orden_id INTEGER," +
+                "familia_id INTEGER," +
+                "genero_id INTEGER," +
+                "especie_id INTEGER," +
+                "nombre_comun INTEGER," +
+                "individuos INTEGER," +
+                "uicn TEXT," +
+                "cites TEXT," +
+                "dsn TEXT," +
+                "nivel_trofico_fishbase REAL," +
+                "habito_alimenticio_id INTEGER," +              // THIS
+                "uso_id INTEGER," +
+                "categoria_abundancia_id INTEGER," +
+                "indicador_id INTEGER," +
+                "endemismo TEXT," +
+                "comportamiento TEXT," +
+                "longitud_total REAL," +
+                "peso REAL," +
+                "habitat_id INTEGER," +                         // THIS
+                "etapa_reproductiva TEXT," +
+                "comentario TEXT," +
+                "img_uri TEXT)";
         db.execSQL(createTableForm);
     }
 

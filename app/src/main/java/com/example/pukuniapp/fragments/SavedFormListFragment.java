@@ -2,6 +2,7 @@ package com.example.pukuniapp.fragments;
 
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_FLORA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_HERPETOLOGIA;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_HIDROBIOLOGIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ORNITOFAUNA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_QUIROPTEROS;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ROEDORES;
@@ -23,6 +24,7 @@ import com.example.pukuniapp.R;
 import com.example.pukuniapp.adapters.CustomAdapter;
 import com.example.pukuniapp.classes.FormFlora;
 import com.example.pukuniapp.classes.FormHerpetologia;
+import com.example.pukuniapp.classes.FormHidrobiologia;
 import com.example.pukuniapp.classes.FormOrnitofauna;
 import com.example.pukuniapp.classes.FormQuiroptero;
 import com.example.pukuniapp.classes.FormRoedor;
@@ -45,6 +47,7 @@ public class SavedFormListFragment extends Fragment {
     List<FormQuiroptero> quiropterosList;
     List<FormRoedor> roedoresList;
     List<FormHerpetologia> herpetologiaList;
+    List<FormHidrobiologia> hidrobiologiaList;
 
     public SavedFormListFragment() {
         // Required empty public constructor
@@ -80,9 +83,10 @@ public class SavedFormListFragment extends Fragment {
         quiropterosList = getQuiropterosListFromDB(db);
         roedoresList = getRoedoresListFromDB(db);
         herpetologiaList = getHerpetologiaListFromDB(db);
+        hidrobiologiaList = getHidrobiologiaListFromDB(db);
         db.close();
 
-        customAdapter = new CustomAdapter(formFloraList, formOrnitofaunaList, quiropterosList, roedoresList, herpetologiaList);
+        customAdapter = new CustomAdapter(formFloraList, formOrnitofaunaList, quiropterosList, roedoresList, herpetologiaList, hidrobiologiaList);
 
         customAdapter.setOnItemClickListener(new CustomAdapter.OnItemClickListener() {
             @Override
@@ -136,6 +140,18 @@ public class SavedFormListFragment extends Fragment {
             public void onHerpetologiaClick(FormHerpetologia herpetologia, int position) {
                 Log.d("Herpetologia", herpetologia.toString());
                 HerpetologiaFragment newFragment = HerpetologiaFragment.newInstance(herpetologia.getEstacion_muestreo_id(), herpetologia.getId());
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, newFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+
+            @Override
+            public void onHidrobiologiaClick(FormHidrobiologia hidrobiologia, int position) {
+                Log.d("Hidrobiologia", hidrobiologia.toString());
+                HidrobiologiaFormFragment newFragment = HidrobiologiaFormFragment.newInstance(hidrobiologia.getEstacion_muestreo_id(), hidrobiologia.getId());
 
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
@@ -552,6 +568,164 @@ public class SavedFormListFragment extends Fragment {
                 formFloraTemp.setEstado_conservacion_id(estado_conservacion_id);
 
                 list.add(formFloraTemp);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return list;
+    }
+
+    private List<FormHidrobiologia> getHidrobiologiaListFromDB(SQLiteDatabase db){
+        List<FormHidrobiologia> list = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FORMULARIO_HIDROBIOLOGIA, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
+                int proyecto_id = cursor.getInt(cursor.getColumnIndexOrThrow("proyecto_id"));
+                String localidad = cursor.getString(cursor.getColumnIndexOrThrow("localidad"));
+                int cuenca_hidrografica_id = cursor.getInt(cursor.getColumnIndexOrThrow("cuenca_hidrografica_id"));
+                int estacion_muestreo_id = cursor.getInt(cursor.getColumnIndexOrThrow("estacion_muestreo_id"));
+                int temporada_evaluacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("temporada_evaluacion_id"));
+                int tipo_ambiente_acuatico_id = cursor.getInt(cursor.getColumnIndexOrThrow("tipo_ambiente_acuatico_id"));
+                int estacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("estacion_id"));
+                int punto_muestreo_id = cursor.getInt(cursor.getColumnIndexOrThrow("punto_muestreo_id"));
+                float este = cursor.getFloat(cursor.getColumnIndexOrThrow("este"));
+                float norte = cursor.getFloat(cursor.getColumnIndexOrThrow("norte"));
+                float altitud = cursor.getFloat(cursor.getColumnIndexOrThrow("altitud"));
+                String fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"));
+                String hora = cursor.getString(cursor.getColumnIndexOrThrow("hora"));
+                String pendiente_cauce = cursor.getString(cursor.getColumnIndexOrThrow("pendiente_cauce"));
+                int clima_id = cursor.getInt(cursor.getColumnIndexOrThrow("clima_id"));
+                float ancho_cauce_sector = cursor.getFloat(cursor.getColumnIndexOrThrow("ancho_cauce_sector"));
+                String tipo_orilla = cursor.getString(cursor.getColumnIndexOrThrow("tipo_orilla"));
+                String tipo_agua = cursor.getString(cursor.getColumnIndexOrThrow("tipo_agua"));
+                String color_aparente_agua = cursor.getString(cursor.getColumnIndexOrThrow("color_aparente_agua"));
+                int metodologia_id = cursor.getInt(cursor.getColumnIndexOrThrow("metodologia_id"));
+                float longitud_muestreo = cursor.getFloat(cursor.getColumnIndexOrThrow("longitud_muestreo"));
+                float ancho_muestreo = cursor.getFloat(cursor.getColumnIndexOrThrow("ancho_muestreo"));
+                float area_muestreo = cursor.getFloat(cursor.getColumnIndexOrThrow("area_muestreo"));
+                float velocidad_corriente = cursor.getFloat(cursor.getColumnIndexOrThrow("velocidad_corriente"));
+                float profundidad_maxima_muestreo = cursor.getFloat(cursor.getColumnIndexOrThrow("profundidad_maxima_muestreo"));
+                float profundidad_maxima_sector = cursor.getFloat(cursor.getColumnIndexOrThrow("profundidad_maxima_sector"));
+                float transparencia = cursor.getFloat(cursor.getColumnIndexOrThrow("transparencia"));
+                String vegetacion_emergente = cursor.getString(cursor.getColumnIndexOrThrow("vegetacion_emergente"));
+                String vegetacion_sumergida = cursor.getString(cursor.getColumnIndexOrThrow("vegetacion_sumergida"));
+                String vegetacion_flotante = cursor.getString(cursor.getColumnIndexOrThrow("vegetacion_flotante"));
+                float habitat_porcentaje_long_caida = cursor.getFloat(cursor.getColumnIndexOrThrow("habitat_porcentaje_long_caida"));
+                float habitat_porcentaje_long_rifle = cursor.getFloat(cursor.getColumnIndexOrThrow("habitat_porcentaje_long_rifle"));
+                float habitat_porcentaje_long_corridas = cursor.getFloat(cursor.getColumnIndexOrThrow("habitat_porcentaje_long_corridas"));
+                float habitat_porcentaje_long_pozos = cursor.getFloat(cursor.getColumnIndexOrThrow("habitat_porcentaje_long_pozos"));
+                float habitat_porcentaje_long_remanso = cursor.getFloat(cursor.getColumnIndexOrThrow("habitat_porcentaje_long_remanso"));
+                float sustrato_porcentaje_arena = cursor.getFloat(cursor.getColumnIndexOrThrow("sustrato_porcentaje_arena"));
+                float sustrato_porcentaje_arcilla = cursor.getFloat(cursor.getColumnIndexOrThrow("sustrato_porcentaje_arcilla"));
+                float sustrato_porcentaje_limo = cursor.getFloat(cursor.getColumnIndexOrThrow("sustrato_porcentaje_limo"));
+                float sustrato_porcentaje_grava = cursor.getFloat(cursor.getColumnIndexOrThrow("sustrato_porcentaje_grava"));
+                float sustrato_porcentaje_organico_hojarasca = cursor.getFloat(cursor.getColumnIndexOrThrow("sustrato_porcentaje_organico_hojarasca"));
+                float sustrato_porcentaje_organico_ramas = cursor.getFloat(cursor.getColumnIndexOrThrow("sustrato_porcentaje_organico_ramas"));
+                float sustrato_porcentaje_organico_arbustos_enraizados = cursor.getFloat(cursor.getColumnIndexOrThrow("sustrato_porcentaje_organico_arbustos_enraizados"));
+                int unidad_vegetacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("unidad_vegetacion_id"));
+                String vegetacion_circundante = cursor.getString(cursor.getColumnIndexOrThrow("vegetacion_circundante"));
+                int clase_id = cursor.getInt(cursor.getColumnIndexOrThrow("clase_id"));
+                int orden_id = cursor.getInt(cursor.getColumnIndexOrThrow("orden_id"));
+                int familia_id = cursor.getInt(cursor.getColumnIndexOrThrow("familia_id"));
+                int genero_id = cursor.getInt(cursor.getColumnIndexOrThrow("genero_id"));
+                int especie_id = cursor.getInt(cursor.getColumnIndexOrThrow("especie_id"));
+                String nombre_comun = cursor.getString(cursor.getColumnIndexOrThrow("nombre_comun"));
+                int individuos = cursor.getInt(cursor.getColumnIndexOrThrow("individuos"));
+                String uicn = cursor.getString(cursor.getColumnIndexOrThrow("uicn"));
+                String cites = cursor.getString(cursor.getColumnIndexOrThrow("cites"));
+                String dsn = cursor.getString(cursor.getColumnIndexOrThrow("dsn"));
+                float nivel_trofico_fishbase = cursor.getFloat(cursor.getColumnIndexOrThrow("nivel_trofico_fishbase"));
+                int habito_alimenticio_id = cursor.getInt(cursor.getColumnIndexOrThrow("habito_alimenticio_id"));
+                int uso_id = cursor.getInt(cursor.getColumnIndexOrThrow("uso_id"));
+                int categoria_abundancia_id = cursor.getInt(cursor.getColumnIndexOrThrow("categoria_abundancia_id"));
+                int indicador_id = cursor.getInt(cursor.getColumnIndexOrThrow("indicador_id"));
+                String endemismo = cursor.getString(cursor.getColumnIndexOrThrow("endemismo"));
+                String comportamiento = cursor.getString(cursor.getColumnIndexOrThrow("comportamiento"));
+                float longitud_total = cursor.getFloat(cursor.getColumnIndexOrThrow("longitud_total"));
+                float peso = cursor.getFloat(cursor.getColumnIndexOrThrow("peso"));
+                int habitat_id = cursor.getInt(cursor.getColumnIndexOrThrow("habitat_id"));
+                String etapa_reproductiva = cursor.getString(cursor.getColumnIndexOrThrow("etapa_reproductiva"));
+                String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
+                String img_uri = cursor.getString(cursor.getColumnIndexOrThrow("img_uri"));
+
+                FormHidrobiologia form = new FormHidrobiologia();
+
+                form.setId(id);
+                form.setEspecialista_id(especialista_id);
+                form.setProyecto_id(proyecto_id);
+                form.setLocalidad(localidad);
+                form.setCuenca_hidrografica_id(cuenca_hidrografica_id);
+                form.setEstacion_muestreo_id(estacion_muestreo_id);
+                form.setTemporada_evaluacion_id(temporada_evaluacion_id);
+                form.setTipo_ambiente_acuatico_id(tipo_ambiente_acuatico_id);
+                form.setEstacion_id(estacion_id);
+                form.setPunto_muestreo_id(punto_muestreo_id);
+                form.setEste(este);
+                form.setNorte(norte);
+                form.setAltitud(altitud);
+                form.setFecha(fecha);
+                form.setHora(hora);
+                form.setPendiente_cauce(pendiente_cauce);
+                form.setClima_id(clima_id);
+                form.setAncho_cauce_sector(ancho_cauce_sector);
+                form.setTipo_orilla(tipo_orilla);
+                form.setTipo_agua(tipo_agua);
+                form.setColor_aparente_agua(color_aparente_agua);
+                form.setMetodologia_id(metodologia_id);
+                form.setLongitud_muestreo(longitud_muestreo);
+                form.setAncho_muestreo(ancho_muestreo);
+                form.setArea_muestreo(area_muestreo);
+                form.setVelocidad_corriente(velocidad_corriente);
+                form.setProfundidad_maxima_muestreo(profundidad_maxima_muestreo);
+                form.setProfundidad_maxima_sector(profundidad_maxima_sector);
+                form.setTransparencia(transparencia);
+                form.setVegetacion_emergente(vegetacion_emergente);
+                form.setVegetacion_sumergida(vegetacion_sumergida);
+                form.setVegetacion_flotante(vegetacion_flotante);
+                form.setHabitat_porcentaje_long_caida(habitat_porcentaje_long_caida);
+                form.setHabitat_porcentaje_long_rifle(habitat_porcentaje_long_rifle);
+                form.setHabitat_porcentaje_long_corridas(habitat_porcentaje_long_corridas);
+                form.setHabitat_porcentaje_long_pozos(habitat_porcentaje_long_pozos);
+                form.setHabitat_porcentaje_long_remanso(habitat_porcentaje_long_remanso);
+                form.setSustrato_porcentaje_arena(sustrato_porcentaje_arena);
+                form.setSustrato_porcentaje_arcilla(sustrato_porcentaje_arcilla);
+                form.setSustrato_porcentaje_limo(sustrato_porcentaje_limo);
+                form.setSustrato_porcentaje_grava(sustrato_porcentaje_grava);
+                form.setSustrato_porcentaje_organico_hojarasca(sustrato_porcentaje_organico_hojarasca);
+                form.setSustrato_porcentaje_organico_ramas(sustrato_porcentaje_organico_ramas);
+                form.setSustrato_porcentaje_organico_arbustos_enraizados(sustrato_porcentaje_organico_arbustos_enraizados);
+                form.setUnidad_vegetacion_id(unidad_vegetacion_id);
+                form.setVegetacion_circundante(vegetacion_circundante);
+                form.setClase_id(clase_id);
+                form.setOrden_id(orden_id);
+                form.setFamilia_id(familia_id);
+                form.setGenero_id(genero_id);
+                form.setEspecie_id(especie_id);
+                form.setNombre_comun(nombre_comun);
+                form.setIndividuos(individuos);
+                form.setUicn(uicn);
+                form.setCites(cites);
+                form.setDsn(dsn);
+                form.setNivel_trofico_fishbase(nivel_trofico_fishbase);
+                form.setHabito_alimenticio_id(habito_alimenticio_id);
+                form.setUso_id(uso_id);
+                form.setCategoria_abundancia_id(categoria_abundancia_id);
+                form.setIndicador_id(indicador_id);
+                form.setEndemismo(endemismo);
+                form.setComportamiento(comportamiento);
+                form.setLongitud_total(longitud_total);
+                form.setPeso(peso);
+                form.setHabitat_id(habitat_id);
+                form.setEtapa_reproductiva(etapa_reproductiva);
+                form.setComentario(comentario);
+                form.setImg_uri(img_uri);
+
+                list.add(form);
             } while (cursor.moveToNext());
         }
 
