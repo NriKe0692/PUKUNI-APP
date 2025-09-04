@@ -8,18 +8,24 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ORNITOFAUN
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_QUIROPTEROS;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_ROEDORES;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.pukuniapp.R;
 import com.example.pukuniapp.adapters.CustomAdapter;
@@ -31,9 +37,19 @@ import com.example.pukuniapp.classes.FormOrnitofauna;
 import com.example.pukuniapp.classes.FormQuiroptero;
 import com.example.pukuniapp.classes.FormRoedor;
 import com.example.pukuniapp.helpers.DBHelper;
+import com.example.pukuniapp.retrofit.ApiClient;
+import com.example.pukuniapp.retrofit.ApiService;
+import com.example.pukuniapp.retrofit.PostResponse;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -164,6 +180,38 @@ public class SavedFormListFragment extends Fragment {
             }
 
             @Override
+            public void onHidrobiologiaSendClick(FormHidrobiologia hidrobiologia) {
+                if (hidrobiologia.getImg_uri() != null) {
+                    String uriString = hidrobiologia.getImg_uri();
+                    Uri imageUri = Uri.parse(uriString);
+                    String base64Image = uriToBase64(imageUri);
+                    hidrobiologia.setImg_uri(base64Image);
+                }
+
+                ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+                SharedPreferences prefs = getActivity().getSharedPreferences("PukuniPrefs", android.content.Context.MODE_PRIVATE);
+                String token = prefs.getString("auth_token", null);
+
+                Call<PostResponse> call = api.postHidrobiologia("Bearer " + token, hidrobiologia);
+
+                call.enqueue(new Callback<PostResponse>() {
+                    @Override
+                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error en el POST: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
             public void onMamiferosGrandesClick(FormMamiferosGrandes mamiferosGrandes, int position) {
                 Log.d("Mamiferos Medianos y Grandes", mamiferosGrandes.toString());
                 FormMamiferosGrandesFragment newFragment = FormMamiferosGrandesFragment.newInstance(mamiferosGrandes.getEstacion_muestreo_id(), mamiferosGrandes.getId());
@@ -173,6 +221,38 @@ public class SavedFormListFragment extends Fragment {
                         .replace(R.id.fragment_container, newFragment)
                         .addToBackStack(null)
                         .commit();
+            }
+
+            @Override
+            public void onMamiferosGrandesSendClick(FormMamiferosGrandes mamiferosGrandes) {
+                if (mamiferosGrandes.getImg_uri() != null) {
+                    String uriString = mamiferosGrandes.getImg_uri();
+                    Uri imageUri = Uri.parse(uriString);
+                    String base64Image = uriToBase64(imageUri);
+                    mamiferosGrandes.setImg_uri(base64Image);
+                }
+
+                ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+                SharedPreferences prefs = getActivity().getSharedPreferences("PukuniPrefs", android.content.Context.MODE_PRIVATE);
+                String token = prefs.getString("auth_token", null);
+
+                Call<PostResponse> call = api.postMamiferosGrandes("Bearer " + token, mamiferosGrandes);
+
+                call.enqueue(new Callback<PostResponse>() {
+                    @Override
+                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error en el POST: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -949,5 +1029,30 @@ public class SavedFormListFragment extends Fragment {
         cursor.close();
 
         return list;
+    }
+
+    private String uriToBase64(Uri imageUri) {
+        try {
+            if (imageUri == null) return null;  // seguridad
+
+            InputStream inputStream = getContext().getContentResolver().openInputStream(imageUri);
+            if (inputStream == null) return null;
+
+            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+
+            int len;
+            while ((len = inputStream.read(buffer)) != -1) {
+                byteBuffer.write(buffer, 0, len);
+            }
+            inputStream.close();
+
+            byte[] bytes = byteBuffer.toByteArray();
+            return Base64.encodeToString(bytes, Base64.NO_WRAP); // NO_WRAP evita saltos de línea
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

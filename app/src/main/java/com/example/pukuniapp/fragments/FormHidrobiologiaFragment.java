@@ -1758,8 +1758,6 @@ public class FormHidrobiologiaFragment extends Fragment {
         et_genero.setOnItemClickListener((parent, view, position, id) -> {
             String generoName = parent.getItemAtPosition(position).toString();
 
-            Toast.makeText(getActivity(), generoName, Toast.LENGTH_SHORT).show();
-
             Genero generoSeleccionado = null;
 
             for (Genero genero : generosList) {

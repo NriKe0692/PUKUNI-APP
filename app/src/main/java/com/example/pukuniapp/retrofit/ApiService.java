@@ -16,6 +16,9 @@ import com.example.pukuniapp.classes.Estadio;
 import com.example.pukuniapp.classes.EstadoConservacion;
 import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.Fenologia;
+import com.example.pukuniapp.classes.FormFlora;
+import com.example.pukuniapp.classes.FormHidrobiologia;
+import com.example.pukuniapp.classes.FormMamiferosGrandes;
 import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
@@ -50,7 +53,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface ApiService {
     @POST("login")
@@ -187,4 +189,10 @@ public interface ApiService {
 
     @GET("/cuencas_hidrograficas")
     Call<List<CuencaHidrografica>> getCuencasHidrograficas(@Header("Authorization") String token);
+
+    @POST("/form_mamiferos_grandes")
+    Call<PostResponse> postMamiferosGrandes(@Header("Authorization") String token, @Body FormMamiferosGrandes request);
+
+    @POST("/form_hidrobiologia")
+    Call<PostResponse> postHidrobiologia(@Header("Authorization") String token, @Body FormHidrobiologia request);
 }

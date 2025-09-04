@@ -46,6 +46,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,6 +157,7 @@ public class FormMamiferosGrandesFragment extends Fragment {
 
     public static FormMamiferosGrandesFragment newInstance(int estacionMuestreoId, int formId) {
         FormMamiferosGrandesFragment fragment = new FormMamiferosGrandesFragment();
+        Log.d("TEEEEEEEEEST", String.valueOf(formId));
         Bundle args = new Bundle();
         args.putInt("estacion_id", estacionMuestreoId);
         args.putInt("formulario_id", formId);
@@ -327,6 +329,7 @@ public class FormMamiferosGrandesFragment extends Fragment {
                         form.setTipo_registro_id(tipo_registro_id);
                         form.setMetodologia_id(metodologia_id);
                         form.setUnidad_muestreal(unidad_muestreal);
+                        Toast.makeText(getContext(), "Clase id: " + clase_id, Toast.LENGTH_SHORT).show();
                         form.setClase_id(clase_id);
                         form.setOrden_id(orden_id);
                         form.setFamilia_id(familia_id);
@@ -500,7 +503,7 @@ public class FormMamiferosGrandesFragment extends Fragment {
 
         ContentValues values = new ContentValues();
         values.put("especialista_id", userId);
-//        values.put("proyecto_id", proyecto_id);
+        values.put("proyecto_id", 1);
         values.put("estacion_muestreo_id", estacionId);
         values.put("temporada_evaluacion_id", temporadaEvaluacion != null ? temporadaEvaluacion.getTemporada_evaluacion_id() : null);
         values.put("unidad_vegetacion_id", unidadVegetacion != null ? unidadVegetacion.getUnidad_vegetacion_id() : null);

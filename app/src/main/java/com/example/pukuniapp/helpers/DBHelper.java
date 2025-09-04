@@ -624,7 +624,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private void createFormMamiferosGrandesTable(SQLiteDatabase db){
         String createTableForm = "CREATE TABLE " + TABLE_FORMULARIO_MAMIFEROS_GRANDES + " (" +
-                "id INTEGER," +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "especialista_id INTEGER," +
                 "proyecto_id INTEGER," +
                 "estacion_muestreo_id INTEGER," +
@@ -669,7 +669,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private void createFormHidrobiologiaTable(SQLiteDatabase db){
         String createTableForm = "CREATE TABLE " + TABLE_FORMULARIO_HIDROBIOLOGIA + " (" +
-                "id INTEGER," +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "especialista_id INTEGER," +
                 "proyecto_id INTEGER," +
                 "localidad TEXT," +
@@ -720,7 +720,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "familia_id INTEGER," +
                 "genero_id INTEGER," +
                 "especie_id INTEGER," +
-                "nombre_comun INTEGER," +
+                "nombre_comun TEXT," +
                 "individuos INTEGER," +
                 "uicn TEXT," +
                 "cites TEXT," +
@@ -893,6 +893,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_FLORA);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_ORNITOFAUNA);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_QUIROPTEROS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_ROEDORES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_HERPETOLOGIA);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_HIDROBIOLOGIA);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_MAMIFEROS_GRANDES);
+
         onCreate(db);
     }
 }

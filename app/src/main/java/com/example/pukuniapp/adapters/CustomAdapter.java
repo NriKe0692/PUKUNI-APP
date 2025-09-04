@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,7 +58,9 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void onRoedorClick(FormRoedor roedor, int position);
         void onHerpetologiaClick(FormHerpetologia herpetologia, int position);
         void onHidrobiologiaClick(FormHidrobiologia hidrobiologia, int position);
+        void onHidrobiologiaSendClick(FormHidrobiologia hidrobiologia);
         void onMamiferosGrandesClick(FormMamiferosGrandes mamiferosGrandes, int position);
+        void onMamiferosGrandesSendClick(FormMamiferosGrandes mamiferosGrandes);
     }
 
     private OnItemClickListener listener;
@@ -229,6 +232,12 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     listener.onHidrobiologiaClick(hidrobiologia, position);
                 }
             });
+
+            hidrobiologiaHolder.send_form.setOnClickListener(v -> {
+                if(listener != null){
+                    listener.onHidrobiologiaSendClick(hidrobiologia);
+                }
+            });
         } else if(holder.getItemViewType() == TYPE_MAMIFEROS_MYG && item instanceof FormMamiferosGrandes) {
             FormMamiferosGrandes mamiferosGrandes = (FormMamiferosGrandes) item;
             MamiferosGrandesViewHolder mamiferosGrandesViewHolder = (MamiferosGrandesViewHolder) holder;
@@ -245,6 +254,12 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     listener.onMamiferosGrandesClick(mamiferosGrandes, position);
                 }
             });
+
+            mamiferosGrandesViewHolder.send_form.setOnClickListener(v -> {
+                if(listener != null){
+                    listener.onMamiferosGrandesSendClick(mamiferosGrandes);
+                }
+            });
         }
     }
 
@@ -252,6 +267,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static class FloraViewHolder extends RecyclerView.ViewHolder {
         TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
         ImageView img_preview;
+        Button send_form;
 
         public FloraViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -261,6 +277,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tv_altura = itemView.findViewById(R.id.tv_altura);
             tv_usos = itemView.findViewById(R.id.tv_usos);
             img_preview = itemView.findViewById(R.id.img_preview);
+            send_form = itemView.findViewById(R.id.send_form);
         }
     }
 
@@ -268,6 +285,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static class OrnitofaunaViewHolder extends RecyclerView.ViewHolder {
         TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
         ImageView img_preview;
+        Button send_form;
 
         public OrnitofaunaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -277,6 +295,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tv_altura = itemView.findViewById(R.id.tv_altura);
             tv_usos = itemView.findViewById(R.id.tv_usos);
             img_preview = itemView.findViewById(R.id.img_preview);
+            send_form = itemView.findViewById(R.id.send_form);
         }
     }
 
@@ -284,6 +303,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static class QuiropterosViewHolder extends RecyclerView.ViewHolder {
         TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
         ImageView img_preview;
+        Button send_form;
 
         public QuiropterosViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -293,6 +313,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tv_altura = itemView.findViewById(R.id.tv_altura);
             tv_usos = itemView.findViewById(R.id.tv_usos);
             img_preview = itemView.findViewById(R.id.img_preview);
+            send_form = itemView.findViewById(R.id.send_form);
         }
     }
 
@@ -300,6 +321,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static class RoedoresViewHolder extends RecyclerView.ViewHolder {
         TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
         ImageView img_preview;
+        Button send_form;
 
         public RoedoresViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -309,6 +331,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tv_altura = itemView.findViewById(R.id.tv_altura);
             tv_usos = itemView.findViewById(R.id.tv_usos);
             img_preview = itemView.findViewById(R.id.img_preview);
+            send_form = itemView.findViewById(R.id.send_form);
         }
     }
 
@@ -316,6 +339,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static class HerpetologiaViewHolder extends RecyclerView.ViewHolder {
         TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
         ImageView img_preview;
+        Button send_form;
 
         public HerpetologiaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -325,6 +349,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tv_altura = itemView.findViewById(R.id.tv_altura);
             tv_usos = itemView.findViewById(R.id.tv_usos);
             img_preview = itemView.findViewById(R.id.img_preview);
+            send_form = itemView.findViewById(R.id.send_form);
         }
     }
 
@@ -332,6 +357,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static class HidrobiologiaViewHolder extends RecyclerView.ViewHolder {
         TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
         ImageView img_preview;
+        Button send_form;
 
         public HidrobiologiaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -341,6 +367,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tv_altura = itemView.findViewById(R.id.tv_altura);
             tv_usos = itemView.findViewById(R.id.tv_usos);
             img_preview = itemView.findViewById(R.id.img_preview);
+            send_form = itemView.findViewById(R.id.send_form);
         }
     }
 
@@ -348,6 +375,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static class MamiferosGrandesViewHolder extends RecyclerView.ViewHolder {
         TextView tv_form_type, tv_localidad, tv_especie, tv_altura, tv_usos;
         ImageView img_preview;
+        Button send_form;
 
         public MamiferosGrandesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -357,6 +385,7 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tv_altura = itemView.findViewById(R.id.tv_altura);
             tv_usos = itemView.findViewById(R.id.tv_usos);
             img_preview = itemView.findViewById(R.id.img_preview);
+            send_form = itemView.findViewById(R.id.send_form);
         }
     }
 }

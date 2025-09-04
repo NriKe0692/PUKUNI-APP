@@ -70,7 +70,14 @@ public class FormHidrobiologia {
     private String etapa_reproductiva;
     private String comentario;
     private String img_uri;
+    private String imgBase64;
 
+    public String getImgBase64() {
+        return imgBase64;
+    }
+    public void setImgBase64(String imgBase64) {
+        this.imgBase64 = imgBase64;
+    }
     public String getEtapa_reproductiva() {
         return etapa_reproductiva;
     }
