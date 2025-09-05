@@ -318,6 +318,9 @@ public class FormRoedoresFragment extends Fragment {
                         String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
                         String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
                         int estado_conservacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_id"));
+                        int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
+
+                        photoUri = Uri.parse(image_uri);
 
                         form = new FormRoedor();
 
@@ -362,6 +365,7 @@ public class FormRoedoresFragment extends Fragment {
                         form.setComentario(comentario);
                         form.setImage_uri(image_uri);
                         form.setEstado_conservacion_id(estado_conservacion_id);
+                        form.setEspecialista_id(especialista_id);
 //                        form.setProyecto_id();
 
                     } while (cursor.moveToNext());
@@ -556,7 +560,7 @@ public class FormRoedoresFragment extends Fragment {
         values.put("image_uri", uriString);
         values.put("uso_id", uso != null ? uso.getUsos_id() : null);
         values.put("especialista_id", userId);
-//        values.put("proyecto_id", );
+        values.put("proyecto_id", 1);
         values.put("estado_conservacion_id", estadoConservacion != null ? estadoConservacion.getEstado_conservacion_habitat_id() : null);
 
         long newRowId;
@@ -895,8 +899,6 @@ public class FormRoedoresFragment extends Fragment {
 
         et_genero.setOnItemClickListener((parent, view, position, id) -> {
             String generoName = parent.getItemAtPosition(position).toString();
-
-            Toast.makeText(getActivity(), generoName, Toast.LENGTH_SHORT).show();
 
             Genero generoSeleccionado = null;
 
@@ -1398,71 +1400,6 @@ public class FormRoedoresFragment extends Fragment {
 
         spinner_metodologia.setAdapter(adapter);
 
-        spinner_metodologia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                List<UnidadMuestreal> unidadMuestrealList = new ArrayList<>();
-
-                Franja franja = (Franja) spinner_franja.getSelectedItem();
-                Metodologia metodologia = (Metodologia) spinner_metodologia.getSelectedItem();
-
-                if(franja != null && metodologia != null){
-                    Cursor cursor2 = db.rawQuery(
-                            "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ?",
-                            new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()) }
-                    );
-
-                    if (cursor2.moveToFirst()) {
-                        do {
-                            int id = cursor2.getInt(cursor2.getColumnIndexOrThrow("unidad_muestreal_id"));
-                            String unidad_muestreal_name = cursor2.getString(cursor2.getColumnIndexOrThrow("unidad_muestreal_name"));
-                            int franja_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("franja_id"));
-                            int metodologia_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("metodologia_id"));
-
-                            UnidadMuestreal unidadMuestreal = new UnidadMuestreal();
-                            unidadMuestreal.setUnidad_muestreal_id(id);
-                            unidadMuestreal.setUnidad_muestreal_name(unidad_muestreal_name);
-                            unidadMuestreal.setFranja_id(franja_id);
-                            unidadMuestreal.setMetodologia_id(metodologia_id);
-
-                            unidadMuestrealList.add(unidadMuestreal);
-                        } while (cursor2.moveToNext());
-                    }
-
-                    cursor2.close();
-
-                    ArrayAdapter<UnidadMuestreal> adapter2 = new ArrayAdapter<>(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            unidadMuestrealList
-                    );
-                    adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    spinner_unidad_muestreal.setAdapter(adapter2);
-
-                    if(form != null){
-                        int defaultPosition = -1;
-
-                        for (int it = 0; it < unidadMuestrealList.size(); it++) {
-                            if (unidadMuestrealList.get(it).getUnidad_muestreal_id() == form.getUnidad_muestreal_id()) {
-                                defaultPosition = it;
-                                break;
-                            }
-                        }
-
-                        if(defaultPosition != -1){
-                            spinner_unidad_muestreal.setSelection(defaultPosition);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
         if(form != null){
             int defaultPosition = -1;
 
@@ -1520,55 +1457,58 @@ public class FormRoedoresFragment extends Fragment {
                         List<UnidadMuestreal> unidadMuestrealList = new ArrayList<>();
 
                         Franja franja = (Franja) spinner_franja.getSelectedItem();
-                        Metodologia metodologia = (Metodologia) spinner_metodologia.getSelectedItem();
+//                        Metodologia metodologia = (Metodologia) spinner_metodologia.getSelectedItem();
 
-                        if(franja != null && metodologia != null){
-                            Cursor cursor2 = db.rawQuery(
-                                    "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ?",
-                                    new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()) }
-                            );
+//                        Cursor cursor2 = db.rawQuery(
+//                                "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ? AND tipo_form_id = ?",
+//                                new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()), String.valueOf(TIPO_FORM_ID) }
+//                        );
 
-                            if (cursor2.moveToFirst()) {
-                                do {
-                                    int id = cursor2.getInt(cursor2.getColumnIndexOrThrow("unidad_muestreal_id"));
-                                    String unidad_muestreal_name = cursor2.getString(cursor2.getColumnIndexOrThrow("unidad_muestreal_name"));
-                                    int franja_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("franja_id"));
-                                    int metodologia_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("metodologia_id"));
+                        Cursor cursor2 = db.rawQuery(
+                                "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND tipo_form_id = ?",
+                                new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(TIPO_FORM_ID) }
+                        );
 
-                                    UnidadMuestreal unidadMuestreal = new UnidadMuestreal();
-                                    unidadMuestreal.setUnidad_muestreal_id(id);
-                                    unidadMuestreal.setUnidad_muestreal_name(unidad_muestreal_name);
-                                    unidadMuestreal.setFranja_id(franja_id);
-                                    unidadMuestreal.setMetodologia_id(metodologia_id);
+                        if (cursor2 != null && cursor2.moveToFirst()) {
+                            do {
+                                int id = cursor2.getInt(cursor2.getColumnIndexOrThrow("unidad_muestreal_id"));
+                                String unidad_muestreal_name = cursor2.getString(cursor2.getColumnIndexOrThrow("unidad_muestreal_name"));
+                                int franja_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("franja_id"));
+                                int metodologia_id = cursor2.getInt(cursor2.getColumnIndexOrThrow("metodologia_id"));
 
-                                    unidadMuestrealList.add(unidadMuestreal);
-                                } while (cursor2.moveToNext());
+                                UnidadMuestreal unidadMuestreal = new UnidadMuestreal();
+                                unidadMuestreal.setUnidad_muestreal_id(id);
+                                unidadMuestreal.setUnidad_muestreal_name(unidad_muestreal_name);
+                                unidadMuestreal.setFranja_id(franja_id);
+                                unidadMuestreal.setMetodologia_id(metodologia_id);
+
+                                unidadMuestrealList.add(unidadMuestreal);
+                            } while (cursor2.moveToNext());
+                        }
+
+                        cursor2.close();
+
+                        ArrayAdapter<UnidadMuestreal> adapter2 = new ArrayAdapter<>(
+                                requireContext(),
+                                android.R.layout.simple_spinner_item,
+                                unidadMuestrealList
+                        );
+                        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                        spinner_unidad_muestreal.setAdapter(adapter2);
+
+                        if(form != null){
+                            int defaultPosition = -1;
+
+                            for (int it = 0; it < unidadMuestrealList.size(); it++) {
+                                if (unidadMuestrealList.get(it).getUnidad_muestreal_id() == form.getUnidad_muestreal_id()) {
+                                    defaultPosition = it;
+                                    break;
+                                }
                             }
 
-                            cursor2.close();
-
-                            ArrayAdapter<UnidadMuestreal> adapter2 = new ArrayAdapter<>(
-                                    requireContext(),
-                                    android.R.layout.simple_spinner_item,
-                                    unidadMuestrealList
-                            );
-                            adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                            spinner_unidad_muestreal.setAdapter(adapter2);
-
-                            if(form != null){
-                                int defaultPosition = -1;
-
-                                for (int it = 0; it < unidadMuestrealList.size(); it++) {
-                                    if (unidadMuestrealList.get(it).getUnidad_muestreal_id() == form.getUnidad_muestreal_id()) {
-                                        defaultPosition = it;
-                                        break;
-                                    }
-                                }
-
-                                if(defaultPosition != -1){
-                                    spinner_unidad_muestreal.setSelection(defaultPosition);
-                                }
+                            if(defaultPosition != -1){
+                                spinner_unidad_muestreal.setSelection(defaultPosition);
                             }
                         }
                     }

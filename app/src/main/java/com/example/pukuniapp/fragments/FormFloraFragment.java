@@ -297,6 +297,8 @@ public class FormFloraFragment extends Fragment {
                         String datos_planta = cursor.getString(cursor.getColumnIndexOrThrow("datos_planta"));
                         String codigo_placa = cursor.getString(cursor.getColumnIndexOrThrow("codigo_placa"));
 
+                        photoUri = Uri.parse(image_uri);
+
                         Log.d("setUnidad_muestreo_id", String.valueOf(unidad_muestreo_id));
 
                         form = new FormFlora();
@@ -444,11 +446,10 @@ public class FormFloraFragment extends Fragment {
         String valorCobertura = et_valor_cobertura.getText().toString();
         String observaciones = et_valor_observaciones.getText().toString();
         String datosPlanta = et_valor_datos_planta.getText().toString();
-        String uriString = (photoUri != null) ? photoUri.toString() : "";
         String tamanioUnidad = et_tamanio_unidad.getText().toString();
         String localidad = et_localidad.getText().toString();
         String codigoPlaca = et_codigo_placa.getText().toString();
-
+        String uriString = (photoUri != null) ? photoUri.toString() : "";
 
         int estacionId = -1;
 
@@ -498,6 +499,7 @@ public class FormFloraFragment extends Fragment {
         values.put("localidad", localidad);
         values.put("codigo_placa", codigoPlaca);
         values.put("especialista_id", userId);
+        values.put("proyecto_id", 1);
 
         long newRowId;
 

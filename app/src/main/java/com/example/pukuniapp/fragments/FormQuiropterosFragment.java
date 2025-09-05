@@ -326,7 +326,10 @@ public class FormQuiropterosFragment extends Fragment {
                         String ebas = cursor.getString(cursor.getColumnIndexOrThrow("ebas"));
                         String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
                         String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
+                        int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
                         int estado_conservacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_id"));
+
+                        photoUri = Uri.parse(image_uri);
 
                         form = new FormQuiroptero();
 
@@ -374,6 +377,7 @@ public class FormQuiropterosFragment extends Fragment {
                         form.setComentario(comentario);
                         form.setImage_uri(image_uri);
                         form.setEstado_conservacion_id(estado_conservacion_id);
+                        form.setEspecialista_id(especialista_id);
 //                        form.setProyecto_id();
 
                     } while (cursor.moveToNext());
@@ -577,7 +581,7 @@ public class FormQuiropterosFragment extends Fragment {
         values.put("image_uri", uriString);
         values.put("uso_id", uso != null ? uso.getUsos_id() : null);
         values.put("especialista_id", userId);
-//        values.put("proyecto_id", );
+        values.put("proyecto_id", 1);
         values.put("estado_conservacion_id", estadoConservacion != null ? estadoConservacion.getEstado_conservacion_habitat_id() : null);
 
         long newRowId;
@@ -1430,9 +1434,14 @@ public class FormQuiropterosFragment extends Fragment {
                 Metodologia metodologia = (Metodologia) spinner_metodologia.getSelectedItem();
 
                 if(franja != null && metodologia != null){
+//                    Cursor cursor2 = db.rawQuery(
+//                            "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ? AND tipo_form_id = ?",
+//                            new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()), String.valueOf(TIPO_FORM_ID) }
+//                    );
+
                     Cursor cursor2 = db.rawQuery(
-                            "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ?",
-                            new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()) }
+                            "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE tipo_form_id = ?",
+                            new String[]{ String.valueOf(TIPO_FORM_ID) }
                     );
 
                     if (cursor2.moveToFirst()) {
@@ -1546,9 +1555,14 @@ public class FormQuiropterosFragment extends Fragment {
                         Metodologia metodologia = (Metodologia) spinner_metodologia.getSelectedItem();
 
                         if(franja != null && metodologia != null){
+//                            Cursor cursor2 = db.rawQuery(
+//                                    "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ? AND tipo_form_id = ?",
+//                                    new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()), String.valueOf(TIPO_FORM_ID) }
+//                            );
+
                             Cursor cursor2 = db.rawQuery(
-                                    "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ?",
-                                    new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()) }
+                                    "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE tipo_form_id = ?",
+                                    new String[]{ String.valueOf(TIPO_FORM_ID) }
                             );
 
                             if (cursor2.moveToFirst()) {

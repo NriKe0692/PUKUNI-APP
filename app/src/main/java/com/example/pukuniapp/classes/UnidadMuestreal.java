@@ -5,6 +5,15 @@ public class UnidadMuestreal {
     private String unidad_muestreal_name;
     private int franja_id;
     private int metodologia_id;
+    private int tipo_form_id;
+
+    public int getTipo_form_id() {
+        return tipo_form_id;
+    }
+
+    public void setTipo_form_id(int tipo_form_id) {
+        this.tipo_form_id = tipo_form_id;
+    }
 
     @Override
     public String toString() {

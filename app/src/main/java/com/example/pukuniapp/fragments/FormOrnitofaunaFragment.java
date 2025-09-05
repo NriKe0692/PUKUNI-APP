@@ -285,6 +285,7 @@ public class FormOrnitofaunaFragment extends Fragment {
                         float altitud = cursor.getFloat(cursor.getColumnIndexOrThrow("altitud"));
                         String fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"));
                         String hora = cursor.getString(cursor.getColumnIndexOrThrow("hora"));
+                        int zona = cursor.getInt(cursor.getColumnIndexOrThrow("zona_id"));
                         int clima_id = cursor.getInt(cursor.getColumnIndexOrThrow("clima_id"));
                         int clase_id = cursor.getInt(cursor.getColumnIndexOrThrow("clase_id"));
                         int orden_id = cursor.getInt(cursor.getColumnIndexOrThrow("orden_id"));
@@ -312,7 +313,10 @@ public class FormOrnitofaunaFragment extends Fragment {
                         String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
                         String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
                         int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
+                        int proyecto_id = cursor.getInt(cursor.getColumnIndexOrThrow("proyecto_id"));
                         int estado_conservacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_id"));
+
+                        photoUri = Uri.parse(image_uri);
 
                         form = new FormOrnitofauna();
 
@@ -327,6 +331,7 @@ public class FormOrnitofaunaFragment extends Fragment {
                         form.setAltitud(altitud);
                         form.setFecha(fecha);
                         form.setHora(hora);
+                        form.setZona_id(zona);
                         form.setClima_id(clima_id);
                         form.setClase_id(clase_id);
                         form.setOrden_id(orden_id);
@@ -354,6 +359,7 @@ public class FormOrnitofaunaFragment extends Fragment {
                         form.setComentario(comentario);
                         form.setImage_uri(image_uri);
                         form.setEspecialista_id(especialista_id);
+                        form.setProyecto_id(proyecto_id);
                         form.setEstado_conservacion_id(estado_conservacion_id);
                     } while (cursor.moveToNext());
                 }
@@ -541,6 +547,7 @@ public class FormOrnitofaunaFragment extends Fragment {
         values.put("comentario", comentario);
         values.put("image_uri", uriString);
         values.put("especialista_id", userId);
+        values.put("proyecto_id", 1);
         values.put("estado_conservacion_id", estadoConservacion != null ? estadoConservacion.getEstado_conservacion_habitat_id() : null);
 
         long newRowId;
@@ -681,8 +688,8 @@ public class FormOrnitofaunaFragment extends Fragment {
 
                         if(franja != null && metodologia != null){
                             Cursor cursor2 = db.rawQuery(
-                                    "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ?",
-                                    new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()) }
+                                    "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ? AND tipo_form_id = ?",
+                                    new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()), String.valueOf(TIPO_FORM_ID) }
                             );
 
                             if (cursor2.moveToFirst()) {
@@ -940,8 +947,8 @@ public class FormOrnitofaunaFragment extends Fragment {
 
                 if(franja != null && metodologia != null){
                     Cursor cursor2 = db.rawQuery(
-                            "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ?",
-                            new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()) }
+                            "SELECT * FROM " + TABLE_UNIDAD_MUESTREAL + " WHERE franja_id = ? AND metodologia_id = ? AND tipo_form_id = ?",
+                            new String[]{ String.valueOf(franja.getFranja_id()), String.valueOf(metodologia.getMetodologia_id()), String.valueOf(TIPO_FORM_ID) }
                     );
 
                     if (cursor2.moveToFirst()) {

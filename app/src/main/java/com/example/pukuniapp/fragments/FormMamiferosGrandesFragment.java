@@ -157,7 +157,6 @@ public class FormMamiferosGrandesFragment extends Fragment {
 
     public static FormMamiferosGrandesFragment newInstance(int estacionMuestreoId, int formId) {
         FormMamiferosGrandesFragment fragment = new FormMamiferosGrandesFragment();
-        Log.d("TEEEEEEEEEST", String.valueOf(formId));
         Bundle args = new Bundle();
         args.putInt("estacion_id", estacionMuestreoId);
         args.putInt("formulario_id", formId);
@@ -313,6 +312,8 @@ public class FormMamiferosGrandesFragment extends Fragment {
                         int estado_conservacion_habitat_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_habitat_id"));
                         String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
                         String img_uri = cursor.getString(cursor.getColumnIndexOrThrow("img_uri"));
+
+                        photoUri = Uri.parse(img_uri);
 
                         form = new FormMamiferosGrandes();
 

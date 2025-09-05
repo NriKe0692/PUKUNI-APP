@@ -17,14 +17,19 @@ import com.example.pukuniapp.classes.EstadoConservacion;
 import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.Fenologia;
 import com.example.pukuniapp.classes.FormFlora;
+import com.example.pukuniapp.classes.FormHerpetologia;
 import com.example.pukuniapp.classes.FormHidrobiologia;
 import com.example.pukuniapp.classes.FormMamiferosGrandes;
+import com.example.pukuniapp.classes.FormOrnitofauna;
+import com.example.pukuniapp.classes.FormQuiroptero;
+import com.example.pukuniapp.classes.FormRoedor;
 import com.example.pukuniapp.classes.Forofito;
 import com.example.pukuniapp.classes.Franja;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.GrupoTrofico;
 import com.example.pukuniapp.classes.HabitatPeces;
 import com.example.pukuniapp.classes.Habito;
+import com.example.pukuniapp.classes.HabitoAlimenticio;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Location;
 import com.example.pukuniapp.classes.Metodologia;
@@ -121,6 +126,9 @@ public interface ApiService {
     @GET("/habitos")
     Call<List<Habito>> getHabitos(@Header("Authorization") String token);
 
+    @GET("/habitos_alimenticios")
+    Call<List<HabitoAlimenticio>> getHabitosAlimenticios(@Header("Authorization") String token);
+
     @GET("/estadios")
     Call<List<Estadio>> getEstadios(@Header("Authorization") String token);
 
@@ -195,4 +203,19 @@ public interface ApiService {
 
     @POST("/form_hidrobiologia")
     Call<PostResponse> postHidrobiologia(@Header("Authorization") String token, @Body FormHidrobiologia request);
+
+    @POST("/form_botanica")
+    Call<PostResponse> postBotanica(@Header("Authorization") String token, @Body FormFlora request);
+
+    @POST("/form_roedores")
+    Call<PostResponse> postRoedor(@Header("Authorization") String token, @Body FormRoedor request);
+
+    @POST("/form_quiropteros")
+    Call<PostResponse> postQuiroptero(@Header("Authorization") String token, @Body FormQuiroptero request);
+
+    @POST("/form_herpetologia")
+    Call<PostResponse> postHerpetologia(@Header("Authorization") String token, @Body FormHerpetologia request);
+
+    @POST("/form_ornitofauna")
+    Call<PostResponse> postOrnitofauna(@Header("Authorization") String token, @Body FormOrnitofauna request);
 }

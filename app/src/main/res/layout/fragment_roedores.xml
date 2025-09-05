@@ -91,11 +91,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Unidad Muestreal"/>
+                android:text="Sub Estación de Muestreo"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_unidad_muestreal"
+                android:id="@+id/spinner_franja"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
@@ -105,11 +105,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sub Estación de Muestreo"/>
+                android:text="Unidad Muestreal"/>
 
             <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/spinner_franja"
+                android:id="@+id/spinner_unidad_muestreal"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>

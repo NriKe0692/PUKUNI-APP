@@ -53,10 +53,15 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface OnItemClickListener {
         void onFloraClick(FormFlora flora, int position);
+        void onFloraSendClick(FormFlora flora);
         void onOrnitofaunaClick(FormOrnitofauna ornito, int position);
+        void onOrnitofaunaSendClick(FormOrnitofauna ornito);
         void onQuiropteroClick(FormQuiroptero quiroptero, int position);
+        void onQuiropteroSendClick(FormQuiroptero quiroptero);
         void onRoedorClick(FormRoedor roedor, int position);
+        void onRoedorSendClick(FormRoedor roedor);
         void onHerpetologiaClick(FormHerpetologia herpetologia, int position);
+        void onHerpetologiaSendClick(FormHerpetologia herpetologia);
         void onHidrobiologiaClick(FormHidrobiologia hidrobiologia, int position);
         void onHidrobiologiaSendClick(FormHidrobiologia hidrobiologia);
         void onMamiferosGrandesClick(FormMamiferosGrandes mamiferosGrandes, int position);
@@ -152,6 +157,12 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     listener.onFloraClick(flora, position);
                 }
             });
+
+            floraHolder.send_form.setOnClickListener(v -> {
+                if(listener != null){
+                    listener.onFloraSendClick(flora);
+                }
+            });
         } else if(holder.getItemViewType() == TYPE_ORNITOFAUNA && item instanceof FormOrnitofauna) {
             FormOrnitofauna ornito = (FormOrnitofauna) item;
             OrnitofaunaViewHolder ornitoHolder = (OrnitofaunaViewHolder) holder;
@@ -168,12 +179,18 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     listener.onOrnitofaunaClick(ornito, position);
                 }
             });
+
+            ornitoHolder.send_form.setOnClickListener(v -> {
+                if(listener != null){
+                    listener.onOrnitofaunaSendClick(ornito);
+                }
+            });
         } else if(holder.getItemViewType() == TYPE_QUIROPTERO && item instanceof FormQuiroptero) {
             FormQuiroptero quiroptero = (FormQuiroptero) item;
             QuiropterosViewHolder quiropteroHolder = (QuiropterosViewHolder) holder;
 
             quiropteroHolder.tv_form_type.setText("Quiróptero");
-            quiropteroHolder.tv_localidad.setText("Metodología: " + quiroptero.getMetodologia_id());
+            quiropteroHolder.tv_localidad.setText("Especialista: " + quiroptero.getEspecialista_id());
             quiropteroHolder.tv_especie.setText("Especie: " + quiroptero.getEspecie_id());
             quiropteroHolder.tv_altura.setVisibility(View.GONE);
             quiropteroHolder.tv_usos.setVisibility(View.GONE);
@@ -184,12 +201,18 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     listener.onQuiropteroClick(quiroptero, position);
                 }
             });
+
+            quiropteroHolder.send_form.setOnClickListener(v -> {
+                if(listener != null){
+                    listener.onQuiropteroSendClick(quiroptero);
+                }
+            });
         } else if(holder.getItemViewType() == TYPE_ROEDOR && item instanceof FormRoedor) {
             FormRoedor roedor = (FormRoedor) item;
             RoedoresViewHolder roedorHolder = (RoedoresViewHolder) holder;
 
             roedorHolder.tv_form_type.setText("Roedor");
-            roedorHolder.tv_localidad.setText("Metodología: " + roedor.getMetodologia_id());
+            roedorHolder.tv_localidad.setText("Especialista: " + roedor.getEspecialista_id());
             roedorHolder.tv_especie.setText("Especie: " + roedor.getEspecie_id());
             roedorHolder.tv_altura.setVisibility(View.GONE);
             roedorHolder.tv_usos.setVisibility(View.GONE);
@@ -198,6 +221,12 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             roedorHolder.itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onRoedorClick(roedor, position);
+                }
+            });
+
+            roedorHolder.send_form.setOnClickListener(v -> {
+                if(listener != null){
+                    listener.onRoedorSendClick(roedor);
                 }
             });
         } else if(holder.getItemViewType() == TYPE_HERPETOLOGIA && item instanceof FormHerpetologia) {
@@ -214,6 +243,12 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             herpetologiaHolder.itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onHerpetologiaClick(herpetologia, position);
+                }
+            });
+
+            herpetologiaHolder.send_form.setOnClickListener(v -> {
+                if(listener != null){
+                    listener.onHerpetologiaSendClick(herpetologia);
                 }
             });
         } else if(holder.getItemViewType() == TYPE_HIDROBIOLOGIA && item instanceof FormHidrobiologia) {

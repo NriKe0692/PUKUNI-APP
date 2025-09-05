@@ -41,7 +41,16 @@ public class FormOrnitofauna {
     String comentario;
     String image_uri;
     int especialista_id;
+    int proyecto_id;
     int estado_conservacion_id;
+
+    public int getProyecto_id() {
+        return proyecto_id;
+    }
+
+    public void setProyecto_id(int proyecto_id) {
+        this.proyecto_id = proyecto_id;
+    }
 
     public int getZona_id() {
         return zona_id;

@@ -11,6 +11,7 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_FAMILIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_FORMULARIO_HIDROBIOLOGIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITAT;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO_ALIMENTICIO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_INDICADOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_METODOLOGIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_ORDEN;
@@ -67,6 +68,7 @@ import com.example.pukuniapp.classes.Familia;
 import com.example.pukuniapp.classes.FormHidrobiologia;
 import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.HabitatPeces;
+import com.example.pukuniapp.classes.HabitoAlimenticio;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.Orden;
@@ -108,6 +110,7 @@ public class FormHidrobiologiaFragment extends Fragment {
     private Spinner spinner_indicador;
     private Spinner spinner_habitat_peces;
     private Spinner spinner_etapa_reproductiva;
+    private Spinner spinner_habitos_alimenticios;
     private EditText et_localidad;
     private EditText et_este;
     private EditText et_norte;
@@ -141,7 +144,6 @@ public class FormHidrobiologiaFragment extends Fragment {
     private EditText et_cites;
     private EditText et_dsn;
     private EditText et_nivel_trofico_fishbase;
-    private EditText et_habitos_alimenticios;
     private EditText et_endemismo;
     private EditText et_comportamiento;
     private EditText et_lt_cm;
@@ -239,6 +241,7 @@ public class FormHidrobiologiaFragment extends Fragment {
         spinner_indicador = view.findViewById(R.id.spinner_indicador);
         spinner_habitat_peces = view.findViewById(R.id.spinner_habitat_peces);
         spinner_etapa_reproductiva = view.findViewById(R.id.spinner_etapa_reproductiva);
+        spinner_habitos_alimenticios = view.findViewById(R.id.spinner_habitos_alimenticios);
         et_localidad = view.findViewById(R.id.et_localidad);
         et_este = view.findViewById(R.id.et_este);
         et_norte = view.findViewById(R.id.et_norte);
@@ -272,7 +275,6 @@ public class FormHidrobiologiaFragment extends Fragment {
         et_cites = view.findViewById(R.id.et_cites);
         et_dsn = view.findViewById(R.id.et_dsn);
         et_nivel_trofico_fishbase = view.findViewById(R.id.et_nivel_trofico_fishbase);
-        et_habitos_alimenticios = view.findViewById(R.id.et_habitos_alimenticios);
         et_endemismo = view.findViewById(R.id.et_endemismo);
         et_comportamiento = view.findViewById(R.id.et_comportamiento);
         et_lt_cm = view.findViewById(R.id.et_lt_cm);
@@ -391,6 +393,8 @@ public class FormHidrobiologiaFragment extends Fragment {
                         String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
                         String img_uri = cursor.getString(cursor.getColumnIndexOrThrow("img_uri"));
 
+                        photoUri = Uri.parse(img_uri);
+
                         form = new FormHidrobiologia();
 
                         form.setId(id);
@@ -477,6 +481,7 @@ public class FormHidrobiologiaFragment extends Fragment {
         setCategoriaXAbundanciaValues(db);
         setIndicadorValues(db);
         setTipoAmbienteAcuaticoValues(db);
+        setHabitosAlimenticiosValues(db);
         setEstacionValues(db);
         setPuntoMuestreoValues(db);
         setHabitatPecesValues(db);
@@ -524,7 +529,6 @@ public class FormHidrobiologiaFragment extends Fragment {
             et_cites.setText(String.valueOf(form.getCites()));
             et_dsn.setText(String.valueOf(form.getDsn()));
             et_nivel_trofico_fishbase.setText(String.valueOf(form.getNivel_trofico_fishbase()));
-            et_habitos_alimenticios.setText(String.valueOf(form.getHabito_alimenticio_id()));
             et_endemismo.setText(String.valueOf(form.getEndemismo()));
             et_comportamiento.setText(String.valueOf(form.getComportamiento()));
             et_lt_cm.setText(String.valueOf(form.getLongitud_total()));
@@ -560,6 +564,7 @@ public class FormHidrobiologiaFragment extends Fragment {
         Indicador indicador = (Indicador) spinner_indicador.getSelectedItem();
         HabitatPeces habitat = (HabitatPeces) spinner_habitat_peces.getSelectedItem();
         String etapaReproductiva = (String) spinner_etapa_reproductiva.getSelectedItem();
+        HabitoAlimenticio  habitooAlimenticio = (HabitoAlimenticio) spinner_habitos_alimenticios.getSelectedItem();
 
         // Recoger valores de los campos de texto
         String localidad = et_localidad.getText().toString();
@@ -595,7 +600,6 @@ public class FormHidrobiologiaFragment extends Fragment {
         String cites = et_cites.getText().toString();
         String dsn = et_dsn.getText().toString();
         String nivel_trofico_fishbase = et_nivel_trofico_fishbase.getText().toString();
-        String habitos_alimenticios = et_habitos_alimenticios.getText().toString();
         String endemismo = et_endemismo.getText().toString();
         String comportamiento = et_comportamiento.getText().toString();
         String lt_cm = et_lt_cm.getText().toString();
@@ -665,7 +669,6 @@ public class FormHidrobiologiaFragment extends Fragment {
 
         ContentValues values = new ContentValues();
         values.put("especialista_id", userId);
-//        values.put("proyecto_id", proyecto_id);
         values.put("localidad", localidad);
         values.put("cuenca_hidrografica_id", cuencaHidrografica != null ? cuencaHidrografica.getCuenca_hidrografica_id() : null);
         values.put("estacion_muestreo_id", estacionId);
@@ -720,7 +723,7 @@ public class FormHidrobiologiaFragment extends Fragment {
         values.put("cites", cites);
         values.put("dsn", dsn);
         values.put("nivel_trofico_fishbase", nivel_trofico_fishbase);
-        values.put("habito_alimenticio_id", habitos_alimenticios);
+        values.put("habito_alimenticio_id", habitooAlimenticio != null ? habitooAlimenticio.getHabito_alimenticio_id() : null);
         values.put("uso_id", uso != null ? uso.getUsos_id() : null);
         values.put("categoria_abundancia_id", categoriaAbundancia != null ? categoriaAbundancia.getCategoria_abundancia_id() : null);
         values.put("indicador_id", indicador != null ? indicador.getIndicador_id() : null);
@@ -732,6 +735,7 @@ public class FormHidrobiologiaFragment extends Fragment {
         values.put("etapa_reproductiva", etapaReproductiva);
         values.put("comentario", observaciones);
         values.put("img_uri", uriString);
+        values.put("proyecto_id", 1);
 
         long newRowId;
 
@@ -1460,6 +1464,54 @@ public class FormHidrobiologiaFragment extends Fragment {
 
             if(defaultPosition != -1){
                 spinner_usos.setSelection(defaultPosition);
+            }
+        }
+    }
+
+    private void setHabitosAlimenticiosValues(SQLiteDatabase db){
+        List<HabitoAlimenticio> habitoAlimenticioList = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(
+            "SELECT * FROM " + TABLE_HABITO_ALIMENTICIO,
+            null
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("habito_alimenticio_id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("habito_alimenticio_name"));
+
+                HabitoAlimenticio habitoAlimenticio = new HabitoAlimenticio();
+                habitoAlimenticio.setHabito_alimenticio_id(id);
+                habitoAlimenticio.setHabito_alimenticio_name(name);
+
+                habitoAlimenticioList.add(habitoAlimenticio);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        ArrayAdapter<HabitoAlimenticio> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                habitoAlimenticioList
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner_habitos_alimenticios.setAdapter(adapter);
+
+        if(form != null){
+            int defaultPosition = -1;
+
+            for (int i = 0; i < habitoAlimenticioList.size(); i++) {
+                if (habitoAlimenticioList.get(i).getHabito_alimenticio_id() == form.getHabito_alimenticio_id()) {
+                    defaultPosition = i;
+                    break;
+                }
+            }
+
+            if(defaultPosition != -1){
+                spinner_habitos_alimenticios.setSelection(defaultPosition);
             }
         }
     }

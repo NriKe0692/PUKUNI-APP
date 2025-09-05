@@ -47,6 +47,15 @@ public class FormQuiroptero {
     private String image_uri;
     private int  uso_id;
     private int estado_conservacion_id;
+    private int especialista_id;
+
+    public int getEspecialista_id() {
+        return especialista_id;
+    }
+
+    public void setEspecialista_id(int especialista_id) {
+        this.especialista_id = especialista_id;
+    }
 
     public int getId() {
         return id;

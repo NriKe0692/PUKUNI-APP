@@ -751,12 +751,12 @@
                 android:layout_height="wrap_content"
                 android:text="Hábitos alimenticios"/>
 
-            <EditText
+            <Spinner
                 android:layout_marginBottom="12dp"
-                android:id="@+id/et_habitos_alimenticios"
+                android:id="@+id/spinner_habitos_alimenticios"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="48dp"/>
 
             <TextView
                 android:layout_marginTop="12dp"

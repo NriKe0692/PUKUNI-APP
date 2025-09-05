@@ -312,6 +312,8 @@ public class FormHerpetologiaFragment extends Fragment {
                         int proyecto_id = cursor.getInt(cursor.getColumnIndexOrThrow("proyecto_id"));
                         int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
 
+                        photoUri = Uri.parse(image_uri);
+
                         form = new FormHerpetologia();
 
                         form.setId(id);
@@ -541,7 +543,7 @@ public class FormHerpetologiaFragment extends Fragment {
         values.put("usos", usos);
         values.put("comentario", comentario);
         values.put("image_uri", uriString);
-//        values.put("proyecto_id", proyecto_id);
+        values.put("proyecto_id", 1);
         values.put("estado_conservacion_habitat_id", estadoConservacion != null ? estadoConservacion.getEstado_conservacion_habitat_id() : null);
         values.put("especialista_id", userId);
 

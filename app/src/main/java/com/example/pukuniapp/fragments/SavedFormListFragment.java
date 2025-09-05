@@ -120,6 +120,38 @@ public class SavedFormListFragment extends Fragment {
             }
 
             @Override
+            public void onFloraSendClick(FormFlora floraForm) {
+                if (floraForm.getImageUri() != null) {
+                    String uriString = floraForm.getImageUri();
+                    Uri imageUri = Uri.parse(uriString);
+                    String base64Image = uriToBase64(imageUri);
+                    floraForm.setImageUri(base64Image);
+                }
+
+                ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+                SharedPreferences prefs = getActivity().getSharedPreferences("PukuniPrefs", android.content.Context.MODE_PRIVATE);
+                String token = prefs.getString("auth_token", null);
+
+                Call<PostResponse> call = api.postBotanica("Bearer " + token, floraForm);
+
+                call.enqueue(new Callback<PostResponse>() {
+                    @Override
+                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error en el POST: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
             public void onOrnitofaunaClick(FormOrnitofauna ornito, int position) {
                 Log.d("Ornito", ornito.toString());
                 FormOrnitofaunaFragment newFragment = FormOrnitofaunaFragment.newInstance(ornito.getEstacion_muestreo_id(), ornito.getId());
@@ -129,6 +161,38 @@ public class SavedFormListFragment extends Fragment {
                         .replace(R.id.fragment_container, newFragment)
                         .addToBackStack(null)
                         .commit();
+            }
+
+            @Override
+            public void onOrnitofaunaSendClick(FormOrnitofauna ornito) {
+                if (ornito.getImage_uri() != null) {
+                    String uriString = ornito.getImage_uri();
+                    Uri imageUri = Uri.parse(uriString);
+                    String base64Image = uriToBase64(imageUri);
+                    ornito.setImage_uri(base64Image);
+                }
+
+                ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+                SharedPreferences prefs = getActivity().getSharedPreferences("PukuniPrefs", android.content.Context.MODE_PRIVATE);
+                String token = prefs.getString("auth_token", null);
+
+                Call<PostResponse> call = api.postOrnitofauna("Bearer " + token, ornito);
+
+                call.enqueue(new Callback<PostResponse>() {
+                    @Override
+                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error en el POST: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -144,6 +208,38 @@ public class SavedFormListFragment extends Fragment {
             }
 
             @Override
+            public void onQuiropteroSendClick(FormQuiroptero quiroptero) {
+                if (quiroptero.getImage_uri() != null) {
+                    String uriString = quiroptero.getImage_uri();
+                    Uri imageUri = Uri.parse(uriString);
+                    String base64Image = uriToBase64(imageUri);
+                    quiroptero.setImage_uri(base64Image);
+                }
+
+                ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+                SharedPreferences prefs = getActivity().getSharedPreferences("PukuniPrefs", android.content.Context.MODE_PRIVATE);
+                String token = prefs.getString("auth_token", null);
+
+                Call<PostResponse> call = api.postQuiroptero("Bearer " + token, quiroptero);
+
+                call.enqueue(new Callback<PostResponse>() {
+                    @Override
+                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error en el POST: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
             public void onRoedorClick(FormRoedor roedor, int position) {
                 Log.d("Roedor", roedor.toString());
                 FormRoedoresFragment newFragment = FormRoedoresFragment.newInstance(roedor.getEstacion_muestreo_id(), roedor.getId());
@@ -156,6 +252,38 @@ public class SavedFormListFragment extends Fragment {
             }
 
             @Override
+            public void onRoedorSendClick(FormRoedor roedor) {
+                if (roedor.getImage_uri() != null) {
+                    String uriString = roedor.getImage_uri();
+                    Uri imageUri = Uri.parse(uriString);
+                    String base64Image = uriToBase64(imageUri);
+                    roedor.setImage_uri(base64Image);
+                }
+
+                ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+                SharedPreferences prefs = getActivity().getSharedPreferences("PukuniPrefs", android.content.Context.MODE_PRIVATE);
+                String token = prefs.getString("auth_token", null);
+
+                Call<PostResponse> call = api.postRoedor("Bearer " + token, roedor);
+
+                call.enqueue(new Callback<PostResponse>() {
+                    @Override
+                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error en el POST: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
             public void onHerpetologiaClick(FormHerpetologia herpetologia, int position) {
                 Log.d("Herpetologia", herpetologia.toString());
                 FormHerpetologiaFragment newFragment = FormHerpetologiaFragment.newInstance(herpetologia.getEstacion_muestreo_id(), herpetologia.getId());
@@ -165,6 +293,37 @@ public class SavedFormListFragment extends Fragment {
                         .replace(R.id.fragment_container, newFragment)
                         .addToBackStack(null)
                         .commit();
+            }
+
+            public void onHerpetologiaSendClick(FormHerpetologia herpetologia) {
+                if (herpetologia.getImage_uri() != null) {
+                    String uriString = herpetologia.getImage_uri();
+                    Uri imageUri = Uri.parse(uriString);
+                    String base64Image = uriToBase64(imageUri);
+                    herpetologia.setImage_uri(base64Image);
+                }
+
+                ApiService api = ApiClient.getRetrofit().create(ApiService.class);
+                SharedPreferences prefs = getActivity().getSharedPreferences("PukuniPrefs", android.content.Context.MODE_PRIVATE);
+                String token = prefs.getString("auth_token", null);
+
+                Call<PostResponse> call = api.postHerpetologia("Bearer " + token, herpetologia);
+
+                call.enqueue(new Callback<PostResponse>() {
+                    @Override
+                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error en el POST: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -315,7 +474,7 @@ public class SavedFormListFragment extends Fragment {
                 formFloraTemp.setFranja_id(franja_id);
                 formFloraTemp.setUnidad_muestreo_id(unidad_muestreo_id);
                 formFloraTemp.setParcela_id(parcela_id);
-                formFloraTemp.setForofito_id(forofito_id);
+                if(forofito_id != -1) formFloraTemp.setForofito_id(forofito_id);
                 formFloraTemp.setSub_parcela_id(sub_parcela_id);
                 formFloraTemp.setTamanio(tamanio);
                 formFloraTemp.setCodigo_placa(codigo_placa);
@@ -406,6 +565,7 @@ public class SavedFormListFragment extends Fragment {
                 String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
                 int  uso_id = cursor.getInt(cursor.getColumnIndexOrThrow("uso_id"));
                 int estado_conservacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_id"));
+                int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
 
                 FormRoedor formRoedorTemp = new FormRoedor();
 
@@ -452,6 +612,7 @@ public class SavedFormListFragment extends Fragment {
                 formRoedorTemp.setImage_uri(image_uri);
                 formRoedorTemp.setUso_id(uso_id);
                 formRoedorTemp.setEstado_conservacion_id(estado_conservacion_id);
+                formRoedorTemp.setEspecialista_id(especialista_id);
 
                 list.add(formRoedorTemp);
             } while (cursor.moveToNext());
@@ -515,6 +676,7 @@ public class SavedFormListFragment extends Fragment {
                 String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
                 int  uso_id = cursor.getInt(cursor.getColumnIndexOrThrow("uso_id"));
                 int estado_conservacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_id"));
+                int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
 
                 FormQuiroptero formQuiropteroTemp = new FormQuiroptero();
 
@@ -563,6 +725,7 @@ public class SavedFormListFragment extends Fragment {
                 formQuiropteroTemp.setComentario(comentario);
                 formQuiropteroTemp.setImage_uri(image_uri);
                 formQuiropteroTemp.setUso_id(uso_id);
+                formQuiropteroTemp.setEspecialista_id(especialista_id);
                 formQuiropteroTemp.setEstado_conservacion_id(estado_conservacion_id);
 
                 list.add(formQuiropteroTemp);
@@ -587,11 +750,13 @@ public class SavedFormListFragment extends Fragment {
                 int estacion_muestreo_id = cursor.getInt(cursor.getColumnIndexOrThrow("estacion_muestreo_id"));
                 int metodologia_id = cursor.getInt(cursor.getColumnIndexOrThrow("metodologia_id"));
                 int unidad_muestreal_id = cursor.getInt(cursor.getColumnIndexOrThrow("unidad_muestreal_id"));
+                int unidad_vegetacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("unidad_vegetacion_id"));
                 float este = cursor.getFloat(cursor.getColumnIndexOrThrow("este"));
                 float norte = cursor.getFloat(cursor.getColumnIndexOrThrow("norte"));
                 float altitud = cursor.getFloat(cursor.getColumnIndexOrThrow("altitud"));
                 String fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"));
                 String hora = cursor.getString(cursor.getColumnIndexOrThrow("hora"));
+                int zona_id = cursor.getInt(cursor.getColumnIndexOrThrow("zona_id"));
                 int clima_id = cursor.getInt(cursor.getColumnIndexOrThrow("clima_id"));
                 int clase_id = cursor.getInt(cursor.getColumnIndexOrThrow("clase_id"));
                 int orden_id = cursor.getInt(cursor.getColumnIndexOrThrow("orden_id"));
@@ -619,6 +784,7 @@ public class SavedFormListFragment extends Fragment {
                 String comentario = cursor.getString(cursor.getColumnIndexOrThrow("comentario"));
                 String image_uri = cursor.getString(cursor.getColumnIndexOrThrow("image_uri"));
                 int especialista_id = cursor.getInt(cursor.getColumnIndexOrThrow("especialista_id"));
+                int proyecto_id = cursor.getInt(cursor.getColumnIndexOrThrow("proyecto_id"));
                 int estado_conservacion_id = cursor.getInt(cursor.getColumnIndexOrThrow("estado_conservacion_id"));
 
                 FormOrnitofauna formFloraTemp = new FormOrnitofauna();
@@ -628,11 +794,13 @@ public class SavedFormListFragment extends Fragment {
                 formFloraTemp.setEstacion_muestreo_id(estacion_muestreo_id);
                 formFloraTemp.setMetodologia_id(metodologia_id);
                 formFloraTemp.setUnidad_muestreal_id(unidad_muestreal_id);
+                formFloraTemp.setUnidad_vegetacion_id(unidad_vegetacion_id);
                 formFloraTemp.setEste(este);
                 formFloraTemp.setNorte(norte);
                 formFloraTemp.setAltitud(altitud);
                 formFloraTemp.setFecha(fecha);
                 formFloraTemp.setHora(hora);
+                formFloraTemp.setZona_id(zona_id);
                 formFloraTemp.setClima_id(clima_id);
                 formFloraTemp.setClase_id(clase_id);
                 formFloraTemp.setOrden_id(orden_id);
@@ -660,6 +828,7 @@ public class SavedFormListFragment extends Fragment {
                 formFloraTemp.setComentario(comentario);
                 formFloraTemp.setImage_uri(image_uri);
                 formFloraTemp.setEspecialista_id(especialista_id);
+                formFloraTemp.setProyecto_id(proyecto_id);
                 formFloraTemp.setEstado_conservacion_id(estado_conservacion_id);
 
                 list.add(formFloraTemp);

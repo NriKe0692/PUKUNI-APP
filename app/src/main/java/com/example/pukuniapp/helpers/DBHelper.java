@@ -207,6 +207,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String sqlQuery = "CREATE TABLE " + TABLE_HABITO_ALIMENTICIO + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "habito_alimenticio_id INTEGER, " +
+                "tipo_form_id INTEGER, " +
                 "habito_alimenticio_name TEXT)";
         db.execSQL(sqlQuery);
     }
@@ -526,6 +527,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "unidad_muestreal_id INTEGER, " +
             "unidad_muestreal_name TEXT, " +
             "franja_id INTEGER, " +
+            "tipo_form_id INTEGER, " +
             "metodologia_id INTEGER)";
         db.execSQL(sqlQuery);
     }
@@ -669,75 +671,75 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private void createFormHidrobiologiaTable(SQLiteDatabase db){
         String createTableForm = "CREATE TABLE " + TABLE_FORMULARIO_HIDROBIOLOGIA + " (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "especialista_id INTEGER," +
-                "proyecto_id INTEGER," +
-                "localidad TEXT," +
-                "cuenca_hidrografica_id INTEGER," +             // THIS
-                "estacion_muestreo_id INTEGER," +
-                "temporada_evaluacion_id INTEGER," +
-                "tipo_ambiente_acuatico_id INTEGER," +          // THIS
-                "estacion_id INTEGER," +                        // THIS
-                "punto_muestreo_id INTEGER," +                  // THIS
-                "este REAL," +
-                "norte REAL," +
-                "altitud REAL," +
-                "fecha TEXT," +
-                "hora TEXT," +
-                "pendiente_cauce TEXT," +
-                "clima_id INTEGER," +
-                "ancho_cauce_sector REAL," +
-                "tipo_orilla TEXT," +
-                "tipo_agua TEXT," +
-                "color_aparente_agua TEXT," +
-                "metodologia_id INTEGER," +
-                "longitud_muestreo REAL," +
-                "ancho_muestreo REAL," +
-                "area_muestreo REAL," +
-                "velocidad_corriente REAL," +
-                "profundidad_maxima_muestreo REAL," +
-                "profundidad_maxima_sector REAL," +
-                "transparencia REAL," +
-                "vegetacion_emergente TEXT," +
-                "vegetacion_sumergida TEXT," +
-                "vegetacion_flotante TEXT," +
-                "habitat_porcentaje_long_caida REAL," +
-                "habitat_porcentaje_long_rifle REAL," +
-                "habitat_porcentaje_long_corridas REAL," +
-                "habitat_porcentaje_long_pozos REAL," +
-                "habitat_porcentaje_long_remanso REAL," +
-                "sustrato_porcentaje_arena REAL," +
-                "sustrato_porcentaje_arcilla REAL," +
-                "sustrato_porcentaje_limo REAL," +
-                "sustrato_porcentaje_grava REAL," +
-                "sustrato_porcentaje_organico_hojarasca REAL," +
-                "sustrato_porcentaje_organico_ramas REAL," +
-                "sustrato_porcentaje_organico_arbustos_enraizados REAL," +
-                "unidad_vegetacion_id INTEGER," +
-                "vegetacion_circundante TEXT," +
-                "clase_id INTEGER," +
-                "orden_id INTEGER," +
-                "familia_id INTEGER," +
-                "genero_id INTEGER," +
-                "especie_id INTEGER," +
-                "nombre_comun TEXT," +
-                "individuos INTEGER," +
-                "uicn TEXT," +
-                "cites TEXT," +
-                "dsn TEXT," +
-                "nivel_trofico_fishbase REAL," +
-                "habito_alimenticio_id INTEGER," +              // THIS
-                "uso_id INTEGER," +
-                "categoria_abundancia_id INTEGER," +
-                "indicador_id INTEGER," +
-                "endemismo TEXT," +
-                "comportamiento TEXT," +
-                "longitud_total REAL," +
-                "peso REAL," +
-                "habitat_id INTEGER," +                         // THIS
-                "etapa_reproductiva TEXT," +
-                "comentario TEXT," +
-                "img_uri TEXT)";
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "especialista_id INTEGER," +
+            "proyecto_id INTEGER," +
+            "localidad TEXT," +
+            "cuenca_hidrografica_id INTEGER," +
+            "estacion_muestreo_id INTEGER," +
+            "temporada_evaluacion_id INTEGER," +
+            "tipo_ambiente_acuatico_id INTEGER," +
+            "estacion_id INTEGER," +
+            "punto_muestreo_id INTEGER," +
+            "este REAL," +
+            "norte REAL," +
+            "altitud REAL," +
+            "fecha TEXT," +
+            "hora TEXT," +
+            "pendiente_cauce TEXT," +
+            "clima_id INTEGER," +
+            "ancho_cauce_sector REAL," +
+            "tipo_orilla TEXT," +
+            "tipo_agua TEXT," +
+            "color_aparente_agua TEXT," +
+            "metodologia_id INTEGER," +
+            "longitud_muestreo REAL," +
+            "ancho_muestreo REAL," +
+            "area_muestreo REAL," +
+            "velocidad_corriente REAL," +
+            "profundidad_maxima_muestreo REAL," +
+            "profundidad_maxima_sector REAL," +
+            "transparencia REAL," +
+            "vegetacion_emergente TEXT," +
+            "vegetacion_sumergida TEXT," +
+            "vegetacion_flotante TEXT," +
+            "habitat_porcentaje_long_caida REAL," +
+            "habitat_porcentaje_long_rifle REAL," +
+            "habitat_porcentaje_long_corridas REAL," +
+            "habitat_porcentaje_long_pozos REAL," +
+            "habitat_porcentaje_long_remanso REAL," +
+            "sustrato_porcentaje_arena REAL," +
+            "sustrato_porcentaje_arcilla REAL," +
+            "sustrato_porcentaje_limo REAL," +
+            "sustrato_porcentaje_grava REAL," +
+            "sustrato_porcentaje_organico_hojarasca REAL," +
+            "sustrato_porcentaje_organico_ramas REAL," +
+            "sustrato_porcentaje_organico_arbustos_enraizados REAL," +
+            "unidad_vegetacion_id INTEGER," +
+            "vegetacion_circundante TEXT," +
+            "clase_id INTEGER," +
+            "orden_id INTEGER," +
+            "familia_id INTEGER," +
+            "genero_id INTEGER," +
+            "especie_id INTEGER," +
+            "nombre_comun TEXT," +
+            "individuos INTEGER," +
+            "uicn TEXT," +
+            "cites TEXT," +
+            "dsn TEXT," +
+            "nivel_trofico_fishbase REAL," +
+            "habito_alimenticio_id INTEGER," +
+            "uso_id INTEGER," +
+            "categoria_abundancia_id INTEGER," +
+            "indicador_id INTEGER," +
+            "endemismo TEXT," +
+            "comportamiento TEXT," +
+            "longitud_total REAL," +
+            "peso REAL," +
+            "habitat_id INTEGER," +
+            "etapa_reproductiva TEXT," +
+            "comentario TEXT," +
+            "img_uri TEXT)";
         db.execSQL(createTableForm);
     }
 
@@ -891,12 +893,12 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_FLORA);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_HIDROBIOLOGIA);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_MAMIFEROS_GRANDES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_ORNITOFAUNA);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_QUIROPTEROS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_ROEDORES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_HERPETOLOGIA);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_HIDROBIOLOGIA);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORMULARIO_MAMIFEROS_GRANDES);
 
         onCreate(db);
     }

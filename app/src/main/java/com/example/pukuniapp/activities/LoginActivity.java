@@ -20,6 +20,7 @@ import static com.example.pukuniapp.helpers.DBHelper.TABLE_GENERO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_GRUPO_TROFICO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITAT;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO;
+import static com.example.pukuniapp.helpers.DBHelper.TABLE_HABITO_ALIMENTICIO;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_INDICADOR;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_METODOLOGIA;
 import static com.example.pukuniapp.helpers.DBHelper.TABLE_MICROHABITAT;
@@ -77,6 +78,7 @@ import com.example.pukuniapp.classes.Genero;
 import com.example.pukuniapp.classes.GrupoTrofico;
 import com.example.pukuniapp.classes.HabitatPeces;
 import com.example.pukuniapp.classes.Habito;
+import com.example.pukuniapp.classes.HabitoAlimenticio;
 import com.example.pukuniapp.classes.Indicador;
 import com.example.pukuniapp.classes.Metodologia;
 import com.example.pukuniapp.classes.Microhabitat;
@@ -299,6 +301,9 @@ public class LoginActivity extends AppCompatActivity {
                                                                                                                                                                 Log.d("TESTING!", "FIN 37");
                                                                                                                                                                 loadCuencasHidrograficasValues(db, api, token, TABLE_CUENCA_HIDROGRAFICA, executor, handler, () -> {
                                                                                                                                                                     Log.d("TESTING!", "FIN 38");
+                                                                                                                                                                    loadHabitosAlimenticios(db, api, token, TABLE_HABITO_ALIMENTICIO, executor, handler, () -> {
+                                                                                                                                                                        Log.d("TESTING!", "FIN 38");
+                                                                                                                                                                    });
                                                                                                                                                                 });
                                                                                                                                                             });
                                                                                                                                                         });
@@ -402,6 +407,39 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Actividad>> call, Throwable t) {
+                irALogin();
+            }
+        });
+    }
+
+    private void loadHabitosAlimenticios(SQLiteDatabase db, ApiService api, String token, String TABLE_NAME, ExecutorService executor, Handler handler, Runnable onComplete){
+        api.getHabitosAlimenticios("Bearer " + token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<HabitoAlimenticio>> call, Response<List<HabitoAlimenticio>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<HabitoAlimenticio> habitoAlimenticioList = response.body();
+
+                    executor.execute(() -> {
+                        db.delete(TABLE_NAME, null, null);
+                        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_NAME + "'");
+
+                        for(HabitoAlimenticio habitoAlimenticio : habitoAlimenticioList){
+                            ContentValues values = new ContentValues();
+                            values.put("habito_alimenticio_id", habitoAlimenticio.getHabito_alimenticio_id());
+                            values.put("habito_alimenticio_name", habitoAlimenticio.getHabito_alimenticio_name());
+                            values.put("tipo_form_id", habitoAlimenticio.getTipo_form_id());
+                            db.insert(TABLE_NAME, null, values);
+                        }
+
+                        onComplete.run();
+                    });
+                } else {
+                    irALogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<HabitoAlimenticio>> call, Throwable t) {
                 irALogin();
             }
         });
@@ -778,6 +816,7 @@ public class LoginActivity extends AppCompatActivity {
                             values.put("unidad_muestreal_id", unidadMuestreal.getUnidad_muestreal_id());
                             values.put("unidad_muestreal_name", unidadMuestreal.getUnidad_muestreal_name());
                             values.put("franja_id", unidadMuestreal.getFranja_id());
+                            values.put("tipo_form_id", unidadMuestreal.getTipo_form_id());
                             values.put("metodologia_id", unidadMuestreal.getMetodologia_id());
                             db.insert(TABLE_NAME, null, values);
                         }
